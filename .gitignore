@@ -1,0 +1,35 @@
+# Python and Jupyter
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.pytest_cache/
+.mypy_cache/
+.DS_Store
+
+# Raw datasets, archives, model checkpoints
+/data/
+/datasets/
+*.zip
+*.tar
+*.tar.gz
+*.pt
+*.pth
+*.ckpt
+*.onnx
+
+# Environment and local settings
+.env
+.env.*
+!.env.example
+.vscode/
+.idea/
+
+# Generated experiments and machine-specific manifests
+/results/
+/checkpoints/
+/logs/
+/runs/
+
+# Keep summary artifacts under reports/ instead

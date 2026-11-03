@@ -1,0 +1,8 @@
+# Baseline notebook dependencies. Versions in the completed run may differ.
+numpy
+pandas
+matplotlib
+Pillow
+torch
+jupyterlab
+ipykernel

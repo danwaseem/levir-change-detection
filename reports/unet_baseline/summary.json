@@ -1,0 +1,17 @@
+{
+  "run_mode": "full",
+  "completed_epochs": 30,
+  "best_epoch": 24,
+  "best_val_f1": 0.731923177356777,
+  "total_minutes": 161.92,
+  "mean_epoch_minutes": 5.4,
+  "train_original_pairs": 445,
+  "val_original_pairs": 64,
+  "train_tiles": 7120,
+  "val_tiles": 1024,
+  "parameters": 483169,
+  "threshold": 0.5,
+  "selected_using": "validation F1 only",
+  "test_set_touched": false,
+  "note": "Full U-Net baseline"
+}
