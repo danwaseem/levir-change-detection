@@ -136,14 +136,12 @@ The folder structure is intentionally small. Raw LEVIR imagery and `.pt` checkpo
 │   └── RELATED_WORK.md               # paper → code mapping (Daudt / LEVIR / U-Net)
 ├── report/
 │   └── report.md                     # written report draft (fill at end)
-├── results/                          # F1 and other metric artifacts
-│   ├── unet_baseline/                # prior U-Net val metrics + gallery
-│   └── experiments/                  # smoke/benchmark summaries
+├── results/
+│   └── unet_baseline/                # validation F1, curves, and gallery
 ├── src/levir_cd/                     # models, data, losses, train, smoke
 ├── scripts/
-│   ├── run_smoke.py
-│   └── build_notebooks.py
-├── tests/                            # CPU unit + smoke tests
+│   └── run_smoke.py
+├── tests/                            # CPU checks for the models
 ├── notebooks/
 │   ├── 01_dataset_audit.ipynb        # data QA + manifest
 │   └── 02_experiments.ipynb          # U-Net / Siamese / ablations / smoke
