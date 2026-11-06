@@ -17,7 +17,7 @@ Compares a six-channel U-Net (FC-EF) with shared-encoder Siamese U-Nets on [LEVI
 | Prior FC-EF U-Net val baseline (F1 **0.732**, seed 1511) | Mean ± seed spread for Siamese |
 | Smoke tests + unit tests (14 passed) | Presentation / contribution statements |
 | Report outline filled with real numbers; blanks for missing runs | — |
-| Architecture overview figure (JPG) | — |
+| Architecture overview figure (`docs/architecture.jpg`) | — |
 
 Coding for the graded experiment plan is on `main`. **Do not invent Siamese / ablation / test scores.** Prefer university **CUDA GPU** for `run_plan.py --mode full` (Mac MPS is too slow for all 9 runs).
 
@@ -37,9 +37,9 @@ We follow the Daudt et al. (2018) change-detection triad and score with change-c
 
 All learned paths output 1-channel logits → sigmoid → threshold **0.5** → change-class F1 / IoU / precision / recall. Default width `base=16`. Checkpoint by validation F1.
 
-![Architecture overview — FC-EF, FC-Siam-diff, FC-Siam-conc](docs/architecture-overview.jpg)
+![LEVIR-CD Building Change Detection Architecture — Daudt triad](docs/architecture.jpg)
 
-*Figure: Architecture overview.*
+*Figure: Local architecture diagram (FC-EF / FC-Siam-diff / FC-Siam-conc).*
 
 ```text
 LEVIR pair (A, B, mask)
