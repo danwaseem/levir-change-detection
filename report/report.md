@@ -225,13 +225,31 @@ Limits of this draft: missing matrix numbers, smaller network than many public L
 
 ---
 
-## 8. Conclusion
+## 8. Future work
+
+Near term (finish this course project):
+
+1. Run the full nine-job matrix on a university GPU and fill the blank tables in §6.
+2. Report mean ± seed spread for FC-EF vs FC-Siam-diff, then freeze settings and do **one** locked test.
+3. Add a small failure gallery (hits, missed small buildings, false alarms, boundary errors) with validation captions.
+4. Complete timing / parameter / latency numbers on the same GPU for a fair cost comparison.
+
+If there is extra time after that (stretch, not required for a passing report):
+
+5. Try a slightly wider FC-EF (`base=32`) under the same protocol to see how much of the gap to published ~0.81–0.86 F1 is just model capacity / training budget.
+6. Use LEVIR geospatial metadata (lat/long) for a stronger nearby-scene leakage check beyond filename stems.
+7. Test on another building-change set (for example WHU-CD or LEVIR-CD+) to see if the same ranking holds.
+8. We still would **not** claim a full STANet reproduction unless the question and compute budget change; attention methods stay out of our current scope.
+
+---
+
+## 9. Conclusion
 
 We set up a full LEVIR-CD training and evaluation pipeline with the Daudt triad, a simple difference baseline, and the planned ablations. So far, validation shows FC-EF F1 0.732 and abs-diff F1 0.129, with no filename stem overlap across splits. The main research comparison still needs the GPU runs and one locked test. We will keep claims matched to whatever those runs show.
 
 ---
 
-## 9. Contributions and how to reproduce
+## 10. Contributions and how to reproduce
 
 | Member | Main work |
 | --- | --- |
@@ -258,7 +276,7 @@ PYTHONPATH=src python scripts/run_plan.py --aggregate-only
 
 ---
 
-## 10. Assistance disclosure
+## 11. Assistance disclosure
 
 ChatGPT was used in the proposal mainly for formatting. Cursor helped with coding and with drafting this report. We checked references against the papers and only put measured numbers in the filled cells. Empty cells are intentional.
 
