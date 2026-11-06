@@ -273,7 +273,7 @@ PYTHONPATH=src python scripts/run_plan.py --aggregate-only
 
 ## 11. Assistance disclosure
 
-ChatGPT was used in the proposal mainly for formatting. Cursor helped with coding and with drafting this report. We checked references against the papers and only put measured numbers in the filled cells. Empty cells are intentional.
+*(Team to fill before final submission. List any AI / writing tools used and how claims were checked, or state that no generative AI assistance was used.)*
 
 ---
 
