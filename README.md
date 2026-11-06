@@ -23,13 +23,23 @@ Coding for the graded experiment plan is on `main`. **Do not invent Siamese / ab
 
 ---
 
-## Architecture
+## Architecture overview
 
-Daudt et al. (2018) triad + Chen & Shi (2020) change-class F1. Mapping: [`docs/RELATED_WORK.md`](docs/RELATED_WORK.md). Code: [`src/levir_cd/models.py`](src/levir_cd/models.py). We do **not** reproduce STANet attention.
+We follow the Daudt et al. (2018) change-detection triad and score with change-class F1 (Chen & Shi, 2020). Code: [`src/levir_cd/models.py`](src/levir_cd/models.py). Paper map: [`docs/RELATED_WORK.md`](docs/RELATED_WORK.md). We do **not** reproduce STANet attention.
 
-![LEVIR-CD architecture](docs/architecture-overview.jpg)
+**How data flows.** Each LEVIR sample is a pair of RGB images (A = earlier date, B = later date) plus a binary building-change mask. We cut 1024×1024 pairs into non-overlapping 256×256 tiles. Optional flips/rotations are applied the same way to A, B, and the mask. A non-learned absolute RGB difference baseline is the reference. Learned models are one of:
 
-Vector copy (optional): [`docs/architecture.svg`](docs/architecture.svg).
+| Paper name | `MODEL` | What it does |
+| --- | --- | --- |
+| **FC-EF** | `unet` | Stack A and B as 6 channels → one U-Net |
+| **FC-Siam-diff** | `siamese_diff` | Shared encoder on A and B; fuse with \|fA−fB\| |
+| **FC-Siam-conc** | `siamese_conc` | Shared encoder; fuse by concatenating features |
+
+All learned paths output 1-channel logits → sigmoid → threshold **0.5** → change-class F1 / IoU / precision / recall. Default width `base=16`. Checkpoint by validation F1.
+
+![Architecture overview — FC-EF, FC-Siam-diff, FC-Siam-conc](docs/architecture-overview.jpg)
+
+*Figure: Architecture overview.* Vector copy: [`docs/architecture.svg`](docs/architecture.svg).
 
 ```text
 LEVIR pair (A, B, mask)
@@ -43,14 +53,6 @@ LEVIR pair (A, B, mask)
                  ▼
         sigmoid → threshold 0.5 → change-class F1 / IoU / P / R
 ```
-
-| Paper name | `MODEL` | Idea |
-| --- | --- | --- |
-| FC-EF | `unet` | Concat A∥B → one U-Net |
-| FC-Siam-diff | `siamese_diff` | Shared enc + \|fA−fB\| |
-| FC-Siam-conc | `siamese_conc` | Shared enc + concat skips |
-
-Default width `base=16`. Train: Adam 1e-3, BCE or BCE+Dice, checkpoint by **validation F1**, threshold **0.5**.
 
 ---
 

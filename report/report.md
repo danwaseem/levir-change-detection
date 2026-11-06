@@ -100,23 +100,33 @@ No shared stems is good, but it does not prove that nearby geographic areas neve
 
 ## 4. Methods
 
+### 4.1 Architecture overview
+
+We implement the Daudt triad under one training and metric pipeline. Two dates (A, B) and a building-change mask are tiled to 256×256. The reference path is absolute RGB difference. The learned paths are:
+
+- **FC-EF:** concatenate A and B (6 channels) into one U-Net.
+- **FC-Siam-diff:** shared encoder; fuse skip/bottleneck features with `|fA − fB|`.
+- **FC-Siam-conc:** shared encoder; fuse by concatenating features.
+
+Every learned model emits a single-channel change map, scored at threshold 0.5 with change-class F1 (plus IoU / precision / recall). Width default is `base=16`. STANet attention is out of scope.
+
 ![Architecture overview](../docs/architecture-overview.jpg)
 
-**Figure 1.** Inputs A and B go into FC-EF, FC-Siam-diff, or FC-Siam-conc. FC-EF stacks the two RGB images. The Siamese models share an encoder and fuse with absolute difference or concatenation. Output is a one-channel change map. Vector copy: [`docs/architecture.svg`](../docs/architecture.svg).
+**Figure 1. Architecture overview.** Bi-temporal inputs feed FC-EF, FC-Siam-diff, or FC-Siam-conc, then a change map at threshold 0.5. Vector copy: [`docs/architecture.svg`](../docs/architecture.svg).
 
-### 4.1 Reference baseline
+### 4.2 Reference baseline
 
 Mean absolute RGB difference `|A − B|`. We pick the threshold on validation by F1. Code: `scripts/run_baseline.py`.
 
-### 4.2 Strong baseline (FC-EF)
+### 4.3 Strong baseline (FC-EF)
 
 Concatenate A and B to 6 channels and run a U-Net with base width 16 (16→32→64→128). About 483k parameters.
 
-### 4.3 Team models (Siamese)
+### 4.4 Team models (Siamese)
 
 Same encoder weights for A and B. FC-Siam-diff uses `|fA − fB|`. FC-Siam-conc concatenates features. Shared decoder predicts the change map.
 
-### 4.4 Training details
+### 4.5 Training details
 
 | Setting | Choice |
 | --- | --- |
