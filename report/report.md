@@ -100,9 +100,9 @@ No shared stems is good, but it does not prove that nearby geographic areas neve
 
 ## 4. Methods
 
-![Architecture overview](../docs/architecture.svg)
+![Architecture overview](../docs/architecture-overview.jpg)
 
-**Figure 1.** Inputs A and B go into FC-EF, FC-Siam-diff, or FC-Siam-conc. FC-EF stacks the two RGB images. The Siamese models share an encoder and fuse with absolute difference or concatenation. Output is a one-channel change map.
+**Figure 1.** Inputs A and B go into FC-EF, FC-Siam-diff, or FC-Siam-conc. FC-EF stacks the two RGB images. The Siamese models share an encoder and fuse with absolute difference or concatenation. Output is a one-channel change map. Vector copy: [`docs/architecture.svg`](../docs/architecture.svg).
 
 ### 4.1 Reference baseline
 
@@ -297,7 +297,8 @@ PYTHONPATH=src python scripts/run_plan.py --aggregate-only
 | --- | --- |
 | Proposal | `docs/Data255_ProjectProposal.pdf` |
 | Related work notes | `docs/RELATED_WORK.md` |
-| Architecture figure | `docs/architecture.svg` |
+| Architecture figure (main) | `docs/architecture-overview.jpg` |
+| Architecture figure (vector) | `docs/architecture.svg` |
 | Manifest | `results/levir_audit/split_manifest.csv` |
 | Stem overlap | `results/levir_audit/stem_overlap_report.json` |
 | Abs-diff | `results/absdiff_baseline/summary.json` |

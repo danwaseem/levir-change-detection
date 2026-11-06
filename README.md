@@ -17,7 +17,7 @@ Compares a six-channel U-Net (FC-EF) with shared-encoder Siamese U-Nets on [LEVI
 | Prior FC-EF U-Net val baseline (F1 **0.732**, seed 1511) | Mean ± seed spread for Siamese |
 | Smoke tests + unit tests (14 passed) | Presentation / contribution statements |
 | Report outline filled with real numbers; blanks for missing runs | — |
-| Architecture figure (SVG) | — |
+| Architecture figure (JPG main + SVG) | — |
 
 Coding for the graded experiment plan is on `main`. **Do not invent Siamese / ablation / test scores.** Prefer university **CUDA GPU** for `run_plan.py --mode full` (Mac MPS is too slow for all 9 runs).
 
@@ -27,7 +27,9 @@ Coding for the graded experiment plan is on `main`. **Do not invent Siamese / ab
 
 Daudt et al. (2018) triad + Chen & Shi (2020) change-class F1. Mapping: [`docs/RELATED_WORK.md`](docs/RELATED_WORK.md). Code: [`src/levir_cd/models.py`](src/levir_cd/models.py). We do **not** reproduce STANet attention.
 
-![LEVIR-CD architecture](docs/architecture.svg)
+![LEVIR-CD architecture](docs/architecture-overview.jpg)
+
+Vector copy (optional): [`docs/architecture.svg`](docs/architecture.svg).
 
 ```text
 LEVIR pair (A, B, mask)
