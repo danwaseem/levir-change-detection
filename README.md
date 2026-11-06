@@ -141,7 +141,8 @@ The folder structure is intentionally small. Raw LEVIR imagery and `.pt` checkpo
 │   └── unet_baseline/                # validation F1, curves, and gallery
 ├── src/levir_cd/                     # models, data, losses, train, smoke
 ├── scripts/
-│   └── run_smoke.py
+│   ├── run_smoke.py
+│   └── run_plan.py                  # full proposal matrix + comparison table
 ├── tests/                            # CPU checks for the models
 ├── notebooks/
 │   ├── 01_dataset_audit.ipynb        # data QA + manifest
@@ -180,17 +181,34 @@ export LEVIR_PROJECT_ROOT="$PWD"
 export LEVIR_DATA_ROOT="/path/to/levir-cd"
 ```
 
-## Experiment checklist (report later)
+## What is done
 
-In `02_experiments.ipynb` (or by calling `run_experiment`):
+Code and docs for the proposal are in the repo. The only measured LEVIR score so far is the validation U-Net baseline below. Siamese, loss, and augmentation numbers are not invented.
 
-1. **Main comparison:** `MODEL=unet` (FC-EF) vs `siamese_diff` (FC-Siam-diff), `LOSS=bce_dice`, `AUGMENT=True`, seeds `1511/42/123`
-2. **Optional triad check:** also run `siamese_conc` (FC-Siam-conc) under the same protocol
-3. **Loss ablation:** `bce` vs `bce_dice`
-4. **Augmentation ablation:** `AUGMENT=True` vs `False`
-5. Absolute-difference baseline on validation (non-learned control)
-6. Record params, train time, checkpoint size, batch-1 latency + per-image val CSV
-7. Freeze settings → **one** locked test evaluation → error analysis in [`report/report.md`](report/report.md)
+| Piece | State |
+| --- | --- |
+| Dataset audit notebook | Ready. Needs the local LEVIR files. |
+| FC-EF, FC-Siam-diff, FC-Siam-conc | Coded in `src/levir_cd/models.py` |
+| BCE and BCE+Dice, paired flips/rotations | Coded |
+| Change-class F1, IoU, precision, recall, boundary F1 | Coded. F1 picks the checkpoint. |
+| Small-building and false-alarm summary | `failure_summary.json` |
+| Threshold sweep around 0.5 | Logged on real runs. Official threshold stays 0.5. |
+| Absolute-difference baseline | Coded. Runs in notebook 02 when LEVIR is present. |
+| Full matrix | `PYTHONPATH=src python scripts/run_plan.py --mode full` |
+| Comparison table | `PYTHONPATH=src python scripts/run_plan.py --aggregate-only` writes `results/comparison_table.md` |
+| U-Net validation F1 0.7319, seed 1511 | Done. [`results/unet_baseline/`](results/unet_baseline/) |
+| Three-seed Siamese comparison, ablations, locked test | Not run yet. Needs LEVIR on a Mac or GPU. |
+
+## Experiment checklist
+
+On a machine with the dataset:
+
+```bash
+PYTHONPATH=src python scripts/run_plan.py --mode full
+PYTHONPATH=src python scripts/run_plan.py --aggregate-only
+```
+
+That runs FC-EF and FC-Siam-diff at seeds 1511, 42, and 123, one FC-Siam-conc run, the BCE versus BCE+Dice ablation, and the augmentation ablation. Then freeze the choices and evaluate the test set once. Details are in [`report/report.md`](report/report.md).
 
 ## Credits
 

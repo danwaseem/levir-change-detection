@@ -12,7 +12,8 @@ from levir_cd.baseline import absolute_difference_baseline
 from levir_cd.config import ExperimentConfig
 from levir_cd.data import SyntheticChangeTiles, make_loaders
 from levir_cd.losses import segmentation_loss
-from levir_cd.metrics import failure_summary, per_image_scores, scores_from_counts, summarize_per_image
+from levir_cd.metrics import failure_summary, per_image_scores, scores_from_counts, summarize_per_image, threshold_sweep
+from levir_cd.plan import comparison_markdown, experiment_plan
 from levir_cd.models import build_model, count_parameters, paper_name
 from levir_cd.train import run_experiment
 
@@ -41,6 +42,25 @@ def test_absdiff_baseline():
     result = absolute_difference_baseline(loader)
     assert 0.0 <= result["f1"] <= 1.0
     assert "threshold" in result
+
+
+def test_experiment_plan_covers_proposal():
+    rows = experiment_plan("/tmp/levir-plan", mode="full")
+    roles = [row["role"] for row in rows]
+    assert roles.count("main") == 6
+    assert "triad" in roles and "loss" in roles and "augmentation" in roles
+    assert all(row["config"].ALLOW_TEST is False for row in rows)
+    text = comparison_markdown([])
+    assert "no runs yet" in text
+
+
+def test_threshold_sweep_marks_official_half():
+    ds = SyntheticChangeTiles(n_tiles=2, size=32, seed=3)
+    loader, _ = make_loaders(ds, ds, batch_size=2)
+    model = build_model("unet", base_channels=4)
+    rows = threshold_sweep(model, loader, torch.device("cpu"), grid=[0.5])
+    assert rows[0]["official"] == 1.0
+    assert 0.0 <= rows[0]["f1"] <= 1.0
 
 
 def test_scores_include_accuracy_without_using_it_as_f1():

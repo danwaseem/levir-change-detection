@@ -19,7 +19,7 @@ from .data import (
 from .device import describe_runtime, pick_device, set_seed, sync_device
 from .losses import segmentation_loss
 from .metrics import evaluate_loader
-from .metrics import failure_summary, per_image_scores, summarize_per_image
+from .metrics import failure_summary, per_image_scores, summarize_per_image, threshold_sweep
 from .models import build_model, count_parameters, paper_name
 
 
@@ -131,6 +131,7 @@ def run_experiment(cfg: ExperimentConfig, device: torch.device | None = None) ->
     epochs = cfg.effective_epochs()
     best_f1 = -1.0
     best_epoch = None
+    best_metrics: dict[str, Any] = {}
     bad_epochs = 0
     rows: list[dict[str, Any]] = []
     started = time.perf_counter()
@@ -167,6 +168,7 @@ def run_experiment(cfg: ExperimentConfig, device: torch.device | None = None) ->
         if metrics["val_f1"] > best_f1 + cfg.MIN_F1_IMPROVEMENT:
             best_f1 = metrics["val_f1"]
             best_epoch = epoch
+            best_metrics = dict(metrics)
             bad_epochs = 0
             torch.save(state, run_dir / "best_model.pt")
             print("  saved new best checkpoint", flush=True)
@@ -204,6 +206,10 @@ def run_experiment(cfg: ExperimentConfig, device: torch.device | None = None) ->
         json.dumps(failures, indent=2),
         encoding="utf-8",
     )
+    sweep = []
+    if cfg.RUN_MODE != "smoke":
+        sweep = threshold_sweep(model, val_loader, device)
+        (run_dir / "threshold_sweep.json").write_text(json.dumps(sweep, indent=2), encoding="utf-8")
 
     total_seconds = time.perf_counter() - started
     summary = {
@@ -216,6 +222,11 @@ def run_experiment(cfg: ExperimentConfig, device: torch.device | None = None) ->
         "completed_epochs": len(rows),
         "best_epoch": best_epoch,
         "best_val_f1": best_f1,
+        "val_precision": best_metrics.get("val_precision"),
+        "val_recall": best_metrics.get("val_recall"),
+        "val_iou": best_metrics.get("val_iou"),
+        "val_boundary_f1": best_metrics.get("val_boundary_f1"),
+        "val_accuracy": best_metrics.get("val_accuracy"),
         "total_minutes": round(total_seconds / 60, 4),
         "mean_epoch_seconds": round(sum(r["elapsed_seconds"] for r in rows) / max(len(rows), 1), 3),
         "batch_one_inference_seconds": round(inference_seconds, 5) if inference_seconds is not None else None,
@@ -231,6 +242,8 @@ def run_experiment(cfg: ExperimentConfig, device: torch.device | None = None) ->
         "checkpoint_bytes": (run_dir / "best_model.pt").stat().st_size if (run_dir / "best_model.pt").exists() else None,
         "per_image_val_summary": per_image_summary,
         "failure_summary": failures,
+        "threshold_sweep": sweep,
+        "official_threshold": cfg.THRESHOLD,
         "run_dir": str(run_dir),
     }
     (run_dir / "summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
@@ -252,6 +265,7 @@ def maybe_copy_summary_to_reports(summary: dict[str, Any], project_root: Path) -
         "per_image_val_summary.json",
         "per_image_val_metrics.csv",
         "failure_summary.json",
+        "threshold_sweep.json",
     ):
         p = src / name
         if p.exists():

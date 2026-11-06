@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
+import numpy as np
 import pandas as pd
 import torch
 
@@ -135,6 +136,52 @@ def per_image_scores(
             )
             index += 1
     return pd.DataFrame(rows)
+
+
+@torch.no_grad()
+def threshold_sweep(
+    model: torch.nn.Module,
+    loader: torch.utils.data.DataLoader,
+    device: torch.device,
+    grid: list[float] | None = None,
+) -> list[dict[str, float]]:
+    """Validation-only sensitivity of the decision threshold.
+
+    The official project threshold stays 0.5. A higher F1 at another
+    threshold is reported, not used to retune the locked test evaluation.
+    """
+    thresholds = grid or [0.3, 0.4, 0.5, 0.6, 0.7]
+    model.eval()
+    chunks_p: list[np.ndarray] = []
+    chunks_t: list[np.ndarray] = []
+    for x, y in loader:
+        prob = torch.sigmoid(model(x.to(device))).detach().cpu().numpy().ravel()
+        truth = (y.detach().cpu().numpy() >= 0.5).ravel()
+        chunks_p.append(prob)
+        chunks_t.append(truth)
+    if not chunks_p:
+        return []
+    prob = np.concatenate(chunks_p)
+    truth = np.concatenate(chunks_t).astype(bool)
+    rows: list[dict[str, float]] = []
+    for threshold in thresholds:
+        pred = prob >= threshold
+        tp = int(np.logical_and(pred, truth).sum())
+        fp = int(np.logical_and(pred, ~truth).sum())
+        fn = int(np.logical_and(~pred, truth).sum())
+        tn = int(np.logical_and(~pred, ~truth).sum())
+        scores = scores_from_counts(tp, fp, fn, tn)
+        rows.append(
+            {
+                "threshold": float(threshold),
+                "official": float(abs(threshold - 0.5) < 1e-9),
+                "f1": scores["f1"],
+                "iou": scores["iou"],
+                "precision": scores["precision"],
+                "recall": scores["recall"],
+            }
+        )
+    return rows
 
 
 def failure_summary(frame: pd.DataFrame, small_max_pixels: int = 256) -> dict[str, Any]:

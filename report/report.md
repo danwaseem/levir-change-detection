@@ -2,7 +2,7 @@
 
 **Course:** DATA 255 Deep Learning Vision, Fall 2026  
 **Team:** BuildSafe Vision — Sneha Singh, Ritika Mukesh Neema, Danish Waseem, Rajesh Paruchuri  
-**Status:** Draft outline only. Fill after experiments are frozen. Do not invent test-set numbers early.
+**Status:** Methods and the experiment matrix are implemented. The only LEVIR number in this repo is the validation U-Net baseline (F1 0.7319, seed 1511). Siamese runs, ablations, and the test set are not filled in yet. Do not invent those numbers.
 
 Related files:
 - Proposal: [`docs/Data255_ProjectProposal.pdf`](../docs/Data255_ProjectProposal.pdf)
@@ -72,16 +72,35 @@ Detailed mapping: [`docs/RELATED_WORK.md`](../docs/RELATED_WORK.md).
 | Augmentation ablation | aug on vs off | chosen architecture, loss, seed |
 | Efficiency | params, train time, checkpoint size, batch-1 latency | same hardware note |
 
+## 6b. How to produce the missing numbers
+
+On a machine that has LEVIR-CD and the audit manifest:
+
+```bash
+PYTHONPATH=src python scripts/run_plan.py --mode full
+PYTHONPATH=src python scripts/run_plan.py --aggregate-only
+```
+
+`scripts/run_plan.py` runs this matrix and writes `results/comparison_table.md`:
+
+| Role | Settings |
+| --- | --- |
+| Main | FC-EF and FC-Siam-diff, BCE+Dice, augmentation on, seeds 1511, 42, 123 |
+| Triad column | FC-Siam-conc, same loss and augmentation, seed 1511 |
+| Loss | FC-EF, BCE only, seed 1511 |
+| Augmentation | FC-EF, augmentation off, seed 1511 |
+
+Each run also writes `failure_summary.json` and, for real data, `threshold_sweep.json`. The official threshold remains 0.5.
+
 ## 7. Results
 
-> Fill from `results/` only, including `results/experiments/*/summary.json`.
+### 7.1 Numbers we actually have
 
-### 7.1 Validation tables
-- Absolute-difference baseline
-- U-Net (include prior seed-1511 feasibility: F1 0.7319 if still the reference full run)
-- Siamese
-- Ablations
-- Mean ± std across seeds for the main comparison
+| Model | Split | Seed | F1 | IoU | Precision | Recall | Where |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | --- |
+| FC-EF lightweight U-Net | validation | 1511 | 0.7319 | 0.5772 | 0.6912 | 0.7778 | `results/unet_baseline/` |
+
+No Siamese validation number, no ablation number, and no test number is available yet. After `run_plan.py`, paste `results/comparison_table.md` here and add mean ± spread across the three main seeds.
 
 ### 7.2 Qualitative examples
 - Hits, missed small buildings, false positives, boundary errors
