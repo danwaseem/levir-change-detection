@@ -70,6 +70,84 @@ def test_manifest_builder_pairs_a_b_label(tmp_path):
     assert "train" in text and "val" in text and "sample" in text
 
 
+def test_locate_dataset_finds_nested_zips(tmp_path):
+    from levir_cd.audit import locate_dataset
+
+    folder = tmp_path / "Downloads" / "cd"
+    folder.mkdir(parents=True)
+    (folder / "train.zip").write_bytes(b"a")
+    (folder / "val.zip").write_bytes(b"b")
+    found = locate_dataset(tmp_path / "project", extra_roots=[tmp_path])
+    assert found == folder.resolve()
+
+
+def test_ensure_manifest_downloads_when_missing(tmp_path, monkeypatch):
+    import hashlib
+    import io
+    import threading
+    import zipfile
+    from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+
+    from PIL import Image
+
+    from levir_cd import audit
+
+    payloads = {}
+    for split in ("train", "val", "test"):
+        buffer = io.BytesIO()
+        with zipfile.ZipFile(buffer, "w") as archive:
+            for part, mode in (("A", "RGB"), ("B", "RGB"), ("label", "L")):
+                raw = io.BytesIO()
+                Image.new(mode, (8, 8), color=0).save(raw, format="PNG")
+                archive.writestr(f"{part}/{split}_1.png", raw.getvalue())
+        payloads[split] = buffer.getvalue()
+
+    class Handler(BaseHTTPRequestHandler):
+        def do_GET(self):
+            name = self.path.rsplit("/", 1)[-1].removesuffix(".zip")
+            body = payloads[name]
+            start = 0
+            status = 200
+            header = self.headers.get("Range")
+            if header:
+                start = int(header.split("=", 1)[1].split("-", 1)[0])
+                if start >= len(body):
+                    self.send_response(416)
+                    self.end_headers()
+                    return
+                status = 206
+            chunk = body[start:]
+            self.send_response(status)
+            self.send_header("Content-Length", str(len(chunk)))
+            if status == 206:
+                self.send_header("Content-Range", f"bytes {start}-{len(body) - 1}/{len(body)}")
+            self.end_headers()
+            self.wfile.write(chunk)
+
+        def log_message(self, fmt, *args):
+            return
+
+    server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+    port = server.server_address[1]
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    splits = {
+        split: {
+            "url": f"http://127.0.0.1:{port}/{split}.zip",
+            "md5": hashlib.md5(payloads[split]).hexdigest(),
+        }
+        for split in payloads
+    }
+    monkeypatch.setattr(audit, "LEVIR_ZIPS", splits)
+    monkeypatch.setenv("LEVIR_DATA_ROOT", str(tmp_path / "downloaded"))
+    try:
+        path = audit.ensure_manifest(tmp_path / "project")
+    finally:
+        server.shutdown()
+    text = path.read_text(encoding="utf-8")
+    assert "train_1" in text and "val_1" in text and "test_1" in text
+
+
 def test_experiment_plan_covers_proposal():
     rows = experiment_plan("/tmp/levir-plan", mode="full")
     roles = [row["role"] for row in rows]

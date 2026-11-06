@@ -170,7 +170,7 @@ python -m pip install -e .
 python -m ipykernel install --user --name levir-cd --display-name "Python (LEVIR-CD)"
 ```
 
-Place LEVIR-CD beside the repo (or set `LEVIR_DATA_ROOT`):
+`scripts/run_plan.py --mode full` looks for LEVIR-CD beside the repo. If it is not there, it downloads the official train, val, and test archives once (about 2.3 GB, academic use only) into `../datasets/levir-cd`. To use a copy you already have, set `LEVIR_DATA_ROOT`:
 
 ```text
 datasets/levir-cd/{train.zip,val.zip,test/}

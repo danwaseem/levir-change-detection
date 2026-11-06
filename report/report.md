@@ -74,7 +74,7 @@ Detailed mapping: [`docs/RELATED_WORK.md`](../docs/RELATED_WORK.md).
 
 ## 6b. How to produce the missing numbers
 
-On a machine that has LEVIR-CD and the audit manifest:
+On the project machine. If LEVIR-CD is not already on disk, this downloads the train, val, and test archives once (~2.3 GB) and writes the audit manifest:
 
 ```bash
 PYTHONPATH=src python scripts/run_plan.py --mode full
