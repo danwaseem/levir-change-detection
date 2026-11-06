@@ -23,6 +23,37 @@ Coding for the graded experiment plan is on `main`. **Do not invent Siamese / ab
 
 ---
 
+## Architecture
+
+Daudt et al. (2018) triad + Chen & Shi (2020) change-class F1. Mapping: [`docs/RELATED_WORK.md`](docs/RELATED_WORK.md). Code: [`src/levir_cd/models.py`](src/levir_cd/models.py). We do **not** reproduce STANet attention.
+
+![LEVIR-CD architecture](docs/architecture-overview.jpg)
+
+Primary figure: JPG above. Optional SVG: [`docs/architecture.svg`](docs/architecture.svg) (use JPG if GitHub SVG preview fails).
+
+```text
+LEVIR pair (A, B, mask)
+        │
+        ▼
+ 256×256 tiles (+ optional synced flip/rot90)
+        │
+        ├── Absolute RGB difference (reference)
+        └── FC-EF | FC-Siam-diff | FC-Siam-conc
+                 │
+                 ▼
+        sigmoid → threshold 0.5 → change-class F1 / IoU / P / R
+```
+
+| Paper name | `MODEL` | Idea |
+| --- | --- | --- |
+| FC-EF | `unet` | Concat A∥B → one U-Net |
+| FC-Siam-diff | `siamese_diff` | Shared enc + \|fA−fB\| |
+| FC-Siam-conc | `siamese_conc` | Shared enc + concat skips |
+
+Default width `base=16`. Train: Adam 1e-3, BCE or BCE+Dice, checkpoint by **validation F1**, threshold **0.5**.
+
+---
+
 ## Local setup (do this first)
 
 ```bash
@@ -106,37 +137,6 @@ Does a Siamese U-Net improve building-change F1 over a six-channel U-Net under t
 
 - **H1:** FC-Siam-diff beats FC-EF on change-class F1/IoU (maybe slower).
 - **H2:** BCE+Dice beats BCE alone under class imbalance.
-
----
-
-## Architecture
-
-Daudt et al. (2018) triad + Chen & Shi (2020) change-class F1. Mapping: [`docs/RELATED_WORK.md`](docs/RELATED_WORK.md). Code: [`src/levir_cd/models.py`](src/levir_cd/models.py). We do **not** reproduce STANet attention.
-
-![LEVIR-CD architecture](docs/architecture-overview.jpg)
-
-Primary figure: JPG above. Optional SVG: [`docs/architecture.svg`](docs/architecture.svg) (use JPG if GitHub SVG preview fails).
-
-```text
-LEVIR pair (A, B, mask)
-        │
-        ▼
- 256×256 tiles (+ optional synced flip/rot90)
-        │
-        ├── Absolute RGB difference (reference)
-        └── FC-EF | FC-Siam-diff | FC-Siam-conc
-                 │
-                 ▼
-        sigmoid → threshold 0.5 → change-class F1 / IoU / P / R
-```
-
-| Paper name | `MODEL` | Idea |
-| --- | --- | --- |
-| FC-EF | `unet` | Concat A∥B → one U-Net |
-| FC-Siam-diff | `siamese_diff` | Shared enc + \|fA−fB\| |
-| FC-Siam-conc | `siamese_conc` | Shared enc + concat skips |
-
-Default width `base=16`. Train: Adam 1e-3, BCE or BCE+Dice, checkpoint by **validation F1**, threshold **0.5**.
 
 ---
 
