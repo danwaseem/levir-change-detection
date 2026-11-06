@@ -19,6 +19,10 @@ Yes. The project has a **pipeline**, the full **Daudt et al. (2018) triad**, and
 
 We **do not** reproduce STANet attention (explicitly out of proposal scope).
 
+![LEVIR-CD architecture: FC-EF, FC-Siam-diff, and FC-Siam-conc](docs/architecture-overview.jpg)
+
+Vector version for slides/report: [`docs/architecture.svg`](docs/architecture.svg).
+
 ### End-to-end pipeline
 
 ```text

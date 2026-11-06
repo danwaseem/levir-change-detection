@@ -43,6 +43,10 @@ Detailed mapping: [`docs/RELATED_WORK.md`](../docs/RELATED_WORK.md).
 
 ## 5. Methods / architecture
 
+![LEVIR-CD architecture: FC-EF, FC-Siam-diff, and FC-Siam-conc](../docs/architecture-overview.jpg)
+
+Figure: bi-temporal RGB inputs feed the Daudt triad. FC-EF concatenates A and B into one U-Net. FC-Siam-diff and FC-Siam-conc share one encoder and fuse with `|fA−fB|` or concat. All paths emit 1-channel logits and are scored at threshold 0.5 with change-class F1. Vector copy: [`docs/architecture.svg`](../docs/architecture.svg).
+
 ### 5.1 Reference baseline
 - Absolute RGB difference + validation-selected threshold
 
@@ -50,7 +54,7 @@ Detailed mapping: [`docs/RELATED_WORK.md`](../docs/RELATED_WORK.md).
 - Input: concat(A,B) → 6 channels; base width 16; 1-channel logits
 
 ### 5.3 Shared-encoder Siamese U-Net
-- Tied encoder on A and B; fuse with `|fA − fB|`; shared decoder
+- Tied encoder on A and B; fuse with `|fA − fB|` or concat; shared decoder
 
 ### 5.4 Losses and training
 - BCE vs BCE+Dice
