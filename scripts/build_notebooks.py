@@ -727,7 +727,7 @@ del model_preview, demo
 - `best_model.pt` / `last_model.pt` — checkpoints (gitignored)  
 - `summary.json` — F1, params, timing, batch-1 latency  
 
-Smoke/benchmark summaries are also copied under `reports/experiments/` for quick sharing.
+Smoke/benchmark summaries are saved under `results/experiments/`.
 """
         )
     )

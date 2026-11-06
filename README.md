@@ -120,11 +120,11 @@ Already reported from the teammate full run (validation only, seed 1511):
 | Best epoch | 24 of 30 |
 | Parameters | 483,169 |
 
-Artifacts: [`reports/unet_baseline/`](reports/unet_baseline/).
+Artifacts: [`results/unet_baseline/`](results/unet_baseline/).
 
 ## Repository layout
 
-The folder structure is intentionally small and is **correct for this project**. You do **not** need extra top-level folders for `data/`, `checkpoints/`, or a second component library — raw LEVIR imagery and `.pt` checkpoints stay outside Git (`results/` / local dataset path).
+The folder structure is intentionally small. Raw LEVIR imagery and `.pt` checkpoints stay outside Git.
 
 ```text
 .
@@ -135,10 +135,10 @@ The folder structure is intentionally small and is **correct for this project**.
 │   ├── Data255_ProjectProposal.pdf   # course proposal (PDF)
 │   └── RELATED_WORK.md               # paper → code mapping (Daudt / LEVIR / U-Net)
 ├── report/
-│   └── report.md                     # final written report draft (fill at end)
-├── reports/                          # numeric/plot artifacts from runs
+│   └── report.md                     # written report draft (fill at end)
+├── results/                          # F1 and other metric artifacts
 │   ├── unet_baseline/                # prior U-Net val metrics + gallery
-│   └── experiments/                  # smoke/benchmark summary copies
+│   └── experiments/                  # smoke/benchmark summaries
 ├── src/levir_cd/                     # models, data, losses, train, smoke
 ├── scripts/
 │   ├── run_smoke.py
@@ -147,17 +147,15 @@ The folder structure is intentionally small and is **correct for this project**.
 ├── notebooks/
 │   ├── 01_dataset_audit.ipynb        # data QA + manifest
 │   └── 02_experiments.ipynb          # U-Net / Siamese / ablations / smoke
-└── results/                          # local runs + checkpoints (gitignored)
 ```
 
 | Folder | Role |
 | --- | --- |
 | `docs/` | Proposal PDF and other static course docs |
-| `report/` | **Written** final report (`report.md`) — prose for submission |
-| `reports/` | **Machine** experiment outputs (CSV/JSON/PNG) shared with the team |
+| `report/` | Written report (`report.md`) |
+| `results/` | F1 scores, plots, and other run numbers |
 | `src/` | Library code used by notebooks and CLI |
 | `notebooks/` | Only two: audit + experiments |
-| `results/` | Local/scratch training outputs — not committed |
 
 Two notebooks only: **01 = audit**, **02 = all model experiments**.
 

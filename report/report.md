@@ -6,7 +6,7 @@
 
 Related files:
 - Proposal: [`docs/Data255_ProjectProposal.pdf`](../docs/Data255_ProjectProposal.pdf)
-- Metric artifacts (tables/plots from runs): [`reports/`](../reports/)
+- Metric artifacts (tables/plots from runs): [`results/`](../results/)
 - Code: [`src/levir_cd/`](../src/levir_cd/)
 
 ---
@@ -68,7 +68,7 @@ Detailed mapping: [`docs/RELATED_WORK.md`](../docs/RELATED_WORK.md).
 
 ## 7. Results
 
-> Fill from `reports/` and `results/experiments/*/summary.json` only.
+> Fill from `results/` only, including `results/experiments/*/summary.json`.
 
 ### 7.1 Validation tables
 - Absolute-difference baseline
@@ -119,4 +119,4 @@ How to reproduce:
 
 - Exact configs (`config.json` per run)
 - Software versions (`torch`, device: MPS/CUDA/CPU)
-- Extra plots from [`reports/unet_baseline/`](../reports/unet_baseline/) and later experiment folders
+- Extra plots from [`results/unet_baseline/`](../results/unet_baseline/) and later experiment folders

@@ -233,10 +233,10 @@ def run_experiment(cfg: ExperimentConfig, device: torch.device | None = None) ->
 
 
 def maybe_copy_summary_to_reports(summary: dict[str, Any], project_root: Path) -> Path | None:
-    """Copy smoke/benchmark summaries under reports/ for quick sharing."""
+    """Copy smoke/benchmark summaries under results/experiments for sharing."""
     if summary.get("run_mode") not in {"smoke", "benchmark"}:
         return None
-    out = project_root / "reports" / "experiments" / Path(summary["run_dir"]).name
+    out = project_root / "results" / "experiments" / Path(summary["run_dir"]).name
     out.mkdir(parents=True, exist_ok=True)
     src = Path(summary["run_dir"])
     for name in (

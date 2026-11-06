@@ -27,13 +27,12 @@ __pycache__/
 .vscode/
 .idea/
 
-# Generated experiments and machine-specific manifests
-/results/
+# Local audit manifests and scratch logs. Shared F1 artifacts live in results/.
+/results/levir_audit/
+/results/smoke_summary.json
 /checkpoints/
 /logs/
 /runs/
-
-# Keep summary artifacts under reports/ instead
 
 # Agent upload staging
 /uploads/
