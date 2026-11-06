@@ -112,7 +112,7 @@ Every learned model emits a single-channel change map, scored at threshold 0.5 w
 
 ![Architecture overview](../docs/architecture-overview.jpg)
 
-**Figure 1. Architecture overview.** Bi-temporal inputs feed FC-EF, FC-Siam-diff, or FC-Siam-conc, then a change map at threshold 0.5. Vector copy: [`docs/architecture.svg`](../docs/architecture.svg).
+**Figure 1. Architecture overview.** Bi-temporal inputs feed FC-EF, FC-Siam-diff, or FC-Siam-conc, then a change map at threshold 0.5.
 
 ### 4.2 Reference baseline
 
@@ -307,8 +307,7 @@ PYTHONPATH=src python scripts/run_plan.py --aggregate-only
 | --- | --- |
 | Proposal | `docs/Data255_ProjectProposal.pdf` |
 | Related work notes | `docs/RELATED_WORK.md` |
-| Architecture figure (main) | `docs/architecture-overview.jpg` |
-| Architecture figure (vector) | `docs/architecture.svg` |
+| Architecture overview figure | `docs/architecture-overview.jpg` |
 | Manifest | `results/levir_audit/split_manifest.csv` |
 | Stem overlap | `results/levir_audit/stem_overlap_report.json` |
 | Abs-diff | `results/absdiff_baseline/summary.json` |

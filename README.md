@@ -17,7 +17,7 @@ Compares a six-channel U-Net (FC-EF) with shared-encoder Siamese U-Nets on [LEVI
 | Prior FC-EF U-Net val baseline (F1 **0.732**, seed 1511) | Mean ± seed spread for Siamese |
 | Smoke tests + unit tests (14 passed) | Presentation / contribution statements |
 | Report outline filled with real numbers; blanks for missing runs | — |
-| Architecture figure (JPG main + SVG) | — |
+| Architecture overview figure (JPG) | — |
 
 Coding for the graded experiment plan is on `main`. **Do not invent Siamese / ablation / test scores.** Prefer university **CUDA GPU** for `run_plan.py --mode full` (Mac MPS is too slow for all 9 runs).
 
@@ -39,7 +39,7 @@ All learned paths output 1-channel logits → sigmoid → threshold **0.5** → 
 
 ![Architecture overview — FC-EF, FC-Siam-diff, FC-Siam-conc](docs/architecture-overview.jpg)
 
-*Figure: Architecture overview.* Vector copy: [`docs/architecture.svg`](docs/architecture.svg).
+*Figure: Architecture overview.*
 
 ```text
 LEVIR pair (A, B, mask)
