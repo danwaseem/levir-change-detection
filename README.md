@@ -194,7 +194,7 @@ Code and docs for the proposal are in the repo. The only measured LEVIR score so
 | Small-building and false-alarm summary | `failure_summary.json` |
 | Threshold sweep around 0.5 | Logged on real runs. Official threshold stays 0.5. |
 | Absolute-difference baseline | Coded. Runs in notebook 02 when LEVIR is present. |
-| Full matrix | `PYTHONPATH=src python scripts/run_plan.py --mode full` |
+| Full matrix | `PYTHONPATH=src python scripts/run_plan.py --mode full` (builds `results/levir_audit/split_manifest.csv` from `LEVIR_DATA_ROOT` or `../datasets/levir-cd` first) |
 | Comparison table | `PYTHONPATH=src python scripts/run_plan.py --aggregate-only` writes `results/comparison_table.md` |
 | U-Net validation F1 0.7319, seed 1511 | Done. [`results/unet_baseline/`](results/unet_baseline/) |
 | Three-seed Siamese comparison, ablations, locked test | Not run yet. Needs LEVIR on a Mac or GPU. |

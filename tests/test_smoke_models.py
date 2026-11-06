@@ -44,6 +44,32 @@ def test_absdiff_baseline():
     assert "threshold" in result
 
 
+def test_manifest_builder_pairs_a_b_label(tmp_path):
+    from PIL import Image
+
+    from levir_cd.audit import ensure_manifest
+
+    for split in ("train", "val"):
+        for part in ("A", "B", "label"):
+            folder = tmp_path / "levir-cd" / split / part
+            folder.mkdir(parents=True)
+            Image.new("RGB" if part != "label" else "L", (8, 8), color=0).save(folder / "sample.png")
+    project = tmp_path / "project"
+    project.mkdir()
+    os_env = __import__("os").environ
+    previous = os_env.get("LEVIR_DATA_ROOT")
+    os_env["LEVIR_DATA_ROOT"] = str(tmp_path / "levir-cd")
+    try:
+        path = ensure_manifest(project)
+    finally:
+        if previous is None:
+            os_env.pop("LEVIR_DATA_ROOT", None)
+        else:
+            os_env["LEVIR_DATA_ROOT"] = previous
+    text = path.read_text(encoding="utf-8")
+    assert "train" in text and "val" in text and "sample" in text
+
+
 def test_experiment_plan_covers_proposal():
     rows = experiment_plan("/tmp/levir-plan", mode="full")
     roles = [row["role"] for row in rows]

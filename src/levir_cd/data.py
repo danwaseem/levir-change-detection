@@ -121,6 +121,11 @@ class SyntheticChangeTiles(Dataset):
 
 
 def load_split_frames(manifest_path: Path) -> tuple[pd.DataFrame, pd.DataFrame]:
+    if not Path(manifest_path).is_file():
+        raise FileNotFoundError(
+            f"Missing {manifest_path}. Run notebook 01, or run "
+            "`PYTHONPATH=src python scripts/run_plan.py --mode full` after LEVIR-CD is on disk."
+        )
     manifest = pd.read_csv(manifest_path)
     required = {"split", "stem", "image_A", "image_B", "mask"}
     missing = required - set(manifest.columns)
