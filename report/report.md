@@ -56,6 +56,12 @@ Detailed mapping: [`docs/RELATED_WORK.md`](../docs/RELATED_WORK.md).
 - BCE vs BCE+Dice
 - Adam, lr, batch, early stopping, checkpoint by validation F1
 - Fixed decision threshold 0.5
+- Secondary: boundary F1 and small-change / false-alarm counts in `failure_summary.json`
+- Overall accuracy is logged and is not the selection metric
+
+### 5.5 What we do not claim
+- STANet attention and batch-balanced contrastive loss are out of scope
+- Published LEVIR test F1 numbers for FC-Siam (about 0.81–0.86) come from other training setups. They are not this team's score.
 
 ## 6. Experiments
 

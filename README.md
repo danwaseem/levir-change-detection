@@ -75,7 +75,8 @@ Width default: `base=16` → `16→32→64→128` bottleneck (smoke may use 8). 
 | Optimizer | Adam, lr `1e-3`, weight decay `1e-4` |
 | Losses | `bce` or `bce_dice` (ablation; imbalance-aware) |
 | Primary metric | change-class **F1** (Chen & Shi protocol) |
-| Secondary | IoU, precision, recall, **per-image** F1 summaries |
+| Secondary | IoU, precision, recall, boundary F1, per-image F1, small-building misses |
+| Diagnostic only | overall accuracy (not used to pick checkpoints) |
 | Selection | best **validation F1** checkpoint |
 | Decision threshold | fixed **0.5** (no test tuning) |
 | Code | `src/levir_cd/{models,data,losses,metrics,train,baseline}.py` |

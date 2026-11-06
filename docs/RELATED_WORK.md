@@ -39,6 +39,23 @@ Dataset page: https://justchenhao.github.io/LEVIR/
 6. Efficiency logging (params, train time, checkpoint size, batch-1 latency).
 7. Dataset-free smoke tests so coding can be verified without LEVIR on disk.
 
+## Gaps checked against the papers and later LEVIR benchmarks
+
+Sources: Daudt et al. 2018, Chen & Shi 2020, and later public LEVIR tables (Open-CD; "A Change Detection Reality Check"). Those later tables are **context only**. They use heavier schedules and often ImageNet backbones. They are not our scores.
+
+| Check | Status |
+| --- | --- |
+| FC-EF, FC-Siam-diff, FC-Siam-conc under one protocol | Implemented |
+| 256×256 non-overlapping tiles, official split kept | Implemented |
+| Change-class precision, recall, F1, IoU | Implemented; F1 selects the checkpoint |
+| Overall accuracy | Recorded as `val_accuracy` and **not** used for selection (Chen & Shi and the proposal warn it is misleading) |
+| Boundary errors | `val_boundary_f1` on a 3×3 boundary band |
+| Missed small buildings / empty-tile false alarms | `failure_summary.json` (small = ≤256 changed pixels on a tile) |
+| BCE vs BCE+Dice and paired flip/rot90 ablations | Switches exist; still need real LEVIR runs |
+| STANet attention, BCL loss, ImageNet/ResNet encoders | Left out on purpose. Adding them would change the controlled comparison. |
+
+Published LEVIR **test** F1 numbers other groups report for the Daudt models are about 0.81–0.86 under their own training budgets. Our feasibility number is validation F1 **0.7319** for the lightweight FC-EF, seed 1511. Do not present the published test numbers as this team's result.
+
 ## Citation stubs (for the final report)
 
 ```bibtex
@@ -46,14 +63,18 @@ Dataset page: https://justchenhao.github.io/LEVIR/
   title={U-Net: Convolutional Networks for Biomedical Image Segmentation},
   author={Ronneberger, Olaf and Fischer, Philipp and Brox, Thomas},
   booktitle={MICCAI},
-  year={2015}
+  pages={234--241},
+  year={2015},
+  doi={10.1007/978-3-319-24574-4_28}
 }
 
 @inproceedings{daudt2018fully,
   title={Fully Convolutional Siamese Networks for Change Detection},
   author={Caye Daudt, Rodrigo and Le Saux, Bertrand and Boulch, Alexandre},
-  booktitle={IEEE ICIP},
-  year={2018}
+  booktitle={IEEE International Conference on Image Processing (ICIP)},
+  pages={4063--4067},
+  year={2018},
+  doi={10.1109/ICIP.2018.8451652}
 }
 
 @article{chen2020stanet,
@@ -63,6 +84,7 @@ Dataset page: https://justchenhao.github.io/LEVIR/
   volume={12},
   number={10},
   pages={1662},
-  year={2020}
+  year={2020},
+  doi={10.3390/rs12101662}
 }
 ```

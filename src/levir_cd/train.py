@@ -19,7 +19,7 @@ from .data import (
 from .device import describe_runtime, pick_device, set_seed, sync_device
 from .losses import segmentation_loss
 from .metrics import evaluate_loader
-from .metrics import per_image_scores, summarize_per_image
+from .metrics import failure_summary, per_image_scores, summarize_per_image
 from .models import build_model, count_parameters, paper_name
 
 
@@ -195,8 +195,13 @@ def run_experiment(cfg: ExperimentConfig, device: torch.device | None = None) ->
     per_image_path = run_dir / "per_image_val_metrics.csv"
     per_image.to_csv(per_image_path, index=False)
     per_image_summary = summarize_per_image(per_image)
+    failures = failure_summary(per_image)
     (run_dir / "per_image_val_summary.json").write_text(
         json.dumps(per_image_summary, indent=2),
+        encoding="utf-8",
+    )
+    (run_dir / "failure_summary.json").write_text(
+        json.dumps(failures, indent=2),
         encoding="utf-8",
     )
 
@@ -225,6 +230,7 @@ def run_experiment(cfg: ExperimentConfig, device: torch.device | None = None) ->
         "synthetic": meta["synthetic"],
         "checkpoint_bytes": (run_dir / "best_model.pt").stat().st_size if (run_dir / "best_model.pt").exists() else None,
         "per_image_val_summary": per_image_summary,
+        "failure_summary": failures,
         "run_dir": str(run_dir),
     }
     (run_dir / "summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
@@ -245,6 +251,7 @@ def maybe_copy_summary_to_reports(summary: dict[str, Any], project_root: Path) -
         "config.json",
         "per_image_val_summary.json",
         "per_image_val_metrics.csv",
+        "failure_summary.json",
     ):
         p = src / name
         if p.exists():

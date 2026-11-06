@@ -12,7 +12,7 @@ from levir_cd.baseline import absolute_difference_baseline
 from levir_cd.config import ExperimentConfig
 from levir_cd.data import SyntheticChangeTiles, make_loaders
 from levir_cd.losses import segmentation_loss
-from levir_cd.metrics import per_image_scores, summarize_per_image
+from levir_cd.metrics import failure_summary, per_image_scores, scores_from_counts, summarize_per_image
 from levir_cd.models import build_model, count_parameters, paper_name
 from levir_cd.train import run_experiment
 
@@ -43,6 +43,12 @@ def test_absdiff_baseline():
     assert "threshold" in result
 
 
+def test_scores_include_accuracy_without_using_it_as_f1():
+    scores = scores_from_counts(tp=10, fp=10, fn=0, tn=80)
+    assert scores["f1"] == 2 * 10 / (20 + 10)
+    assert abs(scores["accuracy"] - 0.9) < 1e-9
+
+
 def test_per_image_metrics():
     ds = SyntheticChangeTiles(n_tiles=4, size=32, seed=1)
     loader, _ = make_loaders(ds, ds, batch_size=2)
@@ -51,6 +57,9 @@ def test_per_image_metrics():
     assert len(frame) == 4
     summary = summarize_per_image(frame)
     assert summary["n"] == 4
+    failures = failure_summary(frame)
+    assert failures["n"] == 4
+    assert "n_missed_small" in failures
 
 
 def test_smoke_train_unet(tmp_path):
