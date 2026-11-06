@@ -21,7 +21,7 @@ We **do not** reproduce STANet attention (explicitly out of proposal scope).
 
 ![LEVIR-CD architecture: FC-EF, FC-Siam-diff, and FC-Siam-conc](docs/architecture-overview.jpg)
 
-Vector version for slides/report: [`docs/architecture.svg`](docs/architecture.svg).
+Use the JPG above in the report/README. Optional vector copy: [`docs/architecture.svg`](docs/architecture.svg) (open locally if GitHub preview fails).
 
 ### End-to-end pipeline
 

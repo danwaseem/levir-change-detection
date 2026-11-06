@@ -1,46 +1,54 @@
 # Deep Learning for Building Change Detection in Multi-Temporal Satellite Imagery
 
-**Course:** DATA 255 Deep Learning Vision, Fall 2026  
-**Team:** BuildSafe Vision — Sneha Singh, Ritika Mukesh Neema, Danish Waseem, Rajesh Paruchuri  
-**Repository:** https://github.com/danwaseem/levir-change-detection  
-**Report status:** Complete draft with verified citations. Filled cells use executed runs only. Empty cells (`—`) wait for the GPU `run_plan.py` matrix and the locked test. Do not invent those numbers.
+DATA 255 Deep Learning Vision, Fall 2026  
+Team **BuildSafe Vision**: Sneha Singh, Ritika Mukesh Neema, Danish Waseem, Rajesh Paruchuri  
+Repo: https://github.com/danwaseem/levir-change-detection
+
+**Note on results.** Numbers in this draft come only from runs we already finished. Blank cells (`—`) are for the GPU experiment matrix and the locked test. We are not filling those in with made-up scores.
 
 ---
 
 ## Abstract
 
-Building change detection asks whether structures were constructed or removed between two satellite acquisitions of the same place. Simple image subtraction fails under illumination, seasonal, and acquisition shifts. This project studies binary building-change segmentation on LEVIR-CD under a matched protocol: non-overlapping 256×256 tiles, official train/val/test isolation, change-class F1 as the selection metric, and a fixed decision threshold of 0.5. We implement the Daudt triad—FC-EF (six-channel U-Net), FC-Siam-diff, and FC-Siam-conc—plus BCE versus BCE+Dice and paired geometric-augmentation ablations. A non-learned absolute RGB-difference baseline provides a reference floor.
+This project looks at building change detection: given two satellite images of the same location at different times, can a model mark where buildings were added or removed? Plain image subtraction does not work well because lighting, seasons, and vegetation also change. We use the LEVIR-CD dataset and treat the task as binary segmentation.
 
-**Measured so far (validation only):** absolute-difference F1 = **0.129** (threshold 0.4 selected on val); lightweight FC-EF U-Net F1 = **0.732** (seed 1511, 30 epochs, 483,169 parameters). Stem filenames do not overlap across splits. Siamese, loss/augmentation ablations, multi-seed means, and the locked test set remain **blank** until the GPU matrix finishes. We do not claim STANet attention results or published Open-CD / Reality-Check F1 numbers as this team’s scores.
+We compare three networks from Daudt et al. (2018): FC-EF (six-channel U-Net), FC-Siam-diff, and FC-Siam-conc. We also compare BCE vs BCE+Dice and training with vs without paired flips/rotations. For a simple reference, we run absolute RGB difference with a validation-chosen threshold.
+
+What we have measured so far on **validation**:
+
+- Absolute difference: F1 = **0.129** (threshold 0.4)
+- Lightweight FC-EF U-Net: F1 = **0.732** (seed 1511, 30 epochs, 483,169 parameters)
+
+Siamese results, ablations, and the test set are still empty. We are not claiming STANet numbers or published Open-CD / Reality Check scores as ours.
 
 ---
 
 ## 1. Introduction and research question
 
-Urban monitoring needs maps of *building* appearance and disappearance, not every pixel that looks different. Vegetation, shadows, and sensor conditions create large “visual change” without construction or demolition. A supervised change-detection model that outputs a dense binary mask is therefore more appropriate than global image differencing.
+The practical need is to find building construction and demolition, not every pixel that looks different between two dates. Shadows, plants, and acquisition conditions create a lot of visual change that is not a building change. So we train a model that outputs a binary change mask.
 
-**Research question.** Under a matched training and evaluation protocol, does a shared-encoder Siamese U-Net improve building-change F1 over a conventional six-channel U-Net, and how do loss design and paired-image augmentation affect performance and computational cost?
+**Research question.** With the same data splits, tiles, and metrics, does a shared-encoder Siamese U-Net get better building-change F1 than a normal six-channel U-Net? How much do the loss choice and paired augmentation matter, and what is the compute cost?
 
 **Hypotheses.**
 
-- **H1.** Siamese feature extraction (FC-Siam-diff) improves change-class F1 and/or IoU relative to FC-EF by comparing before/after representations explicitly, possibly at higher inference latency.
-- **H2.** BCE+Dice improves changed-pixel detection relative to BCE alone because changed pixels are rare on LEVIR-CD.
+- **H1.** FC-Siam-diff should help F1/IoU over FC-EF because the two dates are compared in feature space, though inference may be slower.
+- **H2.** BCE+Dice should help more than BCE alone when changed pixels are rare.
 
-**Success** means producing credible, repeatable evidence for or against these claims—not promising a target score. This is an academic research prototype, not an operational monitoring or damage-assessment system.
+We treat success as answering these questions with fair experiments, even if some results are negative or mixed. This is a class research project, not a deployed monitoring product.
 
 ---
 
 ## 2. Related work
 
-We map three primary papers to concrete code choices. Full notes: [`docs/RELATED_WORK.md`](../docs/RELATED_WORK.md).
+We mainly follow three papers. Longer notes are in [`docs/RELATED_WORK.md`](../docs/RELATED_WORK.md).
 
-1. **Ronneberger et al. (2015)** introduced U-Net’s encoder–decoder with skip connections for dense prediction [1]. Our FC-EF path is a lightweight U-Net on concatenated bi-temporal RGB (`src/levir_cd/models.py`).
+1. Ronneberger et al. (2015) proposed U-Net for dense prediction with skip connections [1]. Our FC-EF model is a small U-Net on stacked RGB pairs.
 
-2. **Daudt et al. (2018)** proposed three fully convolutional change-detection networks: **FC-EF** (early fusion), **FC-Siam-diff** (shared encoder, absolute-difference skips), and **FC-Siam-conc** (shared encoder, concatenated skips) [2]. We implement that triad under one dataloader and metric API. Principal comparison: FC-EF vs FC-Siam-diff; FC-Siam-conc completes the triad.
+2. Daudt et al. (2018) compared FC-EF, FC-Siam-diff, and FC-Siam-conc for change detection [2]. We coded all three in `models.py` under one training loop. The main comparison in our proposal is FC-EF vs FC-Siam-diff. FC-Siam-conc is included so the full triad is covered.
 
-3. **Chen and Shi (2020)** released LEVIR-CD and STANet, and emphasized change-class precision / recall / F1 under class imbalance [3]. We use LEVIR-CD and their metric spirit. We **do not** reproduce spatial–temporal attention (BAM/PAM) or batch-balanced contrastive loss; the proposal places STANet attention out of scope.
+3. Chen and Shi (2020) released LEVIR-CD and STANet, and used change-class precision, recall, and F1 [3]. We use their dataset and that metric style. We do **not** rebuild STANet attention or their contrastive loss; that was out of scope in the proposal.
 
-Later public tables (e.g. Open-CD; “A Change Detection Reality Check”) report FC-EF / FC-Siam test F1 roughly in the **0.81–0.86** range under heavier schedules and different widths [4,5]. Those numbers are **context only**. Our feasibility U-Net is narrower (`base=16`, ~0.48M parameters) and our locked test has not been run.
+Other benchmarks report FC-style models around test F1 0.81–0.86 under longer schedules and wider networks [4,5]. Those papers are useful context. They are not our scores. Our U-Net is narrow (`base=16`).
 
 ---
 
@@ -50,180 +58,154 @@ Later public tables (e.g. Open-CD; “A Change Detection Reality Check”) repor
 
 | Item | Value |
 | --- | --- |
-| Name | LEVIR-CD [3] |
-| Source | https://justchenhao.github.io/LEVIR/ |
-| Content | 637 bi-temporal RGB pairs, 1024×1024, ~0.5 m/px, Texas Google Earth scenes |
-| Labels | Binary building construction / decline masks (~31k change instances reported by authors) |
-| License / use | Academic use; respect Google Earth terms |
-| Local access | Verified; archives under `../datasets/levir-cd` with MD5-checked download support in `audit.py` |
+| Dataset | LEVIR-CD [3] |
+| Link | https://justchenhao.github.io/LEVIR/ |
+| Size | 637 RGB pairs, each 1024×1024, about 0.5 m/pixel, Texas scenes |
+| Labels | Binary building change masks |
+| Use | Academic only; follow Google Earth terms |
+| Our copy | Downloaded and checked locally (`../datasets/levir-cd`) |
 
-Official split → non-overlapping 256×256 tiles (16 tiles per pair):
+We keep the official split and cut each image into 16 non-overlapping 256×256 tiles:
 
 | Split | Pairs | Tiles |
 | --- | ---: | ---: |
 | Train | 445 | 7,120 |
-| Validation | 64 | 1,024 |
+| Val | 64 | 1,024 |
 | Test | 128 | 2,048 |
-| Total | 637 | 10,192 |
 
-Masks are binarized at intensity ≥ 128. Training uses train/val only. Test stays isolated until a single locked evaluation after freezing model, loss, augmentation, and threshold.
+Masks are thresholded at intensity ≥ 128. We only use train/val while picking models. Test is for one final run after we freeze settings.
 
-### 3.2 Leakage and audit
+### 3.2 Split audit
 
-Filename stem overlap across splits (`results/levir_audit/stem_overlap_report.json`):
+We checked whether any filename stems appear in more than one split (`stem_overlap_report.json`):
 
-| Comparison | Shared stems |
+| Pair of splits | Overlap count |
 | --- | ---: |
-| train vs val | **0** |
-| train vs test | **0** |
-| val vs test | **0** |
+| train / val | 0 |
+| train / test | 0 |
+| val / test | 0 |
 
-Zero stem overlap does **not** prove absence of nearby geographic scenes; residual spatial leakage remains a limitation.
+No shared stems is good, but it does not prove that nearby geographic areas never leak across splits. That is still a limitation.
 
 ### 3.3 Metrics
 
-| Role | Metric |
+| Use | Metric |
 | --- | --- |
-| Primary | Change-class **F1** (Dice); selects checkpoints |
-| Secondary | Change-class IoU, precision, recall; boundary F1; per-image summaries; small-building / empty-tile failure counts |
-| Diagnostic only | Overall accuracy (not used for selection) |
-| Decision threshold | Fixed **0.5** for learned models (no test tuning) |
+| Main | Change-class F1 (used to pick checkpoints) |
+| Extra | IoU, precision, recall, boundary F1, per-image / failure summaries |
+| Not for selection | Overall accuracy |
+| Threshold | 0.5 for learned models (not tuned on test) |
 
 ---
 
 ## 4. Methods
 
-![LEVIR-CD architecture: FC-EF, FC-Siam-diff, and FC-Siam-conc](../docs/architecture-overview.jpg)
+![Architecture overview](../docs/architecture-overview.jpg)
 
-**Figure 1.** Bi-temporal RGB inputs feed the Daudt triad. FC-EF concatenates A and B into one U-Net. FC-Siam-diff and FC-Siam-conc share one encoder and fuse with `|fA−fB|` or channel concatenation. All paths emit 1-channel logits scored at threshold 0.5 with change-class F1. Vector copy: [`docs/architecture.svg`](../docs/architecture.svg).
+**Figure 1.** Inputs A and B go into FC-EF, FC-Siam-diff, or FC-Siam-conc. FC-EF stacks the two RGB images. The Siamese models share an encoder and fuse with absolute difference or concatenation. Output is a one-channel change map. SVG copy: [`docs/architecture.svg`](../docs/architecture.svg). (If GitHub preview fails on the SVG, open the JPG.)
 
 ### 4.1 Reference baseline
 
-Absolute mean RGB difference `|A−B|` with a threshold chosen by validation F1 sweep (`scripts/run_baseline.py`). Non-learned control for the “strong DL baseline must beat something simple” requirement.
+Mean absolute RGB difference `|A − B|`. We pick the threshold on validation by F1. Code: `scripts/run_baseline.py`.
 
-### 4.2 Strong baseline — FC-EF
+### 4.2 Strong baseline (FC-EF)
 
-Six-channel U-Net: `concat(A,B)`. Width `base=16` → channels 16→32→64→128. Output: 1-channel logits. About **483,169** trainable parameters.
+Concatenate A and B to 6 channels and run a U-Net with base width 16 (16→32→64→128). About 483k parameters.
 
-### 4.3 Team investigation — Siamese U-Nets
+### 4.3 Team models (Siamese)
 
-Tied encoder on A and B; fuse skips/bottleneck with absolute difference (`siamese_diff`) or concatenation (`siamese_conc`); shared decoder. Same tile interface (6-channel tensor split inside the network).
+Same encoder weights for A and B. FC-Siam-diff uses `|fA − fB|`. FC-Siam-conc concatenates features. Shared decoder predicts the change map.
 
-### 4.4 Losses and optimization
+### 4.4 Training details
 
-| Setting | Value |
+| Setting | Choice |
 | --- | --- |
-| Losses | `bce` or `bce_dice` (= BCE + soft Dice) |
-| Optimizer | Adam, lr `1e-3`, weight decay `1e-4` |
+| Loss | BCE or BCE+Dice |
+| Optimizer | Adam, lr 1e-3, weight decay 1e-4 |
 | Batch size | 4 |
-| Full epochs | 30, early stop patience 8 after min 12 epochs |
-| Augmentation | Synced horizontal/vertical flips and 90° rotations on (A, B, mask) |
-| Checkpoint | Best **validation F1** |
-| Seeds (main) | 1511, 42, 123 |
-
-### 4.5 Out of scope
-
-STANet attention, BCL loss, ImageNet/ResNet encoders, and claims of operational deployment.
+| Epochs | up to 30, early stopping |
+| Augmentation | same flip / rot90 on A, B, and mask |
+| Checkpoint | best validation F1 |
+| Main seeds | 1511, 42, 123 |
 
 ---
 
 ## 5. Experimental setup
 
-### 5.1 Experiment matrix
+Planned matrix (`scripts/run_plan.py --mode full`):
 
 | Role | Model | Loss | Aug | Seeds |
 | --- | --- | --- | --- | --- |
-| Main | FC-EF (`unet`) | BCE+Dice | on | 1511, 42, 123 |
+| Main | FC-EF | BCE+Dice | on | 1511, 42, 123 |
 | Main | FC-Siam-diff | BCE+Dice | on | 1511, 42, 123 |
 | Triad | FC-Siam-conc | BCE+Dice | on | 1511 |
-| Loss ablation | FC-EF | BCE only | on | 1511 |
-| Aug ablation | FC-EF | BCE+Dice | **off** | 1511 |
-| Reference | Abs-diff | — | — | val threshold sweep |
+| Loss ablation | FC-EF | BCE | on | 1511 |
+| Aug ablation | FC-EF | BCE+Dice | off | 1511 |
 
-Entry point: `PYTHONPATH=src python scripts/run_plan.py --mode full` then `--aggregate-only`.
-
-### 5.2 Hardware / software (reported runs)
-
-| Run | Device | Notes |
-| --- | --- | --- |
-| Prior FC-EF val baseline | Team machine (historical full 30-epoch run) | ~162 min; `results/unet_baseline/` |
-| Abs-diff baseline | Mac (Nov 2026) | CPU/numpy over val tiles; ~1.2 min |
-| Full 9-run matrix | **Planned: university CUDA GPU** | Mac MPS too slow for full matrix |
-
-Software stack: Python 3.10+, PyTorch, NumPy, Pandas, Pillow (`requirements.txt`).
+We started a full run on a Mac (MPS) but stopped it because one epoch was already ~16 minutes. The full nine runs will be done on a university GPU. Smoke tests and unit tests pass on the Mac.
 
 ---
 
 ## 6. Results
 
-### 6.1 Numbers from executed runs
+### 6.1 Finished runs
 
-| Method | Split | Seed | F1 | IoU | Precision | Recall | Params | Source |
-| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
-| Abs RGB difference | val | — | **0.1286** | 0.0687 | 0.0965 | 0.1927 | 0 | `results/absdiff_baseline/` (thr=0.4) |
-| FC-EF U-Net | val | 1511 | **0.7319** | 0.5772 | 0.6912 | 0.7778 | 483,169 | `results/unet_baseline/` (best epoch 24/30) |
+| Method | Split | Seed | F1 | IoU | P | R | Params |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Abs RGB difference | val | — | 0.129 | 0.069 | 0.096 | 0.193 | 0 |
+| FC-EF U-Net | val | 1511 | 0.732 | 0.577 | 0.691 | 0.778 | 483,169 |
 
-FC-EF clearly beats the non-learned reference on validation (+0.60 F1). Test set was **not** used for these numbers.
+So the U-Net is much better than raw differencing on validation. Test was not used here.
 
-Learning curves and a validation gallery: [`results/unet_baseline/learning_curves.png`](../results/unet_baseline/learning_curves.png), [`results/unet_baseline/validation_gallery.png`](../results/unet_baseline/validation_gallery.png).
+Plots from the U-Net run: [`learning_curves.png`](../results/unet_baseline/learning_curves.png), [`validation_gallery.png`](../results/unet_baseline/validation_gallery.png).
 
-### 6.2 Main comparison table (fill after GPU matrix)
+### 6.2 Main comparison (to fill after GPU)
 
-| Model | Seed | Val F1 | Val IoU | Val P | Val R | Boundary F1 | Infer (s) | Synthetic |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
-| FC-EF | 1511 | 0.7319 | 0.5772 | 0.6912 | 0.7778 | — | — | no |
-| FC-EF | 42 | — | — | — | — | — | — | — |
-| FC-EF | 123 | — | — | — | — | — | — | — |
-| FC-Siam-diff | 1511 | — | — | — | — | — | — | — |
-| FC-Siam-diff | 42 | — | — | — | — | — | — | — |
-| FC-Siam-diff | 123 | — | — | — | — | — | — | — |
-| FC-Siam-conc | 1511 | — | — | — | — | — | — | — |
+| Model | Seed | Val F1 | IoU | P | R | Boundary F1 | Latency |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| FC-EF | 1511 | 0.732 | 0.577 | 0.691 | 0.778 | — | — |
+| FC-EF | 42 | — | — | — | — | — | — |
+| FC-EF | 123 | — | — | — | — | — | — |
+| FC-Siam-diff | 1511 | — | — | — | — | — | — |
+| FC-Siam-diff | 42 | — | — | — | — | — | — |
+| FC-Siam-diff | 123 | — | — | — | — | — | — |
+| FC-Siam-conc | 1511 | — | — | — | — | — | — |
 
-**Mean ± spread (main comparison, after three seeds):**
+Mean over seeds (after runs finish):
 
-| Model | Mean Val F1 | Spread (max−min or ±std) |
+| Model | Mean Val F1 | Spread |
 | --- | ---: | ---: |
 | FC-EF | — | — |
 | FC-Siam-diff | — | — |
 
-### 6.3 Ablation table (fill after GPU matrix)
+### 6.3 Ablations (to fill)
 
-| Setting | Model | Seed | Val F1 | Val IoU | Notes |
-| --- | --- | ---: | ---: | ---: | --- |
-| BCE+Dice, aug on (reference row) | FC-EF | 1511 | 0.7319 | 0.5772 | from `unet_baseline` |
-| BCE only, aug on | FC-EF | 1511 | — | — | H2 |
-| BCE+Dice, aug **off** | FC-EF | 1511 | — | — | aug ablation |
+| Setting | Val F1 | IoU |
+| --- | ---: | ---: |
+| FC-EF, BCE+Dice, aug on, seed 1511 | 0.732 | 0.577 |
+| FC-EF, BCE only, aug on, seed 1511 | — | — |
+| FC-EF, BCE+Dice, aug off, seed 1511 | — | — |
 
-### 6.4 Efficiency table (fill after GPU matrix)
+### 6.4 Compute (to fill)
 
-| Model | Params | Train time | Checkpoint size | Batch-1 latency | Device |
-| --- | ---: | ---: | ---: | ---: | --- |
-| FC-EF | 483,169 | ~162 min (30 ep, historical) | — | — | prior run |
-| FC-Siam-diff | — | — | — | — | — |
-| FC-Siam-conc | — | — | — | — | — |
+| Model | Params | Train time | Checkpoint size | Batch-1 latency |
+| --- | ---: | ---: | ---: | ---: |
+| FC-EF | 483,169 | ~162 min (old 30-epoch run) | — | — |
+| FC-Siam-diff | — | — | — | — |
+| FC-Siam-conc | — | — | — | — |
 
 ### 6.5 Qualitative examples
 
-| Example type | Split | Status |
-| --- | --- | --- |
-| Clear hit (building appear/disappear) | val | See validation gallery; add captions after matrix |
-| Missed small building | val | `failure_summary.json` after each full run |
-| False positive on unchanged tile | val | same |
-| Boundary error | val | boundary F1 column above |
+We will caption validation examples for hits, missed small buildings, false alarms, and messy boundaries after the matrix writes `failure_summary.json` for each run. The current U-Net gallery is a start.
 
-**Caption rule:** always state split = validation, or test only after lock.
+### 6.6 Locked test (once, later)
 
-### 6.6 Locked test evaluation (once)
-
-| Field | Value |
+| Item | Value |
 | --- | --- |
 | Freeze date | — |
-| Chosen model / loss / aug / seed | — |
-| Checkpoint path | — |
-| Test F1 / IoU / P / R | — / — / — / — |
-| Retuned after seeing test? | **No** (required) |
-
-Command (after freeze only):
+| Chosen setup | — |
+| Test F1 / IoU / P / R | — |
+| Changed model after seeing test? | No |
 
 ```bash
 PYTHONPATH=src python scripts/run_locked_test.py \
@@ -235,41 +217,37 @@ PYTHONPATH=src python scripts/run_locked_test.py \
 
 ## 7. Discussion
 
-**H1 (Siamese vs FC-EF).** Not yet answerable with this team’s multi-seed Siamese numbers (`—` in §6.2). The implemented comparison is fair under one protocol; evidence will be the mean±spread F1 gap and latency trade-off after the GPU matrix.
+Right now we can only say that a trained FC-EF clearly beats absolute difference on validation (0.73 vs 0.13 F1). That matches the idea that building change needs more than pixel differencing.
 
-**H2 (BCE+Dice vs BCE).** Not yet answerable (`—` in §6.3). The loss ablation is coded and scheduled.
+H1 and H2 are still open until Siamese and ablation runs finish on GPU. We will report mean F1 across seeds and not over-claim if Siamese does not win.
 
-**What we can say now.** A lightweight FC-EF already outperforms absolute RGB difference by a large margin on validation (0.73 vs 0.13 F1), confirming that a learned change detector is necessary for this task under illumination/nuisance variation. Published ~0.81–0.86 test F1 figures use different widths and budgets; they are not our result.
-
-**Limitations.** (1) Incomplete principal comparison until GPU runs finish. (2) Lightweight `base=16` vs wider public reimplementations. (3) Stem-overlap audit ≠ full geospatial leakage proof. (4) Texas-only LEVIR geography. (5) Abs-diff `accuracy` field in the JSON omits true negatives in the helper; change-class F1/IoU/P/R are the reported baseline metrics.
-
-**Responsible use.** LEVIR-CD is for academic research. We do not claim safety-critical, legal, or surveillance deployment readiness.
+Limits of this draft: missing matrix numbers, smaller network than many public LEVIR tables, stem check is not a full geo audit, and LEVIR is Texas-only. We also do not claim this system is ready for real monitoring use.
 
 ---
 
 ## 8. Conclusion
 
-We built a reproducible LEVIR-CD pipeline implementing the Daudt FC-EF / FC-Siam-diff / FC-Siam-conc triad, reference absolute-difference baseline, change-class F1 selection, and the proposed ablations. Executed evidence so far shows FC-EF validation F1 **0.7319** (seed 1511) and abs-diff F1 **0.129**, with no stem overlap across splits. The research question—whether Siamese fusion and loss/augmentation choices improve over FC-EF under a matched protocol—requires the remaining GPU matrix and one locked test. Claims will stay proportional to those completed runs.
+We set up a full LEVIR-CD training and evaluation pipeline with the Daudt triad, a simple difference baseline, and the planned ablations. So far, validation shows FC-EF F1 0.732 and abs-diff F1 0.129, with no filename stem overlap across splits. The main research comparison still needs the GPU runs and one locked test. We will keep claims matched to whatever those runs show.
 
 ---
 
-## 9. Contributions and reproducibility
+## 9. Contributions and how to reproduce
 
-| Member | Primary technical ownership |
+| Member | Main work |
 | --- | --- |
-| Sneha Singh | Dataset integrity, geospatial/stem overlap checks, absolute-difference baseline |
-| Ritika Mukesh Neema | U-Net / FC-EF pipeline, paired augmentation, seed reproducibility |
-| Danish Waseem | Siamese U-Net, loss comparison, error analysis |
-| Rajesh Paruchuri | Metrics, efficiency benchmarks, statistical summaries, reproduction check |
+| Sneha | Dataset checks, stem overlap, abs-diff baseline |
+| Ritika | U-Net / FC-EF path, paired aug, seeds |
+| Danish | Siamese models, loss comparison, errors |
+| Rajesh | Metrics, timing, summaries, reproduction |
 
-**Reproduce code (no LEVIR required):**
+Quick code check (no dataset):
 
 ```bash
 PYTHONPATH=src python scripts/run_smoke.py
 PYTHONPATH=src python -m pytest -q
 ```
 
-**Reproduce full experiments (LEVIR + GPU recommended):**
+Full runs (needs LEVIR; GPU preferred):
 
 ```bash
 export LEVIR_DATA_ROOT=/path/to/levir-cd
@@ -278,52 +256,39 @@ PYTHONPATH=src python scripts/run_baseline.py
 PYTHONPATH=src python scripts/run_plan.py --aggregate-only
 ```
 
-Cross-member reproduction: a teammate who did not author the component should regenerate one evaluation using the README and a saved `summary.json` (full retrain optional).
-
 ---
 
 ## 10. Assistance disclosure
 
-- **Proposal stage:** OpenAI ChatGPT used for formatting and light structural organization; technical design and claims were team-authored and checked against sources.
-- **Implementation / this report draft:** Cursor AI assisted with coding, citation checks, and drafting. All experimental numbers in filled cells come from executed artifacts under `results/`. Empty cells were left blank on purpose.
-- No fabricated Siamese, ablation, or test scores.
+ChatGPT was used in the proposal mainly for formatting. Cursor helped with coding and with drafting this report. We checked references against the papers and only put measured numbers in the filled cells. Empty cells are intentional.
 
 ---
 
 ## References
 
-[1] O. Ronneberger, P. Fischer, and T. Brox, “U-Net: Convolutional Networks for Biomedical Image Segmentation,” in *Medical Image Computing and Computer-Assisted Intervention (MICCAI)*, LNCS 9351, Springer, 2015, pp. 234–241. doi: [10.1007/978-3-319-24574-4_28](https://doi.org/10.1007/978-3-319-24574-4_28).
+[1] O. Ronneberger, P. Fischer, and T. Brox, “U-Net: Convolutional Networks for Biomedical Image Segmentation,” MICCAI 2015, LNCS 9351, pp. 234–241. doi: 10.1007/978-3-319-24574-4_28.
 
-[2] R. Caye Daudt, B. Le Saux, and A. Boulch, “Fully Convolutional Siamese Networks for Change Detection,” in *2018 25th IEEE International Conference on Image Processing (ICIP)*, 2018, pp. 4063–4067. doi: [10.1109/ICIP.2018.8451652](https://doi.org/10.1109/ICIP.2018.8451652).
+[2] R. Caye Daudt, B. Le Saux, and A. Boulch, “Fully Convolutional Siamese Networks for Change Detection,” IEEE ICIP 2018, pp. 4063–4067. doi: 10.1109/ICIP.2018.8451652.
 
-[3] H. Chen and Z. Shi, “A Spatial-Temporal Attention-Based Method and a New Dataset for Remote Sensing Image Change Detection,” *Remote Sensing*, vol. 12, no. 10, art. 1662, 2020. doi: [10.3390/rs12101662](https://doi.org/10.3390/rs12101662). Dataset: https://justchenhao.github.io/LEVIR/.
+[3] H. Chen and Z. Shi, “A Spatial-Temporal Attention-Based Method and a New Dataset for Remote Sensing Image Change Detection,” *Remote Sensing*, 12(10), 1662, 2020. doi: 10.3390/rs12101662. https://justchenhao.github.io/LEVIR/
 
-[4] Open-CD project / toolbox documentation and LEVIR-CD benchmark tables (context only; not this team’s scores). See also https://github.com/likyoo/open-cd.
+[4] Open-CD LEVIR-CD benchmark tables (context only). https://github.com/likyoo/open-cd
 
-[5] I. Corley, C. Robinson, and A. Ortiz, “A Change Detection Reality Check,” arXiv:2402.06994, 2024. https://arxiv.org/abs/2402.06994 (context only).
+[5] I. Corley et al., “A Change Detection Reality Check,” arXiv:2402.06994, 2024 (context only).
 
 ---
 
 ## Appendix
 
-### A. Artifact paths
-
-| Artifact | Path |
+| File | Path |
 | --- | --- |
-| Proposal PDF | `docs/Data255_ProjectProposal.pdf` |
-| Related-work map | `docs/RELATED_WORK.md` |
-| Architecture figure | `docs/architecture-overview.jpg`, `docs/architecture.svg` |
-| Split manifest | `results/levir_audit/split_manifest.csv` |
+| Proposal | `docs/Data255_ProjectProposal.pdf` |
+| Related work notes | `docs/RELATED_WORK.md` |
+| Figure (JPG) | `docs/architecture-overview.jpg` |
+| Figure (SVG) | `docs/architecture.svg` |
+| Manifest | `results/levir_audit/split_manifest.csv` |
 | Stem overlap | `results/levir_audit/stem_overlap_report.json` |
-| Abs-diff summary | `results/absdiff_baseline/summary.json` |
-| FC-EF baseline | `results/unet_baseline/` |
-| Future matrix | `results/experiments/`, `results/comparison_table.md` |
-| Locked test | `results/locked_test/` (after freeze) |
+| Abs-diff | `results/absdiff_baseline/summary.json` |
+| U-Net baseline | `results/unet_baseline/` |
 
-### B. Config snapshot (FC-EF historical baseline)
-
-From `results/unet_baseline/summary.json`: 30 epochs, best epoch 24, threshold 0.5, 445/64 train/val pairs, 7120/1024 tiles, F1 selection only, `test_set_touched: false`.
-
-### C. How to paste GPU outputs
-
-After `run_plan.py --aggregate-only`, replace the `—` cells in §6.2–§6.4 with values from `results/comparison_table.md` and each run’s `summary.json` / `failure_summary.json`. Then run locked test once and fill §6.6.
+After GPU training, copy values from `results/comparison_table.md` into the blank tables above.
