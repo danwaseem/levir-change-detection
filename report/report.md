@@ -227,19 +227,14 @@ Limits of this draft: missing matrix numbers, smaller network than many public L
 
 ## 8. Future work
 
-Near term (finish this course project):
+Beyond this course project, several extensions would strengthen the study:
 
-1. Run the full nine-job matrix on a university GPU and fill the blank tables in §6.
-2. Report mean ± seed spread for FC-EF vs FC-Siam-diff, then freeze settings and do **one** locked test.
-3. Add a small failure gallery (hits, missed small buildings, false alarms, boundary errors) with validation captions.
-4. Complete timing / parameter / latency numbers on the same GPU for a fair cost comparison.
-
-If there is extra time after that (stretch, not required for a passing report):
-
-5. Try a slightly wider FC-EF (`base=32`) under the same protocol to see how much of the gap to published ~0.81–0.86 F1 is just model capacity / training budget.
-6. Use LEVIR geospatial metadata (lat/long) for a stronger nearby-scene leakage check beyond filename stems.
-7. Test on another building-change set (for example WHU-CD or LEVIR-CD+) to see if the same ranking holds.
-8. We still would **not** claim a full STANet reproduction unless the question and compute budget change; attention methods stay out of our current scope.
+1. **Capacity and training budget.** Our networks use a small width (`base=16`). A controlled scale-up (wider U-Net / longer schedule) under the same splits would show how much of the gap to published LEVIR F1 numbers is capacity versus architecture choice.
+2. **Stronger geographic leakage checks.** Filename stems do not overlap across splits, but nearby scenes could still correlate. Using LEVIR’s released lat/long metadata to measure spatial distance between train and eval tiles would make the protocol tighter.
+3. **Other datasets and domains.** Repeating the same FC-EF vs Siamese comparison on WHU-CD or LEVIR-CD+ would test whether the ranking holds outside Texas Google Earth imagery.
+4. **Hard cases.** More work on small buildings, dense suburbs, and seasonal / illumination shifts—either with targeted sampling or harder augmentations—would address the failure modes change detectors usually hit.
+5. **Efficiency.** Measuring and improving latency (e.g. lighter decoders or export to ONNX) would matter if the method were ever used for large map tiles, though deployment is outside our current claims.
+6. **Attention / modern CD models.** Methods such as STANet or transformer-based change detectors are natural follow-ons. We left them out on purpose so the Daudt triad comparison stayed fair and feasible; they remain open for later work.
 
 ---
 
