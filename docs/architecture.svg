@@ -53,31 +53,31 @@
   <!-- Header -->
   <rect x="36" y="28" width="1208" height="86" rx="18" fill="#0f172a" filter="url(#soft)"/>
   <text x="640" y="66" text-anchor="middle" font-family="Avenir Next, Segoe UI, Helvetica, Arial, sans-serif" font-size="28" font-weight="700" fill="#f8fafc">LEVIR-CD Building Change Detection Architecture</text>
-  <text x="640" y="96" text-anchor="middle" font-family="Avenir Next, Segoe UI, Helvetica, Arial, sans-serif" font-size="15" fill="#94a3b8">Daudt triad under one protocol · FC-EF · FC-Siam-diff · FC-Siam-conc · threshold 0.5</text>
+  <text x="640" y="96" text-anchor="middle" font-family="Avenir Next, Segoe UI, Helvetica, Arial, sans-serif" font-size="15" fill="#94a3b8">Daudt triad under one protocol | FC-EF | FC-Siam-diff | FC-Siam-conc | threshold 0.5</text>
 
   <!-- Inputs -->
   <g filter="url(#soft)">
     <rect x="48" y="150" width="180" height="220" rx="16" fill="#ffffff" stroke="#99f6e4" stroke-width="2"/>
     <rect x="48" y="150" width="180" height="42" rx="16" fill="url(#tealGrad)"/>
     <rect x="48" y="176" width="180" height="16" fill="url(#tealGrad)"/>
-    <text x="138" y="178" text-anchor="middle" font-family="Avenir Next, Segoe UI, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#ecfdf5">RGB A · t0</text>
+    <text x="138" y="178" text-anchor="middle" font-family="Avenir Next, Segoe UI, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#ecfdf5">RGB A / t0</text>
     <rect x="72" y="214" width="132" height="92" rx="10" fill="#ccfbf1" stroke="#14b8a6" stroke-width="1.5"/>
     <rect x="86" y="230" width="28" height="18" rx="3" fill="#0f766e" opacity="0.85"/>
     <rect x="122" y="242" width="42" height="24" rx="3" fill="#14b8a6" opacity="0.7"/>
     <rect x="104" y="268" width="54" height="16" rx="3" fill="#5eead4"/>
-    <text x="138" y="334" text-anchor="middle" font-family="Avenir Next, Segoe UI, Helvetica, Arial, sans-serif" font-size="12" fill="#0f766e">3 × 256 × 256</text>
+    <text x="138" y="334" text-anchor="middle" font-family="Avenir Next, Segoe UI, Helvetica, Arial, sans-serif" font-size="12" fill="#0f766e">3 x 256 x 256</text>
   </g>
 
   <g filter="url(#soft)">
     <rect x="48" y="400" width="180" height="220" rx="16" fill="#ffffff" stroke="#fdba74" stroke-width="2"/>
     <rect x="48" y="400" width="180" height="42" rx="16" fill="url(#coralGrad)"/>
     <rect x="48" y="426" width="180" height="16" fill="url(#coralGrad)"/>
-    <text x="138" y="428" text-anchor="middle" font-family="Avenir Next, Segoe UI, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#fff7ed">RGB B · t1</text>
+    <text x="138" y="428" text-anchor="middle" font-family="Avenir Next, Segoe UI, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#fff7ed">RGB B / t1</text>
     <rect x="72" y="464" width="132" height="92" rx="10" fill="#ffedd5" stroke="#f97316" stroke-width="1.5"/>
     <rect x="92" y="482" width="36" height="20" rx="3" fill="#c2410c" opacity="0.85"/>
     <rect x="138" y="494" width="40" height="22" rx="3" fill="#fb923c" opacity="0.75"/>
     <rect x="108" y="522" width="48" height="14" rx="3" fill="#fdba74"/>
-    <text x="138" y="584" text-anchor="middle" font-family="Avenir Next, Segoe UI, Helvetica, Arial, sans-serif" font-size="12" fill="#c2410c">3 × 256 × 256</text>
+    <text x="138" y="584" text-anchor="middle" font-family="Avenir Next, Segoe UI, Helvetica, Arial, sans-serif" font-size="12" fill="#c2410c">3 x 256 x 256</text>
   </g>
 
   <!-- Input arrows -->
@@ -90,10 +90,10 @@
     <rect x="280" y="150" width="280" height="52" rx="18" fill="url(#tealGrad)"/>
     <rect x="280" y="182" width="280" height="20" fill="url(#tealGrad)"/>
     <text x="420" y="184" text-anchor="middle" font-family="Avenir Next, Segoe UI, Helvetica, Arial, sans-serif" font-size="18" font-weight="700" fill="#ecfdf5">FC-EF</text>
-    <text x="420" y="228" text-anchor="middle" font-family="Avenir Next, Segoe UI, Helvetica, Arial, sans-serif" font-size="12" fill="#0f766e">Early fusion · MODEL=unet</text>
+    <text x="420" y="228" text-anchor="middle" font-family="Avenir Next, Segoe UI, Helvetica, Arial, sans-serif" font-size="12" fill="#0f766e">Early fusion / MODEL=unet</text>
 
     <rect x="310" y="248" width="220" height="40" rx="10" fill="#ccfbf1" stroke="#14b8a6"/>
-    <text x="420" y="273" text-anchor="middle" font-family="Avenir Next, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#115e59">concat(A, B) ’ 6 ch</text>
+    <text x="420" y="273" text-anchor="middle" font-family="Avenir Next, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#115e59">concat(A, B) -&gt; 6 ch</text>
 
     <!-- U-Net blocks -->
     <rect x="360" y="310" width="120" height="28" rx="6" fill="#99f6e4"/>
@@ -109,7 +109,7 @@
     <text x="420" y="496" text-anchor="middle" font-family="Avenir Next, Segoe UI, Helvetica, Arial, sans-serif" font-size="12" fill="#334155">skips + decoder</text>
     <rect x="360" y="512" width="120" height="36" rx="8" fill="#0f766e"/>
     <text x="420" y="535" text-anchor="middle" font-family="Avenir Next, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#ecfdf5">1-ch logits</text>
-    <text x="420" y="580" text-anchor="middle" font-family="Avenir Next, Segoe UI, Helvetica, Arial, sans-serif" font-size="12" fill="#64748b">single encoderdecoder</text>
+    <text x="420" y="580" text-anchor="middle" font-family="Avenir Next, Segoe UI, Helvetica, Arial, sans-serif" font-size="12" fill="#64748b">single encoder-decoder</text>
     <text x="420" y="598" text-anchor="middle" font-family="Avenir Next, Segoe UI, Helvetica, Arial, sans-serif" font-size="12" fill="#64748b">prior val F1 0.7319</text>
   </g>
 
@@ -119,7 +119,7 @@
     <rect x="590" y="150" width="280" height="52" rx="18" fill="url(#amberGrad)"/>
     <rect x="590" y="182" width="280" height="20" fill="url(#amberGrad)"/>
     <text x="730" y="184" text-anchor="middle" font-family="Avenir Next, Segoe UI, Helvetica, Arial, sans-serif" font-size="18" font-weight="700" fill="#fffbeb">FC-Siam-diff</text>
-    <text x="730" y="228" text-anchor="middle" font-family="Avenir Next, Segoe UI, Helvetica, Arial, sans-serif" font-size="12" fill="#92400e">Shared enc · |fA  fB|</text>
+    <text x="730" y="228" text-anchor="middle" font-family="Avenir Next, Segoe UI, Helvetica, Arial, sans-serif" font-size="12" fill="#92400e">Shared enc / |fA - fB|</text>
 
     <rect x="612" y="250" width="100" height="70" rx="10" fill="#ffedd5" stroke="#f97316"/>
     <text x="662" y="280" text-anchor="middle" font-family="Avenir Next, Segoe UI, Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#9a3412">Enc A</text>
@@ -130,13 +130,13 @@
     <text x="798" y="300" text-anchor="middle" font-family="Avenir Next, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#c2410c">3 ch</text>
 
     <path d="M712 285 H748" stroke="#b45309" stroke-width="2" stroke-dasharray="5 4"/>
-    <text x="730" y="242" text-anchor="middle" font-family="Avenir Next, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#b45309">shared ¸</text>
+    <text x="730" y="242" text-anchor="middle" font-family="Avenir Next, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#b45309">tied enc</text>
 
     <path d="M662 320 V360" stroke="#b45309" stroke-width="2" marker-end="url(#arrowSlate)"/>
     <path d="M798 320 V360" stroke="#b45309" stroke-width="2" marker-end="url(#arrowSlate)"/>
 
     <rect x="640" y="368" width="180" height="54" rx="12" fill="url(#amberGrad)"/>
-    <text x="730" y="392" text-anchor="middle" font-family="Avenir Next, Segoe UI, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#fffbeb">fuse |fA  fB|</text>
+    <text x="730" y="392" text-anchor="middle" font-family="Avenir Next, Segoe UI, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#fffbeb">fuse |fA - fB|</text>
     <text x="730" y="410" text-anchor="middle" font-family="Avenir Next, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#fef3c7">skips + bottleneck</text>
 
     <path d="M730 422 V450" stroke="#b45309" stroke-width="2" marker-end="url(#arrowSlate)"/>
@@ -154,7 +154,7 @@
     <rect x="900" y="150" width="280" height="52" rx="18" fill="url(#blueGrad)"/>
     <rect x="900" y="182" width="280" height="20" fill="url(#blueGrad)"/>
     <text x="1040" y="184" text-anchor="middle" font-family="Avenir Next, Segoe UI, Helvetica, Arial, sans-serif" font-size="18" font-weight="700" fill="#eff6ff">FC-Siam-conc</text>
-    <text x="1040" y="228" text-anchor="middle" font-family="Avenir Next, Segoe UI, Helvetica, Arial, sans-serif" font-size="12" fill="#1e40af">Shared enc · concat(fA, fB)</text>
+    <text x="1040" y="228" text-anchor="middle" font-family="Avenir Next, Segoe UI, Helvetica, Arial, sans-serif" font-size="12" fill="#1e40af">Shared enc / concat(fA, fB)</text>
 
     <rect x="922" y="250" width="100" height="70" rx="10" fill="#dbeafe" stroke="#3b82f6"/>
     <text x="972" y="280" text-anchor="middle" font-family="Avenir Next, Segoe UI, Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#1e3a8a">Enc A</text>
@@ -165,7 +165,7 @@
     <text x="1108" y="300" text-anchor="middle" font-family="Avenir Next, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#1d4ed8">3 ch</text>
 
     <path d="M1022 285 H1058" stroke="#1d4ed8" stroke-width="2" stroke-dasharray="5 4"/>
-    <text x="1040" y="242" text-anchor="middle" font-family="Avenir Next, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#1d4ed8">shared ¸</text>
+    <text x="1040" y="242" text-anchor="middle" font-family="Avenir Next, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#1d4ed8">tied enc</text>
 
     <path d="M972 320 V360" stroke="#1d4ed8" stroke-width="2" marker-end="url(#arrowSlate)"/>
     <path d="M1108 320 V360" stroke="#1d4ed8" stroke-width="2" marker-end="url(#arrowSlate)"/>
@@ -187,8 +187,8 @@
   <g filter="url(#soft)">
     <rect x="280" y="650" width="900" height="96" rx="16" fill="#ffffff" stroke="#86efac" stroke-width="2"/>
     <rect x="280" y="650" width="12" height="96" rx="6" fill="url(#greenGrad)"/>
-    <text x="320" y="688" font-family="Avenir Next, Segoe UI, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#14532d">Change map ’ sigmoid ’ threshold 0.5</text>
-    <text x="320" y="716" font-family="Avenir Next, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" fill="#334155">Primary metric: change-class F1 · also IoU, precision, recall, boundary F1</text>
+    <text x="320" y="688" font-family="Avenir Next, Segoe UI, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#14532d">Change map -&gt; sigmoid -&gt; threshold 0.5</text>
+    <text x="320" y="716" font-family="Avenir Next, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" fill="#334155">Primary metric: change-class F1 + also IoU, precision, recall, boundary F1</text>
 
     <rect x="980" y="672" width="70" height="28" rx="14" fill="#dcfce7" stroke="#22c55e"/>
     <text x="1015" y="691" text-anchor="middle" font-family="Avenir Next, Segoe UI, Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#166534">F1</text>
