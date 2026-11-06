@@ -120,7 +120,19 @@ class SyntheticChangeTiles(Dataset):
         return torch.from_numpy(x_arr).float().div_(255.0), torch.from_numpy(y_arr)
 
 
-def load_split_frames(manifest_path: Path) -> tuple[pd.DataFrame, pd.DataFrame]:
+def _validate_split_frame(frame: pd.DataFrame, split_name: str) -> pd.DataFrame:
+    if frame.empty:
+        raise ValueError(f"Manifest has no rows for split={split_name!r}")
+    if not frame.stem.is_unique:
+        raise ValueError(f"Duplicate stems inside split={split_name!r}")
+    for key in ("image_A", "image_B", "mask"):
+        absent = [p for p in frame[key] if not Path(p).is_file()]
+        if absent:
+            raise FileNotFoundError(f"Missing {key} files, e.g. {absent[:3]}")
+    return frame.reset_index(drop=True)
+
+
+def load_manifest(manifest_path: Path) -> pd.DataFrame:
     if not Path(manifest_path).is_file():
         raise FileNotFoundError(
             f"Missing {manifest_path}. Run notebook 01, or run "
@@ -131,22 +143,25 @@ def load_split_frames(manifest_path: Path) -> tuple[pd.DataFrame, pd.DataFrame]:
     missing = required - set(manifest.columns)
     if missing:
         raise ValueError(f"Manifest missing columns: {missing}")
-    if "test" in set(manifest["split"].astype(str)):
-        # Test rows may exist in the audit CSV for bookkeeping, but training code ignores them.
-        pass
-    train_df = manifest.loc[manifest.split == "train"].sort_values("stem").reset_index(drop=True)
-    val_df = manifest.loc[manifest.split == "val"].sort_values("stem").reset_index(drop=True)
-    if train_df.empty or val_df.empty:
-        raise ValueError("Manifest must contain both train and val rows")
+    return manifest
+
+
+def load_split_frame(manifest_path: Path, split: str) -> pd.DataFrame:
+    """Load one split (train/val/test). Training code should not call this for test."""
+    key = str(split).lower().strip()
+    if key not in {"train", "val", "test"}:
+        raise ValueError(f"Unknown split: {split}")
+    manifest = load_manifest(manifest_path)
+    frame = manifest.loc[manifest.split == key].sort_values("stem")
+    return _validate_split_frame(frame, key)
+
+
+def load_split_frames(manifest_path: Path) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Train/val only. Test rows may exist in the CSV but are ignored here."""
+    train_df = load_split_frame(manifest_path, "train")
+    val_df = load_split_frame(manifest_path, "val")
     if not set(train_df.stem).isdisjoint(set(val_df.stem)):
         raise ValueError("Train/val stems overlap")
-    for frame in (train_df, val_df):
-        if not frame.stem.is_unique:
-            raise ValueError("Duplicate stems inside a split")
-        for key in ("image_A", "image_B", "mask"):
-            absent = [p for p in frame[key] if not Path(p).is_file()]
-            if absent:
-                raise FileNotFoundError(f"Missing {key} files, e.g. {absent[:3]}")
     return train_df, val_df
 
 

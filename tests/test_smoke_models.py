@@ -70,14 +70,19 @@ def test_manifest_builder_pairs_a_b_label(tmp_path):
     assert "train" in text and "val" in text and "sample" in text
 
 
-def test_locate_dataset_finds_nested_zips(tmp_path):
-    from levir_cd.audit import locate_dataset
+def test_locate_dataset_finds_nested_zips(tmp_path, monkeypatch):
+    from levir_cd import audit
+
+    # Ignore the real machine LEVIR folder so this test stays hermetic.
+    monkeypatch.delenv("LEVIR_DATA_ROOT", raising=False)
+    monkeypatch.setattr(audit, "candidate_data_roots", lambda project_root: [])
+    monkeypatch.setattr(audit.Path, "home", staticmethod(lambda: tmp_path))
 
     folder = tmp_path / "Downloads" / "cd"
     folder.mkdir(parents=True)
     (folder / "train.zip").write_bytes(b"a")
     (folder / "val.zip").write_bytes(b"b")
-    found = locate_dataset(tmp_path / "project", extra_roots=[tmp_path])
+    found = audit.locate_dataset(tmp_path / "project", extra_roots=[tmp_path])
     assert found == folder.resolve()
 
 
@@ -156,6 +161,24 @@ def test_experiment_plan_covers_proposal():
     assert all(row["config"].ALLOW_TEST is False for row in rows)
     text = comparison_markdown([])
     assert "no runs yet" in text
+
+
+def test_locked_test_cli_refuses_without_confirmation(tmp_path):
+    sys.path.insert(0, str(ROOT / "scripts"))
+    import run_locked_test as locked  # type: ignore
+
+    code = locked.main(["--checkpoint", str(tmp_path / "missing.pt")])
+    assert code == 2
+
+
+def test_load_split_frame_test_rows():
+    from levir_cd.data import load_split_frame
+
+    manifest = ROOT / "results" / "levir_audit" / "split_manifest.csv"
+    if not manifest.is_file():
+        return
+    test_df = load_split_frame(manifest, "test")
+    assert len(test_df) == 128
 
 
 def test_threshold_sweep_marks_official_half():

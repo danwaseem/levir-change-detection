@@ -19,6 +19,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from levir_cd.audit import ensure_manifest
+from levir_cd.geo_audit import write_geo_audit
 from levir_cd.plan import experiment_plan, write_comparison_table
 from levir_cd.train import run_experiment
 
@@ -31,7 +32,8 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     project_root = Path(args.project_root).resolve()
     if not args.aggregate_only and args.mode in {"benchmark", "full"}:
-        ensure_manifest(project_root)
+        manifest = ensure_manifest(project_root)
+        write_geo_audit(manifest, project_root / "results" / "levir_audit")
     if not args.aggregate_only:
         for item in experiment_plan(str(project_root), mode=args.mode):
             print(f"\n=== {item['role']} {item['config'].run_name} ===", flush=True)

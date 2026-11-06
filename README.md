@@ -197,9 +197,10 @@ Code and docs for the proposal are in the repo. The only measured LEVIR score so
 | Change-class F1, IoU, precision, recall, boundary F1 | Coded. F1 picks the checkpoint. |
 | Small-building and false-alarm summary | `failure_summary.json` |
 | Threshold sweep around 0.5 | Logged on real runs. Official threshold stays 0.5. |
-| Absolute-difference baseline | Coded. Runs in notebook 02 when LEVIR is present. |
+| Absolute-difference baseline | `PYTHONPATH=src python scripts/run_baseline.py` (validation only; writes `results/absdiff_baseline/`) |
 | Full matrix | `PYTHONPATH=src python scripts/run_plan.py --mode full` (builds `results/levir_audit/split_manifest.csv` from `LEVIR_DATA_ROOT` or `../datasets/levir-cd` first) |
 | Comparison table | `PYTHONPATH=src python scripts/run_plan.py --aggregate-only` writes `results/comparison_table.md` |
+| Locked test (once, after freeze) | `PYTHONPATH=src python scripts/run_locked_test.py --checkpoint …/best_model.pt --i-confirm-choices-are-frozen` |
 | U-Net validation F1 0.7319, seed 1511 | Done. [`results/unet_baseline/`](results/unet_baseline/) |
 | Three-seed Siamese comparison, ablations, locked test | Not run yet. Needs LEVIR on a Mac or GPU. |
 
@@ -213,6 +214,50 @@ PYTHONPATH=src python scripts/run_plan.py --aggregate-only
 ```
 
 That runs FC-EF and FC-Siam-diff at seeds 1511, 42, and 123, one FC-Siam-conc run, the BCE versus BCE+Dice ablation, and the augmentation ablation. Then freeze the choices and evaluate the test set once. Details are in [`report/report.md`](report/report.md).
+
+## University GPU lab (recommended for the full matrix)
+
+Mac MPS is fine for smoke checks. The nine-run `full` matrix is much faster on a CUDA lab GPU. Do not invent scores on the laptop while waiting.
+
+1. Clone / pull this repo on the lab machine and create an env:
+
+```bash
+git clone https://github.com/danwaseem/levir-change-detection.git
+cd levir-change-detection
+git pull
+python3 -m venv .venv && source .venv/bin/activate
+pip install -U pip
+pip install torch --index-url https://download.pytorch.org/whl/cu124   # adjust CUDA tag to the lab
+pip install -r requirements.txt
+pip install -e .
+```
+
+2. Point at LEVIR-CD (copy zips from the Mac, or let the script download once):
+
+```bash
+export LEVIR_DATA_ROOT="/path/to/levir-cd"   # train.zip, val.zip, test.zip
+# optional: export LEVIR_PROJECT_ROOT="$PWD"
+```
+
+3. Code check, then full matrix (leave the session overnight / use `tmux` or `screen`):
+
+```bash
+PYTHONPATH=src python scripts/run_smoke.py
+PYTHONPATH=src python -m pytest -q
+PYTHONPATH=src python scripts/run_plan.py --mode full
+PYTHONPATH=src python scripts/run_baseline.py
+PYTHONPATH=src python scripts/run_plan.py --aggregate-only
+```
+
+4. After validation winners are frozen, **one** locked test:
+
+```bash
+PYTHONPATH=src python scripts/run_locked_test.py \
+  --checkpoint results/experiments/<best_run>/best_model.pt \
+  --i-confirm-choices-are-frozen
+```
+
+5. Copy `results/experiments/`, `results/comparison_table.md`, `results/absdiff_baseline/`, and `results/locked_test/` back to the team Mac for the report.
 
 ## Credits
 
