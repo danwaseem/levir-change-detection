@@ -1,4 +1,6 @@
-# Baseline notebook dependencies. Versions in the completed run may differ.
+# Core experiment dependencies. Install PyTorch for your platform first if needed:
+#   CPU:  pip install torch --index-url https://download.pytorch.org/whl/cpu
+#   Mac:  pip install torch
 numpy
 pandas
 matplotlib
@@ -6,3 +8,4 @@ Pillow
 torch
 jupyterlab
 ipykernel
+pytest

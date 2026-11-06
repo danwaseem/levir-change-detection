@@ -1,0 +1,10 @@
+{
+  "n": 2,
+  "mean_f1": 0.0,
+  "std_f1": 0.0,
+  "mean_iou": 0.0,
+  "fraction_zero_f1": 1.0,
+  "fraction_with_change": 0.5,
+  "worst_f1_sample_index": 0,
+  "best_f1_sample_index": 0
+}

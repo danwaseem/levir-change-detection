@@ -1,0 +1,2 @@
+epoch,train_loss,val_loss,val_precision,val_recall,val_f1,val_iou,tp,fp,fn,elapsed_seconds
+1,1.6174694895744324,1.645836591720581,0.0,0.0,0.0,0.0,0,0,153,0.03904930500016235
