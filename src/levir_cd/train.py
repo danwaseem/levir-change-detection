@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+import random
+import numpy as np
 import time
 from pathlib import Path
 from typing import Any, Callable
@@ -137,7 +139,63 @@ def run_experiment(cfg: ExperimentConfig, device: torch.device | None = None) ->
     started = time.perf_counter()
     inference_seconds = None
 
-    for epoch in range(1, epochs + 1):
+    # Resume only from checkpoints created with matching settings.
+    start_epoch = 1
+    last_path = run_dir / "last_model.pt"
+
+    if cfg.RUN_MODE == "full" and last_path.exists():
+        checkpoint = torch.load(
+            last_path, map_location=device, weights_only=False
+        )
+
+        if checkpoint["config"] != cfg.to_dict():
+            raise RuntimeError(
+                "Checkpoint configuration differs from current settings. "
+                "Do not overwrite this run."
+            )
+
+        model.load_state_dict(checkpoint["model_state"])
+        optimizer.load_state_dict(checkpoint["optimizer_state"])
+
+        start_epoch = int(checkpoint["epoch"]) + 1
+        metrics_path = run_dir / "metrics.csv"
+
+        if not metrics_path.exists():
+            raise RuntimeError("Cannot resume without metrics.csv")
+
+        rows = pd.read_csv(metrics_path).to_dict("records")
+        rows = [r for r in rows if int(r["epoch"]) < start_epoch]
+
+        if not rows or int(rows[-1]["epoch"]) != start_epoch - 1:
+            raise RuntimeError("Checkpoint and metrics history disagree")
+
+        best_path = run_dir / "best_model.pt"
+        if not best_path.exists():
+            raise RuntimeError("Best checkpoint is missing")
+
+        best_checkpoint = torch.load(
+            best_path, map_location="cpu", weights_only=False
+        )
+        best_epoch = int(best_checkpoint["epoch"])
+        best_metrics = dict(best_checkpoint["metrics"])
+        best_f1 = float(best_metrics["val_f1"])
+        bad_epochs = sum(int(r['epoch']) > best_epoch for r in rows)
+
+        if "rng_state" in checkpoint:
+            rng = checkpoint["rng_state"]
+            random.setstate(rng["python"])
+            np.random.set_state(rng["numpy"])
+            torch.set_rng_state(rng["torch"].cpu())
+            if device.type == "cuda" and rng.get("cuda") is not None:
+                torch.cuda.set_rng_state_all(rng["cuda"])
+
+        print(
+            f"Resuming at epoch {start_epoch}; "
+            f"best epoch {best_epoch}, F1 {best_f1:.4f}",
+            flush=True,
+        )
+
+    for epoch in range(start_epoch, epochs + 1):
         sync_device(device)
         tick = time.perf_counter()
         print(f"\nEpoch {epoch}/{epochs}", flush=True)
@@ -164,16 +222,31 @@ def run_experiment(cfg: ExperimentConfig, device: torch.device | None = None) ->
             "metrics": row,
             "torch_version": str(torch.__version__),
         }
-        torch.save(state, run_dir / "last_model.pt")
-        if metrics["val_f1"] > best_f1 + cfg.MIN_F1_IMPROVEMENT:
+        improved = metrics["val_f1"] > best_f1 + cfg.MIN_F1_IMPROVEMENT
+
+        if improved:
             best_f1 = metrics["val_f1"]
             best_epoch = epoch
             best_metrics = dict(metrics)
             bad_epochs = 0
-            torch.save(state, run_dir / "best_model.pt")
-            print("  saved new best checkpoint", flush=True)
         else:
             bad_epochs += 1
+
+        state["rng_state"] = {
+            "python": random.getstate(),
+            "numpy": np.random.get_state(),
+            "torch": torch.get_rng_state(),
+            "cuda": torch.cuda.get_rng_state_all()
+            if device.type == "cuda" else None,
+        }
+
+        # Write best before last so a complete last checkpoint
+        # never refers to a best checkpoint that was not saved.
+        if improved:
+            torch.save(state, run_dir / "best_model.pt")
+            print("  saved new best checkpoint", flush=True)
+
+        torch.save(state, run_dir / "last_model.pt")
         if cfg.RUN_MODE == "full" and epoch >= cfg.MIN_EPOCHS and bad_epochs >= cfg.EARLY_STOP_PATIENCE:
             print(f"Early stopping at epoch {epoch}; best epoch {best_epoch}")
             break

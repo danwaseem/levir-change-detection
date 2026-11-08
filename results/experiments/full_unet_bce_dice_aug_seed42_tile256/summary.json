@@ -1,0 +1,95 @@
+{
+  "run_mode": "full",
+  "model": "unet",
+  "paper_name": "FC-EF (6-channel U-Net)",
+  "loss": "bce_dice",
+  "augment": true,
+  "seed": 42,
+  "completed_epochs": 28,
+  "best_epoch": 20,
+  "best_val_f1": 0.7269952567112957,
+  "val_precision": 0.7066925075254629,
+  "val_recall": 0.7484990775025673,
+  "val_iou": 0.5710860548980851,
+  "val_boundary_f1": 0.3233957936695756,
+  "val_accuracy": 0.9764085859060287,
+  "total_minutes": 67.3371,
+  "mean_epoch_seconds": 142.811,
+  "batch_one_inference_seconds": 0.00137,
+  "train_original_pairs": 445,
+  "val_original_pairs": 64,
+  "train_tiles": 7120,
+  "val_tiles": 1024,
+  "parameters": 483169,
+  "threshold": 0.5,
+  "selected_using": "validation F1 only",
+  "test_set_touched": false,
+  "synthetic": false,
+  "checkpoint_bytes": 5891826,
+  "per_image_val_summary": {
+    "n": 1024,
+    "mean_f1": 0.20948767479561753,
+    "std_f1": 0.32667455620617347,
+    "mean_iou": 0.16599848570934958,
+    "fraction_zero_f1": 0.66796875,
+    "fraction_with_change": 0.42578125,
+    "worst_f1_sample_index": 1,
+    "best_f1_sample_index": 274
+  },
+  "failure_summary": {
+    "n": 1024,
+    "small_change_max_pixels": 256,
+    "n_small_change_tiles": 22,
+    "n_large_change_tiles": 414,
+    "n_empty_tiles": 588,
+    "small_change_mean_recall": 0.03958333333333333,
+    "large_change_mean_recall": 0.4994218670706004,
+    "n_missed_small": 21,
+    "n_false_alarm_empty": 33,
+    "n_low_precision_change": 124
+  },
+  "threshold_sweep": [
+    {
+      "threshold": 0.3,
+      "official": 0.0,
+      "f1": 0.6729233445184694,
+      "iou": 0.5070719477574553,
+      "precision": 0.691252280236156,
+      "recall": 0.6555413050178464
+    },
+    {
+      "threshold": 0.4,
+      "official": 0.0,
+      "f1": 0.6732417147896764,
+      "iou": 0.5074335862790192,
+      "precision": 0.7098337732034089,
+      "recall": 0.6402373637736182
+    },
+    {
+      "threshold": 0.5,
+      "official": 1.0,
+      "f1": 0.6721510619035944,
+      "iou": 0.5061954282745335,
+      "precision": 0.7263717063768774,
+      "recall": 0.625462846575681
+    },
+    {
+      "threshold": 0.6,
+      "official": 0.0,
+      "f1": 0.6696991740228068,
+      "iou": 0.5034193476733871,
+      "precision": 0.7423556915311952,
+      "recall": 0.6099969889229292
+    },
+    {
+      "threshold": 0.7,
+      "official": 0.0,
+      "f1": 0.6653962895860949,
+      "iou": 0.4985721861808201,
+      "precision": 0.7597973008392314,
+      "recall": 0.5918605757690675
+    }
+  ],
+  "official_threshold": 0.5,
+  "run_dir": "/app/dl/results/experiments/full_unet_bce_dice_aug_seed42_tile256"
+}

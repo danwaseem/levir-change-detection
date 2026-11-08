@@ -1,0 +1,95 @@
+{
+  "run_mode": "full",
+  "model": "siamese_diff",
+  "paper_name": "FC-Siam-diff",
+  "loss": "bce_dice",
+  "augment": true,
+  "seed": 42,
+  "completed_epochs": 12,
+  "best_epoch": 1,
+  "best_val_f1": 0.6062539025652491,
+  "val_precision": 0.6083391400941071,
+  "val_recall": 0.6041829115694956,
+  "val_iou": 0.4349815964909859,
+  "val_boundary_f1": 0.22645165465784467,
+  "val_accuracy": 0.9670652598142624,
+  "total_minutes": 29.3661,
+  "mean_epoch_seconds": 143.472,
+  "batch_one_inference_seconds": 0.00212,
+  "train_original_pairs": 445,
+  "val_original_pairs": 64,
+  "train_tiles": 7120,
+  "val_tiles": 1024,
+  "parameters": 482737,
+  "threshold": 0.5,
+  "selected_using": "validation F1 only",
+  "test_set_touched": false,
+  "synthetic": false,
+  "checkpoint_bytes": 5887346,
+  "per_image_val_summary": {
+    "n": 1024,
+    "mean_f1": 6.958087656979493e-07,
+    "std_f1": 1.9833293988586847e-05,
+    "mean_iou": 3.480028743218161e-07,
+    "fraction_zero_f1": 0.998046875,
+    "fraction_with_change": 0.42578125,
+    "worst_f1_sample_index": 0,
+    "best_f1_sample_index": 772
+  },
+  "failure_summary": {
+    "n": 1024,
+    "small_change_max_pixels": 256,
+    "n_small_change_tiles": 22,
+    "n_large_change_tiles": 414,
+    "n_empty_tiles": 588,
+    "small_change_mean_recall": 0.0,
+    "large_change_mean_recall": 8.608405871893192e-07,
+    "n_missed_small": 22,
+    "n_false_alarm_empty": 0,
+    "n_low_precision_change": 434
+  },
+  "threshold_sweep": [
+    {
+      "threshold": 0.3,
+      "official": 0.0,
+      "f1": 2.0594367653491953e-05,
+      "iou": 1.0297289859832581e-05,
+      "precision": 0.8055555555555556,
+      "recall": 1.0297315454353065e-05
+    },
+    {
+      "threshold": 0.4,
+      "official": 0.0,
+      "f1": 1.2782779040077208e-05,
+      "iou": 6.39143037015969e-06,
+      "precision": 0.8571428571428571,
+      "recall": 6.391437178563972e-06
+    },
+    {
+      "threshold": 0.5,
+      "official": 1.0,
+      "f1": 4.971101919306943e-06,
+      "iou": 2.4855571376324e-06,
+      "precision": 0.7777777777777778,
+      "recall": 2.4855589027748778e-06
+    },
+    {
+      "threshold": 0.6,
+      "official": 0.0,
+      "f1": 1.4203173557099599e-06,
+      "iou": 7.101591821806858e-07,
+      "precision": 0.5,
+      "recall": 7.10159686507108e-07
+    },
+    {
+      "threshold": 0.7,
+      "official": 0.0,
+      "f1": 7.101594343438074e-07,
+      "iou": 3.55079843253554e-07,
+      "precision": 1.0,
+      "recall": 3.55079843253554e-07
+    }
+  ],
+  "official_threshold": 0.5,
+  "run_dir": "/app/dl/results/experiments/full_siamese_diff_bce_dice_aug_seed42_tile256"
+}

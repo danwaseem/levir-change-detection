@@ -37,7 +37,46 @@ def main(argv: list[str] | None = None) -> int:
     if not args.aggregate_only:
         for item in experiment_plan(str(project_root), mode=args.mode):
             print(f"\n=== {item['role']} {item['config'].run_name} ===", flush=True)
-            run_experiment(item["config"])
+            cfg = item["config"]
+            summary_path = cfg.run_dir / "summary.json"
+            config_path = cfg.run_dir / "config.json"
+            checkpoint_path = cfg.run_dir / "best_model.pt"
+
+            if cfg.RUN_MODE == "full" and summary_path.exists():
+                import json
+
+                summary = json.loads(
+                    summary_path.read_text(encoding="utf-8")
+                )
+
+                if not config_path.exists() or not checkpoint_path.exists():
+                    raise RuntimeError(
+                        f"Incomplete saved run: {cfg.run_dir}"
+                    )
+
+                saved_config = json.loads(
+                    config_path.read_text(encoding="utf-8")
+                )
+
+                if saved_config != cfg.to_dict():
+                    raise RuntimeError(
+                        f"Completed run configuration mismatch: {cfg.run_dir}"
+                    )
+
+                if (summary.get("run_mode") != "full"
+                        or summary.get("synthetic") is not False
+                        or summary.get("completed_epochs", 0) < 1):
+                    raise RuntimeError(
+                        f"Invalid completed-run summary: {cfg.run_dir}"
+                    )
+
+                print(
+                    f"SKIPPING completed experiment: {cfg.run_name}",
+                    flush=True,
+                )
+                continue
+
+            run_experiment(cfg)
     table = write_comparison_table(project_root / "results")
     print("Wrote", table)
     return 0

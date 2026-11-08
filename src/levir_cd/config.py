@@ -19,7 +19,7 @@ class ExperimentConfig:
     TILE_SIZE: int = 256
     IMAGE_SIZE: int = 1024
     BATCH_SIZE: int = 4
-    NUM_WORKERS: int = 0
+    NUM_WORKERS: int = 4
     BASE_CHANNELS: int = 16
     LEARNING_RATE: float = 1e-3
     WEIGHT_DECAY: float = 1e-4

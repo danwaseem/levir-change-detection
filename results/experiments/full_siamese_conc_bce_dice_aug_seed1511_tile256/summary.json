@@ -1,0 +1,95 @@
+{
+  "run_mode": "full",
+  "model": "siamese_conc",
+  "paper_name": "FC-Siam-conc",
+  "loss": "bce_dice",
+  "augment": true,
+  "seed": 1511,
+  "completed_epochs": 20,
+  "best_epoch": 12,
+  "best_val_f1": 0.773022582021226,
+  "val_precision": 0.8357414972780477,
+  "val_recall": 0.7190601178581015,
+  "val_iou": 0.6300218493789742,
+  "val_boundary_f1": 0.35181068555713574,
+  "val_accuracy": 0.9822793453931808,
+  "total_minutes": 48.4396,
+  "mean_epoch_seconds": 143.273,
+  "batch_one_inference_seconds": 0.00284,
+  "train_original_pairs": 445,
+  "val_original_pairs": 64,
+  "train_tiles": 7120,
+  "val_tiles": 1024,
+  "parameters": 563889,
+  "threshold": 0.5,
+  "selected_using": "validation F1 only",
+  "test_set_touched": false,
+  "synthetic": false,
+  "checkpoint_bytes": 6861170,
+  "per_image_val_summary": {
+    "n": 1024,
+    "mean_f1": 0.23931372819836508,
+    "std_f1": 0.3512138569118364,
+    "mean_iou": 0.19445139217134483,
+    "fraction_zero_f1": 0.6513671875,
+    "fraction_with_change": 0.42578125,
+    "worst_f1_sample_index": 1,
+    "best_f1_sample_index": 848
+  },
+  "failure_summary": {
+    "n": 1024,
+    "small_change_max_pixels": 256,
+    "n_small_change_tiles": 22,
+    "n_large_change_tiles": 414,
+    "n_empty_tiles": 588,
+    "small_change_mean_recall": 0.0,
+    "large_change_mean_recall": 0.5462402527580005,
+    "n_missed_small": 22,
+    "n_false_alarm_empty": 32,
+    "n_low_precision_change": 98
+  },
+  "threshold_sweep": [
+    {
+      "threshold": 0.3,
+      "official": 0.0,
+      "f1": 0.7362820755994605,
+      "iou": 0.582631662796684,
+      "precision": 0.7967445796391125,
+      "recall": 0.6843489327010072
+    },
+    {
+      "threshold": 0.4,
+      "official": 0.0,
+      "f1": 0.735279616277594,
+      "iou": 0.5813772164511747,
+      "precision": 0.8152589745640525,
+      "recall": 0.6695907491758597
+    },
+    {
+      "threshold": 0.5,
+      "official": 1.0,
+      "f1": 0.7329652975845443,
+      "iou": 0.5784887313561582,
+      "precision": 0.8322308377176694,
+      "recall": 0.6548563560002102
+    },
+    {
+      "threshold": 0.6,
+      "official": 0.0,
+      "f1": 0.7290310658980226,
+      "iou": 0.5736025848760266,
+      "precision": 0.8489365677980498,
+      "recall": 0.6388049716859333
+    },
+    {
+      "threshold": 0.7,
+      "official": 0.0,
+      "f1": 0.7228102686907278,
+      "iou": 0.5659380520932946,
+      "precision": 0.8666700423348503,
+      "recall": 0.6199104630667251
+    }
+  ],
+  "official_threshold": 0.5,
+  "run_dir": "/app/dl/results/experiments/full_siamese_conc_bce_dice_aug_seed1511_tile256"
+}
