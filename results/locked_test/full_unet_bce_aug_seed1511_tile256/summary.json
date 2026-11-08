@@ -1,0 +1,43 @@
+{
+  "split": "test",
+  "checkpoint": "results/experiments/full_unet_bce_aug_seed1511_tile256/best_model.pt",
+  "model": "unet",
+  "paper_name": "FC-EF (6-channel U-Net)",
+  "loss": "bce",
+  "threshold": 0.5,
+  "official_threshold": 0.5,
+  "parameters": 483169,
+  "n_pairs": 128,
+  "n_tiles": 2048,
+  "test_f1": 0.7798444405896456,
+  "test_iou": 0.6391352599061295,
+  "test_precision": 0.7696360349705408,
+  "test_recall": 0.7903272938091709,
+  "test_boundary_f1": 0.3560454105337964,
+  "test_accuracy": 0.9772678762674332,
+  "per_image_test_summary": {
+    "n": 2048,
+    "mean_f1": 0.29709467506728626,
+    "std_f1": 0.3793588025831564,
+    "mean_iou": 0.24634303198676538,
+    "fraction_zero_f1": 0.59130859375,
+    "fraction_with_change": 0.45654296875,
+    "worst_f1_sample_index": 0,
+    "best_f1_sample_index": 72
+  },
+  "failure_summary": {
+    "n": 2048,
+    "small_change_max_pixels": 256,
+    "n_small_change_tiles": 61,
+    "n_large_change_tiles": 874,
+    "n_empty_tiles": 1113,
+    "small_change_mean_recall": 0.08277663428100751,
+    "large_change_mean_recall": 0.7020316994529361,
+    "n_missed_small": 56,
+    "n_false_alarm_empty": 212,
+    "n_low_precision_change": 167
+  },
+  "test_set_touched": true,
+  "retuned_after_test": false,
+  "note": "One-shot locked evaluation. Do not change models after this."
+}
