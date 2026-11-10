@@ -1,0 +1,19 @@
+{
+  "threshold": 0.4,
+  "selected_on": "validation",
+  "precision": 0.09646878139449912,
+  "recall": 0.1927472811536402,
+  "f1": 0.1285827292313658,
+  "iou": 0.06870874349607445,
+  "accuracy": 0.06870874349607445,
+  "tp": 542828.0,
+  "fp": 5084153.0,
+  "fn": 2273440.0,
+  "tn": 0.0,
+  "split": "val",
+  "mode": "full",
+  "n_pairs": 64,
+  "n_tiles": 1024,
+  "selected_using": "validation F1 threshold sweep",
+  "test_set_touched": false
+}

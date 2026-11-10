@@ -4,7 +4,7 @@ DATA 255 Deep Learning Vision, Fall 2026
 Team **BuildSafe Vision**: Sneha Singh, Ritika Mukesh Neema, Danish Waseem, Rajesh Paruchuri  
 Repo: https://github.com/danwaseem/levir-change-detection
 
-**Note on results.** Numbers in this draft come only from runs we already finished. Blank cells (`—`) are for the GPU experiment matrix and the locked test. We are not filling those in with made-up scores.
+**Note on results.** All table numbers below come from finished runs (`results/experiments/`, `results/comparison_table.md`, `results/locked_test/`). We do not invent scores.
 
 ---
 
@@ -14,12 +14,15 @@ This project looks at building change detection: given two satellite images of t
 
 We compare three networks from Daudt et al. (2018): FC-EF (six-channel U-Net), FC-Siam-diff, and FC-Siam-conc. We also compare BCE vs BCE+Dice and training with vs without paired flips/rotations. For a simple reference, we run absolute RGB difference with a validation-chosen threshold.
 
-What we have measured so far on **validation**:
+On **validation** (GPU full matrix, change-class F1 @ 0.5):
 
 - Absolute difference: F1 = **0.129** (threshold 0.4)
-- Lightweight FC-EF U-Net: F1 = **0.732** (seed 1511, 30 epochs, 483,169 parameters)
+- FC-EF (BCE+Dice, 3 seeds): mean F1 = **0.718**
+- FC-Siam-diff (BCE+Dice, 3 seeds): mean F1 = **0.543**
+- FC-Siam-conc (BCE+Dice, seed 1511): F1 = **0.773**
+- Best setup overall: FC-EF **BCE** (seed 1511), val F1 = **0.778** → locked **test F1 = 0.780**
 
-Siamese results, ablations, and the test set are still empty. We are not claiming STANet numbers or published Open-CD / Reality Check scores as ours.
+We are not claiming STANet numbers or published Open-CD / Reality Check scores as ours.
 
 ---
 
@@ -152,74 +155,80 @@ Planned matrix (`scripts/run_plan.py --mode full`):
 | Loss ablation | FC-EF | BCE | on | 1511 |
 | Aug ablation | FC-EF | BCE+Dice | off | 1511 |
 
-We started a full run on a Mac (MPS) but stopped it because one epoch was already ~16 minutes. The full nine runs will be done on a university GPU. Smoke tests and unit tests pass on the Mac.
+Mac MPS was too slow for the nine-run matrix (~16 min/epoch), so full training ran on a university GPU. Smoke tests and unit tests pass on Mac.
 
 ---
 
 ## 6. Results
 
-### 6.1 Finished runs
+### 6.1 Reference baseline vs early FC-EF
 
 | Method | Split | Seed | F1 | IoU | P | R | Params |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
 | Abs RGB difference | val | — | 0.129 | 0.069 | 0.096 | 0.193 | 0 |
-| FC-EF U-Net | val | 1511 | 0.732 | 0.577 | 0.691 | 0.778 | 483,169 |
+| FC-EF U-Net (early baseline) | val | 1511 | 0.732 | 0.577 | 0.691 | 0.778 | 483,169 |
 
-So the U-Net is much better than raw differencing on validation. Test was not used here.
+Learned FC-EF is far above raw differencing. Curves and gallery below are from that early baseline run (validation only).
 
-Plots from the U-Net run: [`learning_curves.png`](../results/unet_baseline/learning_curves.png), [`validation_gallery.png`](../results/unet_baseline/validation_gallery.png).
+![FC-EF U-Net learning curves](../results/unet_baseline/learning_curves.png)
 
-### 6.2 Main comparison (to fill after GPU)
+![Validation gallery — Before / After / Ground truth / Prediction](../results/unet_baseline/validation_gallery.png)
 
-| Model | Seed | Val F1 | IoU | P | R | Boundary F1 | Latency |
+### 6.2 Main comparison (GPU, BCE+Dice, aug on)
+
+| Model | Seed | Val F1 | IoU | P | R | Boundary F1 | Latency (s) |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| FC-EF | 1511 | 0.732 | 0.577 | 0.691 | 0.778 | — | — |
-| FC-EF | 42 | — | — | — | — | — | — |
-| FC-EF | 123 | — | — | — | — | — | — |
-| FC-Siam-diff | 1511 | — | — | — | — | — | — |
-| FC-Siam-diff | 42 | — | — | — | — | — | — |
-| FC-Siam-diff | 123 | — | — | — | — | — | — |
-| FC-Siam-conc | 1511 | — | — | — | — | — | — |
+| FC-EF | 1511 | 0.702 | 0.541 | 0.734 | 0.673 | 0.311 | 0.0015 |
+| FC-EF | 42 | 0.727 | 0.571 | 0.707 | 0.749 | 0.323 | 0.0014 |
+| FC-EF | 123 | 0.726 | 0.570 | 0.753 | 0.701 | 0.328 | 0.0014 |
+| FC-Siam-diff | 1511 | 0.503 | 0.336 | 0.674 | 0.402 | 0.211 | 0.0021 |
+| FC-Siam-diff | 42 | 0.606 | 0.435 | 0.608 | 0.604 | 0.227 | 0.0021 |
+| FC-Siam-diff | 123 | 0.521 | 0.352 | 0.941 | 0.360 | 0.219 | 0.0021 |
+| FC-Siam-conc | 1511 | 0.773 | 0.630 | 0.836 | 0.719 | 0.352 | 0.0028 |
 
-Mean over seeds (after runs finish):
+Mean over the three matched seeds (BCE+Dice):
 
-| Model | Mean Val F1 | Spread |
+| Model | Mean Val F1 | Spread (std) |
 | --- | ---: | ---: |
-| FC-EF | — | — |
-| FC-Siam-diff | — | — |
+| FC-EF | 0.718 | 0.011 |
+| FC-Siam-diff | 0.543 | 0.045 |
 
-### 6.3 Ablations (to fill)
+Under the same BCE+Dice protocol, FC-EF beats FC-Siam-diff. Single-seed FC-Siam-conc (0.773) is the strongest BCE+Dice triad run, but overall best validation F1 was FC-EF **BCE** (next section).
+
+### 6.3 Ablations
 
 | Setting | Val F1 | IoU |
 | --- | ---: | ---: |
-| FC-EF, BCE+Dice, aug on, seed 1511 | 0.732 | 0.577 |
-| FC-EF, BCE only, aug on, seed 1511 | — | — |
-| FC-EF, BCE+Dice, aug off, seed 1511 | — | — |
+| FC-EF, BCE+Dice, aug on, seed 1511 | 0.702 | 0.541 |
+| FC-EF, BCE only, aug on, seed 1511 | **0.778** | 0.636 |
+| FC-EF, BCE+Dice, aug off, seed 1511 | 0.745 | 0.594 |
 
-### 6.4 Compute (to fill)
+BCE alone beat BCE+Dice on this narrow U-Net. Turning aug off also scored higher than the matched BCE+Dice+aug seed, so paired flips/rotations were not clearly helpful here.
+
+### 6.4 Compute (GPU full runs)
 
 | Model | Params | Train time | Checkpoint size | Batch-1 latency |
 | --- | ---: | ---: | ---: | ---: |
-| FC-EF | 483,169 | ~162 min (old 30-epoch run) | — | — |
-| FC-Siam-diff | — | — | — | — |
-| FC-Siam-conc | — | — | — | — |
+| FC-EF (BCE, seed 1511) | 483,169 | ~51 min | ~5.6 MB | 0.0014 s |
+| FC-Siam-diff (seed 1511) | 482,737 | ~47 min | ~5.6 MB | 0.0021 s |
+| FC-Siam-conc (seed 1511) | 563,889 | ~48 min | ~6.5 MB | 0.0028 s |
 
 ### 6.5 Qualitative examples
 
-We will caption validation examples for hits, missed small buildings, false alarms, and messy boundaries after the matrix writes `failure_summary.json` for each run. The current U-Net gallery is a start.
+The gallery above shows three validation tiles for the FC-EF U-Net: hits on larger new buildings (samples 1–2), soft boundaries vs crisp labels, and a false-alarm case (sample 3) where the prediction fires but the ground-truth mask is empty. GPU-run `failure_summary.json` files support the same error themes (small-change misses, empty-tile false alarms).
 
-### 6.6 Locked test (once, later)
+### 6.6 Locked test
 
 | Item | Value |
 | --- | --- |
-| Freeze date | — |
-| Chosen setup | — |
-| Test F1 / IoU / P / R | — |
+| Freeze date | 2026-11-08 |
+| Chosen setup | FC-EF U-Net, BCE, aug on, seed 1511 (`full_unet_bce_aug_seed1511_tile256`) |
+| Test F1 / IoU / P / R | **0.780** / 0.639 / 0.770 / 0.790 |
 | Changed model after seeing test? | No |
 
 ```bash
 PYTHONPATH=src python scripts/run_locked_test.py \
-  --checkpoint results/experiments/<best_run>/best_model.pt \
+  --checkpoint results/experiments/full_unet_bce_aug_seed1511_tile256/best_model.pt \
   --i-confirm-choices-are-frozen
 ```
 
@@ -227,11 +236,9 @@ PYTHONPATH=src python scripts/run_locked_test.py \
 
 ## 7. Discussion
 
-Right now we can only say that a trained FC-EF clearly beats absolute difference on validation (0.73 vs 0.13 F1). That matches the idea that building change needs more than pixel differencing.
+Absolute difference is weak (val F1 0.129). Every learned model is far stronger. Under matched BCE+Dice training, FC-EF mean F1 0.718 beats FC-Siam-diff mean 0.543, so shared-encoder difference fusion did **not** win on this narrow (`base=16`) setup. FC-Siam-conc reached 0.773 on one seed, competitive with early-fusion. The loss ablation favored plain BCE (0.778), which we froze for the locked test (test F1 0.780).
 
-H1 and H2 are still open until Siamese and ablation runs finish on GPU. We will report mean F1 across seeds and not over-claim if Siamese does not win.
-
-Limits of this draft: missing matrix numbers, smaller network than many public LEVIR tables, stem check is not a full geo audit, and LEVIR is Texas-only. We also do not claim this system is ready for real monitoring use.
+Limits: smaller network than many public LEVIR tables, stem check is not a full geo audit, LEVIR is Texas-only, and Siamese-conc has only one seed. We do not claim this system is ready for real monitoring use.
 
 ---
 
@@ -250,7 +257,7 @@ Beyond this course project, several extensions would strengthen the study:
 
 ## 9. Conclusion
 
-We set up a full LEVIR-CD training and evaluation pipeline with the Daudt triad, a simple difference baseline, and the planned ablations. So far, validation shows FC-EF F1 0.732 and abs-diff F1 0.129, with no filename stem overlap across splits. The main research comparison still needs the GPU runs and one locked test. We will keep claims matched to whatever those runs show.
+We built a full LEVIR-CD training and evaluation pipeline with the Daudt triad, a difference baseline, and the planned ablations. On GPU validation, FC-EF (mean F1 0.718) beat FC-Siam-diff (0.543); FC-Siam-conc reached 0.773 on one seed; BCE-only FC-EF was best overall (val 0.778, locked test 0.780). Abs-diff remains at 0.129. Filename stems do not overlap across splits. Claims stay limited to these runs.
 
 ---
 
@@ -312,5 +319,5 @@ PYTHONPATH=src python scripts/run_plan.py --aggregate-only
 | Stem overlap | `results/levir_audit/stem_overlap_report.json` |
 | Abs-diff | `results/absdiff_baseline/summary.json` |
 | U-Net baseline | `results/unet_baseline/` |
-
-After GPU training, copy values from `results/comparison_table.md` into the blank tables above.
+| GPU comparison table | `results/comparison_table.md` |
+| Locked test | `results/locked_test/full_unet_bce_aug_seed1511_tile256/` |

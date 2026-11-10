@@ -9,17 +9,18 @@ Compares a six-channel U-Net (FC-EF) with shared-encoder Siamese U-Nets on [LEVI
 
 ## Status — what is done vs left
 
-| Done | Still needed (teammate / GPU) |
+| Done | Still needed |
 | --- | --- |
-| Full training + eval code (Daudt triad, losses, metrics, ablations) | Run full 9-job matrix on GPU |
-| Dataset audit notebook + manifest builder + stem-overlap check | Paste GPU numbers into report tables |
-| Abs-diff reference baseline scored on **val** (F1 **0.129**) | One locked **test** after freeze |
-| Prior FC-EF U-Net val baseline (F1 **0.732**, seed 1511) | Mean ± seed spread for Siamese |
-| Smoke tests + unit tests (14 passed) | Presentation / contribution statements |
-| Report outline filled with real numbers; blanks for missing runs | — |
-| Architecture overview figure (`docs/architecture.jpg`) | — |
+| Full training + eval code (Daudt triad, losses, metrics, ablations) | Presentation slides |
+| Dataset audit + stem-overlap check | Team assistance disclosure in report |
+| Abs-diff baseline on **val** (F1 **0.129**) | Contribution wording polish if needed |
+| GPU 9-run matrix + comparison table | — |
+| Locked test: FC-EF BCE seed 1511 → test F1 **0.780** | — |
+| Report tables filled from GPU + locked test | — |
+| Architecture figure + validation gallery / curves | — |
+| Smoke + unit tests (14) | — |
 
-Coding for the graded experiment plan is on `main`. **Do not invent Siamese / ablation / test scores.** Prefer university **CUDA GPU** for `run_plan.py --mode full` (Mac MPS is too slow for all 9 runs).
+Coding and GPU experiments are on `main`. Report numbers come from `results/` only — do not invent scores.
 
 ---
 
