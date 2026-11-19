@@ -416,11 +416,12 @@ def build():
     heading(doc, "IV.  METHODS")
     body(
         doc,
-        "Fig. 1 shows the team pipeline. We map the course’s three roles explicitly: "
-        "(1) reference baseline = absolute RGB difference; (2) strong baseline = FC-EF "
-        "(6-channel U-Net, ~483k params); (3) team investigation = shared-encoder "
-        "FC-Siam-diff and FC-Siam-conc (~483k / ~564k), fused with |fA−fB| or concat. All "
-        "learned paths map logits → sigmoid → threshold 0.5.",
+        "We organize methods into the three course roles. Reference baseline: absolute RGB "
+        "difference with a validation-chosen threshold (0.4). Strong baseline: FC-EF, a "
+        "six-channel early-fusion U-Net (~483k params). Team investigation: shared-encoder "
+        "FC-Siam-diff and FC-Siam-conc (~483k / ~564k), which fuse with |fA−fB| or feature "
+        "concatenation. Fig. 1 shows the shared pipeline. All learned paths map logits → "
+        "sigmoid → threshold 0.5.",
         indent=False,
     )
     figure(
@@ -523,23 +524,26 @@ def build():
         "Fig. 3. Seed variability for the principal BCE+Dice comparison "
         "(FC-EF vs FC-Siam-diff).",
     )
+    subhead(doc, "C.  Reliability")
     body(
         doc,
-        "Reliability. The principal comparison uses three seeds with individual rows in "
-        "Table III and the spread in Fig. 3. FC-EF is both higher and more stable "
-        "(±0.011) than FC-Siam-diff (±0.045). We report this training variability "
-        "directly; we do not claim statistical significance beyond the observed means "
-        "and spreads. Ablations and FC-Siam-conc remain single-seed and are labeled as "
-        "such.",
+        "The principal trained-method comparison uses three seeds (1511, 42, 123). We "
+        "report every seed in Table III plus mean±std, and show spread in Fig. 3. FC-EF "
+        "is both higher and more stable (std 0.011) than FC-Siam-diff (std 0.045). We do "
+        "not claim statistical significance; the seed study is a reliability check under "
+        "matched training budgets. Ablations and FC-Siam-conc remain single-seed and are "
+        "labeled as such. Training variability is separate from finite test-set "
+        "uncertainty; the locked test is one frozen evaluation, not a retuned search.",
+        indent=False,
     )
 
-    subhead(doc, "C.  Ablations")
+    subhead(doc, "D.  Ablations")
     body(
         doc,
-        "Table IV and Fig. 4 hold architecture and seed fixed (FC-EF, 1511). BCE alone "
-        "beats BCE+Dice. Turning off geometric augmentation also helps versus "
-        "BCE+Dice+aug under this width and budget. Fig. 5 shows validation F1 trajectories "
-        "at seed 1511: FC-EF+BCE climbs fastest among the matched runs.",
+        "Table IV and Fig. 4 hold architecture and seed fixed (FC-EF, 1511) so only one "
+        "factor changes. BCE alone beats BCE+Dice. Turning off geometric augmentation also "
+        "helps versus BCE+Dice+aug under this width and budget. Fig. 5 shows validation F1 "
+        "trajectories at seed 1511: FC-EF+BCE climbs fastest among the matched runs.",
         indent=False,
     )
     table_title(doc, "TABLE IV.  FC-EF ABLATIONS (SEED 1511)")
@@ -564,7 +568,7 @@ def build():
         "Fig. 5. Validation F1 trajectories at seed 1511 for principal and ablation runs.",
     )
 
-    subhead(doc, "D.  Locked test")
+    subhead(doc, "E.  Locked test")
     body(
         doc,
         "Locked setup: FC-EF + BCE + aug, seed 1511 (best val F1 0.778 at epoch 13). "
@@ -616,9 +620,7 @@ def build():
         "Hypothesis outcomes. H1 is not supported for FC-Siam-diff (0.543 vs 0.718). "
         "FC-Siam-conc is competitive on one seed (0.773), so the negative result is about "
         "difference fusion at this capacity, not every Siamese design. H2 is not supported: "
-        "BCE (0.778) beats BCE+Dice (0.702) on the ablation seed. These mixed outcomes are "
-        "still a successful course result: the question was answered under a fair protocol "
-        "instead of forced into a win.",
+        "BCE (0.778) beats BCE+Dice (0.702) on the ablation seed.",
     )
     body(
         doc,
@@ -679,11 +681,12 @@ def build():
     body(
         doc,
         "Under a matched LEVIR-CD protocol, learned models beat absolute difference "
-        "(0.129 vs ~0.70–0.78 F1). The strong baseline (FC-EF) beats the main Siamese "
-        "investigation (FC-Siam-diff); BCE beats BCE+Dice in our ablation; the frozen "
-        "FC-EF+BCE model reaches test F1 0.780. The research question gets a clear, partly "
-        "negative answer with seed-reported reliability and protected-test discipline. "
-        "That honesty—not a larger network—is the project’s main claim.",
+        "(0.129 vs ~0.70–0.78 F1). The strong baseline FC-EF beats the Siamese-diff "
+        "investigation on the three-seed comparison; BCE beats BCE+Dice in the controlled "
+        "ablation; the frozen FC-EF+BCE model reaches test F1 0.780. H1 and H2 are not "
+        "supported at width base=16. That partly negative answer is still a valid course "
+        "outcome: the comparison was fair, the test stayed locked, and claims stay inside "
+        "the evidence. Shared code and equal team ownership kept the study honest.",
         indent=False,
     )
 
