@@ -16,7 +16,7 @@
 | **Ritika Mukesh Neema** | Supporting | FC-EF local feasibility / paired-aug wiring; seed config files; progress-report packaging; assist figure/config indexing | `configs/full_unet_*`, `docs/PROGRESS_REPORT.md`, feasibility `results/unet_baseline/` |
 | **Rajesh Paruchuri** | Supporting | Metric aggregation / comparison table; latency numbers packaging; signed reproduction check; compute-table formatting | `results/comparison_table.md`, `docs/REPRODUCTION.md`, report compute rows |
 
-Individual statements (actual files): `docs/individual/sneha_singh.md`, `ritika_mukesh_neema.md`, `danish_waseem.md`, `rajesh_paruchuri.md`.
+Individual statements: `docs/individual-contribution/` (`sneha_singh.md`, `ritika_mukesh_neema.md`, `danish_waseem.md`, `rajesh_paruchuri.md`).
 
 ---
 
