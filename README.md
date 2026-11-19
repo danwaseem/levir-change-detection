@@ -29,7 +29,7 @@ Figures: [`results/report_figures/`](results/report_figures/) · Gallery: [`resu
 | Document | Path |
 | --- | --- |
 | Proposal | [`docs/Data255_ProjectProposal.pdf`](docs/Data255_ProjectProposal.pdf) |
-| Final report (PDF) | [`report/report.pdf`](report/report.pdf) |
+| Final report (PDF) | [`report/DATA255_BuildSafeVision_IEEE.pdf`](report/DATA255_BuildSafeVision_IEEE.pdf) |
 | Final report (DOCX) | [`report/DATA255_BuildSafeVision_IEEE.docx`](report/DATA255_BuildSafeVision_IEEE.docx) |
 | Week 3 dataset card | [`docs/progress-report-week-3-4/week3_dataset_card.pdf`](docs/progress-report-week-3-4/week3_dataset_card.pdf) |
 | Week 4 progress report | [`docs/progress-report-week-3-4/week4_progress_report.pdf`](docs/progress-report-week-3-4/week4_progress_report.pdf) |
