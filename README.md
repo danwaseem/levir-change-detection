@@ -3,24 +3,44 @@
 DATA 255 Deep Learning Vision, Fall 2026  
 Team **BuildSafe Vision**: Sneha Singh, Ritika Mukesh Neema, Danish Waseem, Rajesh Paruchuri
 
-Compares a six-channel U-Net (FC-EF) with shared-encoder Siamese U-Nets on [LEVIR-CD](https://justchenhao.github.io/LEVIR/) for building construction/demolition. Proposal: [`docs/Data255_ProjectProposal.pdf`](docs/Data255_ProjectProposal.pdf). Report draft: [`report/report.md`](report/report.md).
+Compares a six-channel U-Net (FC-EF) with shared-encoder Siamese U-Nets on [LEVIR-CD](https://justchenhao.github.io/LEVIR/) for building construction/demolition.
+
+- Proposal: [`docs/Data255_ProjectProposal.pdf`](docs/Data255_ProjectProposal.pdf)  
+- Final report (Markdown): [`report/report.md`](report/report.md)  
+- Final report (PDF): [`report/report.pdf`](report/report.pdf)  
+- Repo: https://github.com/danwaseem/levir-change-detection
 
 ---
 
-## Status — what is done vs left
+## Project status — complete
 
-| Done | Still needed |
+| Deliverable | Status |
 | --- | --- |
-| Full training + eval code (Daudt triad, losses, metrics, ablations) | Presentation slides |
-| Dataset audit + stem-overlap check | Team assistance disclosure (§11 in report) |
-| Abs-diff baseline on **val** (F1 **0.129**) | Export final PDF for submission |
-| GPU 9-run matrix + comparison table | — |
-| Locked test: FC-EF BCE seed 1511 → test F1 **0.780** | — |
-| Full write-up in `report/report.md` (results, H1/H2, failures, locked gallery) | — |
-| Architecture figure + validation gallery / curves | — |
-| Smoke + unit tests (14) | — |
+| Code (Daudt triad, losses, metrics, abs-diff, audits, tests) | Done |
+| GPU 9-run matrix + comparison table | Done |
+| Locked test (FC-EF BCE, seed 1511) | Done — **test F1 0.780** |
+| Leakage audit (stem overlap = 0) | Done |
+| Report write-up + figures | Done |
+| Assistance disclosure | Done (Claude noted in report §11) |
+| Presentation slides | Team / course schedule |
 
-Coding and GPU experiments are on `main`. Report numbers come from `results/` only — do not invent scores.
+No further training or fine-tuning is required for submission. Numbers come only from `results/`.
+
+---
+
+## Headline results
+
+| Method | Split | F1 | Notes |
+| --- | --- | ---: | --- |
+| Abs RGB difference | val | 0.129 | Non-learned reference |
+| FC-EF (BCE+Dice, mean 3 seeds) | val | 0.718 | Principal comparison |
+| FC-Siam-diff (BCE+Dice, mean 3 seeds) | val | 0.543 | H1 not supported |
+| FC-Siam-conc (BCE+Dice, seed 1511) | val | 0.773 | Single seed |
+| FC-EF BCE (locked) | val → **test** | 0.778 → **0.780** | Chosen after freeze |
+
+**Hypotheses:** H1 (Siam-diff > FC-EF) and H2 (BCE+Dice > BCE) were **not supported** under this narrow (`base=16`) protocol. Absolute difference is far weaker than every learned model.
+
+Figures: [`results/report_figures/`](results/report_figures/) · Gallery: [`results/experiments/full_unet_bce_aug_seed1511_tile256/validation_gallery.png`](results/experiments/full_unet_bce_aug_seed1511_tile256/validation_gallery.png)
 
 ---
 
@@ -28,19 +48,15 @@ Coding and GPU experiments are on `main`. Report numbers come from `results/` on
 
 We follow the Daudt et al. (2018) change-detection triad and score with change-class F1 (Chen & Shi, 2020). Code: [`src/levir_cd/models.py`](src/levir_cd/models.py). Paper map: [`docs/RELATED_WORK.md`](docs/RELATED_WORK.md). We do **not** reproduce STANet attention.
 
-**How data flows.** Each LEVIR sample is a pair of RGB images (A = earlier date, B = later date) plus a binary building-change mask. We cut 1024×1024 pairs into non-overlapping 256×256 tiles. Optional flips/rotations are applied the same way to A, B, and the mask. A non-learned absolute RGB difference baseline is the reference. Learned models are one of:
-
 | Paper name | `MODEL` | What it does |
 | --- | --- | --- |
 | **FC-EF** | `unet` | Stack A and B as 6 channels → one U-Net |
-| **FC-Siam-diff** | `siamese_diff` | Shared encoder on A and B; fuse with \|fA−fB\| |
+| **FC-Siam-diff** | `siamese_diff` | Shared encoder; fuse with \|fA−fB\| |
 | **FC-Siam-conc** | `siamese_conc` | Shared encoder; fuse by concatenating features |
 
-All learned paths output 1-channel logits → sigmoid → threshold **0.5** → change-class F1 / IoU / precision / recall. Default width `base=16`. Checkpoint by validation F1.
+All learned paths: logits → sigmoid → threshold **0.5** → change-class F1 / IoU / P / R. Width `base=16`. Checkpoint by validation F1.
 
 ![LEVIR-CD Building Change Detection Architecture — Daudt triad](docs/architecture.jpg)
-
-*Figure: Local architecture diagram (FC-EF / FC-Siam-diff / FC-Siam-conc).*
 
 ```text
 LEVIR pair (A, B, mask)
@@ -57,7 +73,7 @@ LEVIR pair (A, B, mask)
 
 ---
 
-## Local setup (do this first)
+## Local setup
 
 ```bash
 git clone https://github.com/danwaseem/levir-change-detection.git
@@ -69,19 +85,13 @@ source .venv/bin/activate          # Windows: .venv\Scripts\activate
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 python -m pip install -e .
-
-# optional Jupyter kernel
-python -m ipykernel install --user --name levir-cd --display-name "Python (LEVIR-CD)"
 ```
 
-**Dataset (LEVIR-CD, academic use only).** Not stored in Git (~2.3 GB zips).
+**Dataset (LEVIR-CD, academic use only).** Not stored in Git.
 
 ```bash
-export LEVIR_DATA_ROOT="/path/to/levir-cd"   # folder with train.zip, val.zip, test.zip
-# optional: export LEVIR_PROJECT_ROOT="$PWD"
+export LEVIR_DATA_ROOT="/path/to/levir-cd"   # train/val/test with A/, B/, label/
 ```
-
-If `LEVIR_DATA_ROOT` is unset, `run_plan.py --mode full` looks under `../datasets/levir-cd` and can download once. Expected layout after extract: `A/`, `B/`, `label/` per split.
 
 **Quick check (no LEVIR needed):**
 
@@ -90,56 +100,22 @@ PYTHONPATH=src python scripts/run_smoke.py
 PYTHONPATH=src python -m pytest -q
 ```
 
-Do **not** commit smoke folders, `.pt` checkpoints, or `results/smoke_summary.json`.
+Do **not** commit smoke folders or `.pt` checkpoints.
 
 ---
 
-## How to run experiments
+## How to reproduce experiments
 
 | Goal | Command | Needs LEVIR? |
 | --- | --- | --- |
 | Smoke (code only) | `PYTHONPATH=src python scripts/run_smoke.py` | No |
 | Unit tests | `PYTHONPATH=src python -m pytest -q` | No |
 | Abs-diff baseline (val) | `PYTHONPATH=src python scripts/run_baseline.py` | Yes |
-| Full 9-run matrix | `PYTHONPATH=src python scripts/run_plan.py --mode full` | Yes |
+| Full 9-run matrix | `PYTHONPATH=src python scripts/run_plan.py --mode full` | Yes (GPU recommended) |
 | Build comparison table | `PYTHONPATH=src python scripts/run_plan.py --aggregate-only` | Summaries on disk |
 | Locked test (once) | `PYTHONPATH=src python scripts/run_locked_test.py --checkpoint …/best_model.pt --i-confirm-choices-are-frozen` | Yes |
 
-### University GPU lab (recommended for full matrix)
-
-```bash
-git pull
-source .venv/bin/activate
-# install CUDA torch for the lab, e.g.:
-# pip install torch --index-url https://download.pytorch.org/whl/cu124
-pip install -r requirements.txt && pip install -e .
-
-export LEVIR_DATA_ROOT="/path/to/levir-cd"
-
-# use tmux/screen — this takes hours
-PYTHONPATH=src python scripts/run_smoke.py
-PYTHONPATH=src python scripts/run_plan.py --mode full
-PYTHONPATH=src python scripts/run_baseline.py
-PYTHONPATH=src python scripts/run_plan.py --aggregate-only
-```
-
-After freeze, one test pass, then copy back:
-
-- `results/experiments/`
-- `results/comparison_table.md`
-- `results/absdiff_baseline/`
-- `results/locked_test/`
-
-Matrix contents: FC-EF + FC-Siam-diff at seeds 1511/42/123, one FC-Siam-conc, BCE-only ablation, no-aug ablation.
-
----
-
-## Research question
-
-Does a Siamese U-Net improve building-change F1 over a six-channel U-Net under the same protocol, and how do loss and paired augmentation affect accuracy and cost?
-
-- **H1:** FC-Siam-diff beats FC-EF on change-class F1/IoU (maybe slower).
-- **H2:** BCE+Dice beats BCE alone under class imbalance.
+Full matrix already completed on the university GPU lab. Re-running is optional for reproduction only.
 
 ---
 
@@ -153,18 +129,7 @@ Does a Siamese U-Net improve building-change F1 over a six-channel U-Net under t
 | Val | 64 | 1,024 |
 | Test | 128 | 2,048 |
 
-Train/val only until freeze. Stem overlap across splits: **0** (`results/levir_audit/` after audit). Imagery is not in Git.
-
----
-
-## Results so far (validation only)
-
-| Method | Seed | F1 | IoU | P | R | Where |
-| --- | ---: | ---: | ---: | ---: | ---: | --- |
-| Abs RGB difference | — | **0.129** | 0.069 | 0.096 | 0.193 | run locally → `results/absdiff_baseline/` |
-| FC-EF U-Net | 1511 | **0.732** | 0.577 | 0.691 | 0.778 | [`results/unet_baseline/`](results/unet_baseline/) |
-
-Siamese / ablations / test: **not run yet**.
+Stem overlap across splits: **0** ([`results/levir_audit/stem_overlap_report.json`](results/levir_audit/stem_overlap_report.json)). Imagery is not in Git.
 
 ---
 
@@ -173,13 +138,18 @@ Siamese / ablations / test: **not run yet**.
 ```text
 .
 ├── README.md
-├── requirements.txt / pyproject.toml
-├── docs/          # proposal, related work, architecture figure
-├── report/        # report.md
-├── results/       # baselines + experiment summaries (no huge .pt in Git)
-├── src/levir_cd/  # models, data, train, metrics, baseline, audit
-├── scripts/       # run_smoke, run_plan, run_baseline, run_locked_test
-├── notebooks/     # 01 audit, 02 experiments
+├── docs/                 # proposal, related work, architecture.jpg
+├── report/               # report.md + report.pdf
+├── results/
+│   ├── absdiff_baseline/
+│   ├── levir_audit/      # stem overlap + manifest
+│   ├── report_figures/   # loss / P-R / bar charts
+│   ├── experiments/      # per-run summaries (+ locked gallery)
+│   ├── locked_test/
+│   └── comparison_table.md
+├── src/levir_cd/
+├── scripts/              # run_smoke, run_plan, run_baseline, run_locked_test
+├── notebooks/
 └── tests/
 ```
 
@@ -187,4 +157,4 @@ Siamese / ablations / test: **not run yet**.
 
 ## Credits
 
-LEVIR-CD: Chen & Shi (2020). Academic use only. Team roles follow the proposal.
+LEVIR-CD: Chen & Shi (2020). Academic use only. Team roles follow the proposal and report §9.

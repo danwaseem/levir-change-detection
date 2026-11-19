@@ -89,6 +89,14 @@ def comparison_markdown(summaries: list[dict[str, Any]]) -> str:
     if not summaries:
         lines.append("| — | — | — | — | — | — | — | — | — | — | — | — | no runs yet |")
         return "\n".join(lines) + "\n"
+    # Keep finished LEVIR training runs only (drop smoke + locked-test summaries).
+    summaries = [
+        row
+        for row in summaries
+        if row.get("synthetic") is not True
+        and row.get("run_mode") != "smoke"
+        and row.get("best_val_f1") is not None
+    ]
     for row in summaries:
         name = row.get("paper_name") or paper_name(str(row.get("model", "")))
         lines.append(

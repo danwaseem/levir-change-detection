@@ -35,3 +35,7 @@ __pycache__/
 
 # Agent upload staging
 /uploads/
+
+# Local smoke / backup run dirs (do not commit)
+/results/experiments/smoke_*/
+/results/unet_baseline/_original_backup/

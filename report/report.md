@@ -396,3 +396,4 @@ Claude was used as an assistance tool for writing organization, report formattin
 | Locked-model gallery | `results/experiments/full_unet_bce_aug_seed1511_tile256/validation_gallery.png` |
 | Report figures (loss / P-R / bars) | `results/report_figures/` |
 | Locked test | `results/locked_test/full_unet_bce_aug_seed1511_tile256/` |
+| Final report (PDF) | `report/report.pdf` |
