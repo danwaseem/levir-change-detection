@@ -11,7 +11,7 @@ Compares a six-channel U-Net (FC-EF) with shared-encoder Siamese U-Nets on [LEVI
 - Presentation outline: [`docs/presentation/slides.md`](docs/presentation/slides.md)  
 - Team work division: [`docs/TEAM_WORK_DIVISION.md`](docs/TEAM_WORK_DIVISION.md)  
 - Week 3/4 Canvas uploads: [`docs/progress-report-week-3-4/`](docs/progress-report-week-3-4/) (dataset card + progress report PDFs)  
-- Individual contribution statements: [`docs/individual-contribution/`](docs/individual-contribution/) ([Sneha](docs/individual-contribution/sneha_singh.md) · [Ritika](docs/individual-contribution/ritika_mukesh_neema.md) · [Danish](docs/individual-contribution/danish_waseem.md) · [Rajesh](docs/individual-contribution/rajesh_paruchuri.md))  
+- Individual contribution statements: [`individual-contribution/`](individual-contribution/) ([Sneha](individual-contribution/sneha_singh.md) · [Ritika](individual-contribution/ritika_mukesh_neema.md) · [Danish](individual-contribution/danish_waseem.md) · [Rajesh](individual-contribution/rajesh_paruchuri.md))  
 - Repo: https://github.com/danwaseem/levir-change-detection
 
 ---
@@ -142,9 +142,10 @@ Stem overlap across splits: **0** ([`results/levir_audit/stem_overlap_report.jso
 ```text
 .
 ├── README.md
+├── individual-contribution/  # per-member contribution statements
 ├── configs/              # JSON configs for the nine reported GPU runs
-├── docs/                 # proposal, related work, reproduction, slides, architecture
-├── report/               # IEEE-style report.md + report.pdf
+├── docs/                 # proposal, related work, week3/4 Canvas, slides
+├── report/               # IEEE DOCX + PDF (+ build_ieee_report.py)
 ├── results/
 │   ├── absdiff_baseline/
 │   ├── levir_audit/      # stem overlap + manifest
