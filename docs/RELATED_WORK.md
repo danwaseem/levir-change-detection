@@ -54,7 +54,7 @@ Sources: Daudt et al. 2018, Chen & Shi 2020, and later public LEVIR tables (Open
 | BCE vs BCE+Dice and paired flip/rot90 ablations | Coded. `scripts/run_plan.py --mode full` runs them with the main comparison. |
 | STANet attention, BCL loss, ImageNet/ResNet encoders | Left out on purpose. Adding them would change the controlled comparison. |
 
-Published LEVIR **test** F1 numbers other groups report for the Daudt models are about 0.81–0.86 under their own training budgets. Our feasibility number is validation F1 **0.7319** for the lightweight FC-EF, seed 1511. Do not present the published test numbers as this team's result.
+Published LEVIR **test** F1 numbers other groups report for the Daudt models are about 0.81–0.86 under their own training budgets. Those numbers are **context only**. This team's locked result is FC-EF+BCE test F1 **0.780** (val 0.778, seed 1511, `base=16`). Do not present published heavier-schedule scores as this team's result.
 
 ## Citation stubs (for the final report)
 

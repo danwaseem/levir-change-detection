@@ -29,8 +29,8 @@ Individual statements: `individual-contribution/`.
 | Configs + Week 4 progress + gallery + responsible-use | Ritika | Done |
 | Metrics + figures + environment + reproduction | Rajesh | Done |
 | IEEE report packaging | team | Done |
-| Confidential peer assessment | each | Outside repo |
-| Presentation | team | Separate |
+| Confidential peer assessment | each | Outside repo / Canvas |
+| Presentation decks | team | Done (`presentation/LEVIR_Change_Detection_DATA255.{pptx,pdf}`) |
 
 ---
 

@@ -53,6 +53,10 @@ See `results/environment.json`. Training: university CUDA lab (`PROJECT_ROOT=/ap
 
 `*.pt` weights are gitignored. Metric summaries under `results/` are sufficient for this non-retrain verification. Forward-pass re-score needs `best_model.pt` from the team GPU store or a retrain from `configs/full_unet_bce_aug_seed1511_tile256.json`.
 
+## Manifest path note
+
+`results/levir_audit/split_manifest.csv` contains absolute image paths from the host that built it. Stem-overlap counts in `stem_overlap_report.json` remain valid without those files. To train or re-score on a new machine, set `LEVIR_DATA_ROOT` and rebuild the manifest with the dataset audit before loading tiles.
+
 ## Sign-off
 
 | Role | Name | Date | Result |

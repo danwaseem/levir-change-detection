@@ -34,6 +34,7 @@ Figures: [`results/report_figures/`](results/report_figures/) · Gallery: [`resu
 | Week 3 dataset card | [`docs/progress-report-week-3-4/week3_dataset_card.pdf`](docs/progress-report-week-3-4/week3_dataset_card.pdf) |
 | Week 4 progress report | [`docs/progress-report-week-3-4/week4_progress_report.pdf`](docs/progress-report-week-3-4/week4_progress_report.pdf) |
 | Reproduction evidence | [`docs/REPRODUCTION.md`](docs/REPRODUCTION.md) |
+| Presentation (PDF / PPTX) | [`presentation/LEVIR_Change_Detection_DATA255.pdf`](presentation/LEVIR_Change_Detection_DATA255.pdf) · [`presentation/LEVIR_Change_Detection_DATA255.pptx`](presentation/LEVIR_Change_Detection_DATA255.pptx) |
 | Presentation outline | [`docs/presentation/slides.md`](docs/presentation/slides.md) |
 | Team work division | [`docs/TEAM_WORK_DIVISION.md`](docs/TEAM_WORK_DIVISION.md) |
 | Individual statements | [`individual-contribution/`](individual-contribution/) |
@@ -65,7 +66,8 @@ Full checklist and cross-review pairs: [`docs/TEAM_WORK_DIVISION.md`](docs/TEAM_
 | Leakage audit (stem overlap = 0) | Done |
 | Report write-up + figures | Done |
 | Assistance disclosure | Done (Claude noted in report) |
-| Presentation | Team / course schedule |
+| Presentation decks (PDF/PPTX) | Done — [`presentation/`](presentation/) |
+| Confidential peer assessment | Each member / Canvas (outside repo) |
 
 No further training is required for submission. Numbers come only from `results/`.
 
@@ -86,6 +88,8 @@ Stem overlap across splits: **0** ([`results/levir_audit/stem_overlap_report.jso
 ```bash
 export LEVIR_DATA_ROOT="/path/to/levir-cd"   # train/val/test with A/, B/, label/
 ```
+
+`results/levir_audit/split_manifest.csv` stores host-local image paths from the machine that built it. Stem-overlap counts are still valid. To rebuild paths on a new host after setting `LEVIR_DATA_ROOT`, re-run the dataset audit (`notebooks/01_dataset_audit.ipynb` or the audit helpers). Reported metric summaries under `results/` do **not** need that rebuild.
 
 ---
 
@@ -164,7 +168,8 @@ The full matrix already ran on the university GPU lab. Re-running is optional. A
 ├── README.md
 ├── individual-contribution/   # per-member contribution statements
 ├── configs/                   # JSON configs for the nine reported GPU runs
-├── docs/                      # proposal, related work, week3/4 Canvas, slides
+├── docs/                      # proposal, related work, week3/4 Canvas, slide outline
+├── presentation/              # final PPTX + PDF decks
 ├── report/                    # IEEE DOCX + PDF (+ build_ieee_report.py)
 ├── results/
 │   ├── absdiff_baseline/

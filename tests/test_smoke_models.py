@@ -172,11 +172,24 @@ def test_locked_test_cli_refuses_without_confirmation(tmp_path):
 
 
 def test_load_split_frame_test_rows():
+    from pathlib import Path
+
+    import pandas as pd
+    import pytest
+
     from levir_cd.data import load_split_frame
 
     manifest = ROOT / "results" / "levir_audit" / "split_manifest.csv"
     if not manifest.is_file():
-        return
+        pytest.skip("split_manifest.csv not present")
+    frame = pd.read_csv(manifest)
+    test_rows = frame.loc[frame.split == "test"]
+    assert len(test_rows) == 128
+    sample = Path(str(test_rows.iloc[0]["image_A"]))
+    if not sample.is_file():
+        pytest.skip(
+            "LEVIR images not on this host; rebuild split_manifest with LEVIR_DATA_ROOT"
+        )
     test_df = load_split_frame(manifest, "test")
     assert len(test_df) == 128
 
