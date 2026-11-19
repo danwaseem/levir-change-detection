@@ -10,7 +10,7 @@ from pathlib import Path
 from docx import Document
 from docx.enum.section import WD_SECTION
 from docx.enum.table import WD_TABLE_ALIGNMENT
-from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_LINE_SPACING
+from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_BREAK, WD_LINE_SPACING
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from docx.shared import Inches, Pt, Twips
@@ -695,21 +695,80 @@ def build():
         indent=False,
     )
 
+    # Full-width end matter so the contributions table can use the page.
+    sec_end = doc.add_section(WD_SECTION.NEW_PAGE)
+    configure_page(sec_end)
+    set_columns(sec_end, 1)
+
     heading(doc, "CONTRIBUTIONS")
-    table_title(doc, "TABLE VII.  TEAM CONTRIBUTIONS (LEAD + SUPPORT)", before=2, after=0)
+    body(
+        doc,
+        "Team contributions follow an even lead-and-support split. Every member owns a "
+        "technical lead area and also supports another member’s work. Detailed artifact "
+        "lists are in individual-contribution/ and docs/TEAM_WORK_DIVISION.md.",
+        indent=False,
+    )
+    table_title(doc, "TABLE VII.  TEAM CONTRIBUTIONS (LEAD + SUPPORT)", before=6, after=2)
     add_table(
         doc,
-        ["Member", "Lead", "Supports"],
+        ["Member", "Technical lead", "Also supports", "Key artifacts"],
         [
-            ["Sneha", "Data, audit, abs-diff, protocol, Week 3", "Freeze checklist (Danish)"],
-            ["Danish", "Models, GPU matrix, locked test, H1/H2", "Dataloader + summary QA"],
-            ["Ritika", "Configs, losses, feasibility, Week 4, gallery", "Dataset-card + GPU configs"],
-            ["Rajesh", "Metrics, latency, figures, env, reproduction", "Locked-test verify + compute"],
+            [
+                "Sneha Singh",
+                "Data pipeline; leakage/geo audit; abs-diff reference baseline; "
+                "split/tile + freeze-before-test protocol; Week 3 dataset card",
+                "Danish — freeze checklist before locked test; "
+                "Ritika — protocol fields in configs",
+                "notebooks/01_dataset_audit.ipynb; results/levir_audit/; "
+                "results/absdiff_baseline/; week3_dataset_card.pdf",
+            ],
+            [
+                "Danish Waseem",
+                "FC-EF / Siamese model code; 9-run GPU matrix; locked test "
+                "execution; H1/H2 interpretation",
+                "Sneha — Siamese/dataloader integration; "
+                "Rajesh — per-run summary.json QA vs report",
+                "src/levir_cd/models.py; results/experiments/full_*; "
+                "results/locked_test/",
+            ],
+            [
+                "Ritika Mukesh Neema",
+                "Config/seed/aug wiring; BCE / BCE+Dice losses; local feasibility "
+                "+ smoke packaging; Week 4 progress; validation gallery; "
+                "responsible-use drafting",
+                "Sneha — dataset-card / stem-overlap review; "
+                "Danish — full config matrix for GPU runs",
+                "configs/; src/levir_cd/losses.py; results/unet_baseline/; "
+                "week4_progress_report.pdf; gallery",
+            ],
+            [
+                "Rajesh Paruchuri",
+                "Metrics + secondary scores; comparison table; latency/compute; "
+                "environment.json; report figures; failure-count tables; "
+                "signed reproduction; aggregate plan outputs",
+                "Danish — locked-test F1/IoU verification; "
+                "Ritika — compute/latency rows for progress packaging",
+                "src/levir_cd/metrics.py; results/comparison_table.md; "
+                "results/report_figures/; docs/REPRODUCTION.md",
+            ],
         ],
-        [900, 2400, 2100],
-        font_size=7,
-        compact=True,
+        [1200, 2400, 2000, 2200],
+        font_size=8,
+        compact=False,
     )
+    body(
+        doc,
+        "Cross-review pairs: Ritika reviews Sneha’s dataset card and abs-diff summary; "
+        "Rajesh reviews Danish’s locked-test and experiment summaries; Sneha reviews "
+        "Ritika’s progress report, configs, and gallery; Danish reviews Rajesh’s "
+        "reproduction commands, comparison table, and figure set.",
+    )
+
+    # Keep assistance disclosure + references on the following page.
+    p_break = doc.add_paragraph()
+    p_break.paragraph_format.space_before = Pt(0)
+    p_break.paragraph_format.space_after = Pt(0)
+    p_break.add_run().add_break(WD_BREAK.PAGE)
 
     heading(doc, "ASSISTANCE DISCLOSURE")
     body(
