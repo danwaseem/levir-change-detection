@@ -6,7 +6,7 @@
 ## Concrete artifacts
 - Supporting FC-EF / paired-augmentation config wiring: `configs/full_unet_*.json`
 - Local feasibility packaging under `results/unet_baseline/`
-- Week 4 progress-report packaging: `docs/PROGRESS_REPORT.md`
+- Week 4 progress-report packaging: `docs/progress-report-week-3-4/week4_progress_report.pdf`
 - Assist maintaining config index (`configs/INDEX.md`) for reported runs
 
 ## Cross-review activity

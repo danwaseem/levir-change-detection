@@ -11,9 +11,9 @@
 
 | Member | Load | Owns (hard vs supporting) | Key artifacts |
 | --- | --- | --- | --- |
-| **Sneha Singh** | **Hard** | Data pipeline end-to-end; leakage/geo audit; abs-diff reference science; eval protocol (splits, freeze rules, primary metric); dataset card; responsible-use / limitation drafting; deep review of experimental claims | `notebooks/01_dataset_audit.ipynb`, `results/levir_audit/`, `results/absdiff_baseline/`, `docs/DATASET_CARD.md`, report §§III & VII (protocol / responsible use) |
+| **Sneha Singh** | **Hard** | Data pipeline end-to-end; leakage/geo audit; abs-diff reference science; eval protocol (splits, freeze rules, primary metric); dataset card; responsible-use / limitation drafting; deep review of experimental claims | `notebooks/01_dataset_audit.ipynb`, `results/levir_audit/`, `results/absdiff_baseline/`, `docs/progress-report-week-3-4/week3_dataset_card.pdf`, report §§III & VII (protocol / responsible use) |
 | **Danish Waseem** | **Hard** | Daudt triad model code on GPU; full 9-run matrix; loss/architecture investigation; locked test; failure analysis + gallery; environment logging; H1/H2 interpretation | `src/levir_cd/models.py` / train path on lab, `results/experiments/full_*`, `results/locked_test/`, `results/environment.json`, report §§IV–VII results/errors |
-| **Ritika Mukesh Neema** | Supporting | FC-EF local feasibility / paired-aug wiring; seed config files; progress-report packaging; assist figure/config indexing | `configs/full_unet_*`, `docs/PROGRESS_REPORT.md`, feasibility `results/unet_baseline/` |
+| **Ritika Mukesh Neema** | Supporting | FC-EF local feasibility / paired-aug wiring; seed config files; progress-report packaging; assist figure/config indexing | `configs/full_unet_*`, `docs/progress-report-week-3-4/week4_progress_report.pdf`, feasibility `results/unet_baseline/` |
 | **Rajesh Paruchuri** | Supporting | Metric aggregation / comparison table; latency numbers packaging; signed reproduction check; compute-table formatting | `results/comparison_table.md`, `docs/REPRODUCTION.md`, report compute rows |
 
 Individual statements (repo root): `individual-contribution/` (`sneha_singh.md`, `ritika_mukesh_neema.md`, `danish_waseem.md`, `rajesh_paruchuri.md`).
