@@ -75,15 +75,19 @@ Masks are binarized at intensity \(\ge 128\). Training and model selection use t
 
 ### 3.2 Leakage audit
 
-Filename-stem overlap across splits (`results/levir_audit/stem_overlap_report.json`):
+We checked whether the same image **filename stem** appears in more than one official split (`results/levir_audit/stem_overlap_report.json`). Overlap count **0 means no shared stems** (good)—not a missing audit.
 
-| Split pair | Shared stems |
+| Check | Result |
 | --- | ---: |
-| train / val | 0 |
-| train / test | 0 |
-| val / test | 0 |
+| Train pairs audited | 445 |
+| Val pairs audited | 64 |
+| Test pairs audited | 128 |
+| Shared stems: train ∩ val | **0** |
+| Shared stems: train ∩ test | **0** |
+| Shared stems: val ∩ test | **0** |
+| Example overlapping stems | none |
 
-Zero stem overlap reduces one leakage path. It does **not** prove that nearby geographic scenes never correlate across splits; a lat/long distance audit remains future work.
+**Interpretation.** Official LEVIR pair IDs do not collide across splits, so there is no trivial identity leakage via repeated filenames. This still does **not** prove that nearby geographic scenes never correlate across splits; a lat/long distance audit remains future work.
 
 ### 3.3 Metrics and decision rule
 

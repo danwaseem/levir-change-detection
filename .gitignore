@@ -27,8 +27,7 @@ __pycache__/
 .vscode/
 .idea/
 
-# Local audit manifests and scratch logs. Shared F1 artifacts live in results/.
-/results/levir_audit/
+# Scratch logs. Stem-overlap audit JSON is tracked for the report.
 /results/smoke_summary.json
 /checkpoints/
 /logs/

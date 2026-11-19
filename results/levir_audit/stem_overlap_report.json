@@ -1,0 +1,22 @@
+{
+  "splits": {
+    "test": 128,
+    "train": 445,
+    "val": 64
+  },
+  "stem_overlaps": {
+    "test_vs_train": {
+      "count": 0,
+      "examples": []
+    },
+    "test_vs_val": {
+      "count": 0,
+      "examples": []
+    },
+    "train_vs_val": {
+      "count": 0,
+      "examples": []
+    }
+  },
+  "note": "Shared stems across splits are rare for LEVIR-CD. Absence of stem overlap does not prove absence of nearby/overlapping scenes."
+}
