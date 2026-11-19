@@ -3,32 +3,32 @@
 **Members:** Sneha Singh · Ritika Mukesh Neema · Danish Waseem · Rajesh Paruchuri  
 **Repo:** https://github.com/danwaseem/levir-change-detection
 
-**Load split:** **Sneha** and **Danish** own the hard research/engineering core. **Ritika** and **Rajesh** own supporting implementation, packaging, and verification. Presentation is handled separately by the team.
+Presentation is handled separately by the team.
 
 ---
 
 ## Owned technical areas
 
-| Member | Load | Owns (hard vs supporting) | Key artifacts |
-| --- | --- | --- | --- |
-| **Sneha Singh** | **Hard** | Data pipeline end-to-end; leakage/geo audit; abs-diff reference science; eval protocol (splits, freeze rules, primary metric); dataset card; responsible-use / limitation drafting; deep review of experimental claims | `notebooks/01_dataset_audit.ipynb`, `results/levir_audit/`, `results/absdiff_baseline/`, `docs/progress-report-week-3-4/week3_dataset_card.pdf`, report §§III & VII (protocol / responsible use) |
-| **Danish Waseem** | **Hard** | Daudt triad model code on GPU; full 9-run matrix; loss/architecture investigation; locked test; failure analysis + gallery; environment logging; H1/H2 interpretation | `src/levir_cd/models.py` / train path on lab, `results/experiments/full_*`, `results/locked_test/`, `results/environment.json`, report §§IV–VII results/errors |
-| **Ritika Mukesh Neema** | Supporting | FC-EF local feasibility / paired-aug wiring; seed config files; progress-report packaging; assist figure/config indexing | `configs/full_unet_*`, `docs/progress-report-week-3-4/week4_progress_report.pdf`, feasibility `results/unet_baseline/` |
-| **Rajesh Paruchuri** | Supporting | Metric aggregation / comparison table; latency numbers packaging; signed reproduction check; compute-table formatting | `results/comparison_table.md`, `docs/REPRODUCTION.md`, report compute rows |
+| Member | Owns | Key artifacts |
+| --- | --- | --- |
+| **Sneha Singh** | Data pipeline; leakage/geo audit; abs-diff reference baseline; split/tile protocol; Week 3 dataset card; responsible-use drafting | `notebooks/01_dataset_audit.ipynb`, `results/levir_audit/`, `results/absdiff_baseline/`, `docs/progress-report-week-3-4/week3_dataset_card.pdf` |
+| **Danish Waseem** | Siamese + FC-EF GPU training; 9-run matrix; locked test execution; qualitative gallery; H1/H2 interpretation | `src/levir_cd/models.py`, `results/experiments/full_*`, `results/locked_test/`, validation gallery |
+| **Ritika Mukesh Neema** | FC-EF/paired-aug config wiring; seed configs; local feasibility packaging; Week 4 progress report | `configs/full_unet_*`, `docs/progress-report-week-3-4/week4_progress_report.pdf`, `results/unet_baseline/` |
+| **Rajesh Paruchuri** | Metrics + secondary scores (IoU/P/R/boundary F1); comparison table; latency/compute reporting; `results/environment.json`; report figure packaging (`results/report_figures/`); signed reproduction check; quantitative failure-count tables for the report | `src/levir_cd/metrics.py`, `results/comparison_table.md`, `results/environment.json`, `results/report_figures/`, `docs/REPRODUCTION.md` |
 
-Individual statements (repo root): `individual-contribution/` (`sneha_singh.md`, `ritika_mukesh_neema.md`, `danish_waseem.md`, `rajesh_paruchuri.md`).
+Individual statements: `individual-contribution/`.
 
 ---
 
-## Non-presentation checklist
+## Checklist
 
 | Item | Owner | Status |
 | --- | --- | --- |
-| Hard science: data + protocol + abs-diff | Sneha | Done |
-| Hard science: GPU matrix + locked test + failures | Danish | Done |
-| Supporting: progress report / U-Net config packaging | Ritika | Done |
-| Supporting: reproduction sign-off / tables | Rajesh | Done |
-| IEEE report packaging | team (Sneha+Danish lead technical claims) | Done |
+| Data + leakage + abs-diff | Sneha | Done |
+| GPU matrix + locked test + gallery | Danish | Done |
+| Configs + progress report | Ritika | Done |
+| Metrics, figures, environment, reproduction | Rajesh | Done |
+| IEEE report packaging | team | Done |
 | Confidential peer assessment | each | Outside repo |
 | Presentation | team | Separate |
 
@@ -36,11 +36,9 @@ Individual statements (repo root): `individual-contribution/` (`sneha_singh.md`,
 
 ## Cross-review pairs
 
-Hard work is reviewed by supporters; supporters’ packaging is reviewed by leads.
-
 | Reviewer | Reviews |
 | --- | --- |
 | Ritika → Sneha | Dataset card + stem-overlap + abs-diff summary |
 | Rajesh → Danish | Locked-test F1/IoU + experiment summaries vs report |
 | Sneha → Ritika | Progress report + U-Net configs consistency |
-| Danish → Rajesh | Reproduction commands + comparison table |
+| Danish → Rajesh | Reproduction commands + comparison table + figure set |

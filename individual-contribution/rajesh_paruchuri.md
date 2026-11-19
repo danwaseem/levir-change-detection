@@ -1,16 +1,18 @@
 # Individual contribution statement — Rajesh Paruchuri
 
-**Team:** BuildSafe Vision · DATA 255 Fall 2026  
-**Load:** Supporting (metrics tables, timing packaging, reproduction sign-off)
+**Team:** BuildSafe Vision · DATA 255 Fall 2026
 
 ## Concrete artifacts
-- Aggregate comparison table regeneration: `results/comparison_table.md`
+- Metrics implementation and secondary scores (IoU, precision, recall, boundary F1): `src/levir_cd/metrics.py`
+- Aggregate comparison table: `results/comparison_table.md`
+- Compute / batch-1 latency packaging and trade-off rows in the final report
+- Environment record for verification host + lab notes: `results/environment.json`
+- Report figure packaging under `results/report_figures/` (bars, curves used in the IEEE report)
+- Quantitative failure-count tables for locked-test analysis (empty-tile / small-change stats) pulled into the report
 - Signed cross-member reproduction log: `docs/REPRODUCTION.md`
-- Packaging of compute / batch-1 latency rows for the report (from existing `summary.json` fields)
-- Supporting check that reported F1/IoU match on-disk artifacts
 
 ## Cross-review activity
-Reviewed Danish’s locked-test summary (`test_f1` **0.780**, `test_iou` **0.639**, no post-test retune) against the IEEE report tables.
+Reviewed Danish’s locked-test summary (`test_f1` **0.780**, `test_iou` **0.639**, no post-test retune) against the IEEE report tables and figure set.
 
 ## Experiment I can explain in depth
-Artifact reproduction workflow: `run_plan.py --aggregate-only` + reading locked-test/abs-diff JSON to confirm report numbers without retraining.
+Metric + compute package: change-class F1 selection vs secondary scores, latency warm-up/sync protocol, and reproducing Table numbers from `summary.json` without retraining.

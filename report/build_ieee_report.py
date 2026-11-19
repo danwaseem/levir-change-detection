@@ -551,10 +551,11 @@ def build():
     heading(doc, "ACKNOWLEDGMENT")
     body(
         doc,
-        "Sneha Singh led data pipeline, leakage audit, abs-diff reference, and eval protocol. "
-        "Danish Waseem led Siamese models, the GPU matrix, locked test, and failure analysis. "
-        "Ritika Mukesh Neema supported FC-EF/aug config packaging and the progress report. "
-        "Rajesh Paruchuri supported comparison-table aggregation, compute packaging, and the "
+        "Sneha Singh: data pipeline, leakage audit, abs-diff reference, and protocol. "
+        "Danish Waseem: Siamese models, GPU matrix, locked test, and qualitative gallery. "
+        "Ritika Mukesh Neema: FC-EF/aug config packaging and the Week 4 progress report. "
+        "Rajesh Paruchuri: metrics and secondary scores, comparison table, latency/compute "
+        "rows, environment.json, report figure packaging, failure-count tables, and the "
         "signed reproduction check (docs/REPRODUCTION.md).",
         indent=False,
     )

@@ -1,9 +1,9 @@
 # Cross-member reproduction evidence
 
-**Hard authors (experiments):** Danish Waseem (GPU matrix, locked test); Sneha Singh (abs-diff reference + split/audit artifacts)  
-**Supporting verifier:** Rajesh Paruchuri (artifact number check / table regen)  
+**Experiment authors:** Danish Waseem (GPU matrix, locked test); Sneha Singh (abs-diff reference + split/audit artifacts)  
+**Metrics / tables / reproduction:** Rajesh Paruchuri  
 **Initial record:** 2026-11-18  
-**Re-verified:** 2026-11-18 (Rajesh supporting check on clean `main`)
+**Re-verified:** 2026-11-18 (Rajesh on clean `main`)
 
 This check does **not** require full retraining. It verifies that reported numbers match on-disk artifacts.
 
@@ -55,6 +55,6 @@ See `results/environment.json`. Training: university CUDA lab (`PROJECT_ROOT=/ap
 
 | Role | Name | Date | Result |
 | --- | --- | --- | --- |
-| Hard author (GPU / locked test) | Danish Waseem | 2026-11-18 | Runs + locked test on disk |
-| Hard author (abs-diff / audit) | Sneha Singh | 2026-11-18 | Reference + leakage artifacts |
-| Supporting verifier | Rajesh Paruchuri | 2026-11-18 | Artifact numbers match report |
+| GPU / locked test | Danish Waseem | 2026-11-18 | Runs + locked test on disk |
+| Abs-diff / audit | Sneha Singh | 2026-11-18 | Reference + leakage artifacts |
+| Metrics / reproduction | Rajesh Paruchuri | 2026-11-18 | Artifact numbers match report |
