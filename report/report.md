@@ -155,18 +155,30 @@ Held constant across the principal comparison: official splits, \(256\times256\)
 
 ## 6. Results
 
-### 6.1 Reference baseline and feasibility curve
+### 6.1 Reference baseline and summary view
 
 | Method | Split | Seed | F1 | IoU | Precision | Recall | Params |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
 | Absolute RGB difference | val | — | 0.129 | 0.069 | 0.096 | 0.193 | 0 |
 | FC-EF (early feasibility) | val | 1511 | 0.732 | 0.577 | 0.691 | 0.778 | 483,169 |
 
-![FC-EF U-Net learning curves](../results/unet_baseline/learning_curves.png)
+![Validation F1 summary bar chart](../results/report_figures/comparison_f1_bar.png)
 
-**Figure 2.** Early FC-EF feasibility run (validation). Training loss decreases smoothly; validation F1 peaks near epoch 24 (F1 0.732). This run demonstrates learning but is not the locked checkpoint.
+**Figure 2.** Validation change-class F1 across the reference baseline, principal means, triad completion, and locked setup. Learned models dominate absolute difference; locked FC-EF+BCE is best overall (0.778).
 
-### 6.2 Principal comparison (GPU, BCE+Dice, augmentation on)
+### 6.2 Locked-model training dynamics
+
+The selected model is FC-EF + BCE (seed 1511). Training curves show clear learning: train loss falls smoothly, validation F1 peaks at epoch **13** (F1 **0.778**), and later epochs are unstable—so early stopping / best-checkpoint selection matters.
+
+![Locked model learning curves](../results/report_figures/locked_learning_curves.png)
+
+**Figure 3.** Locked FC-EF+BCE run: train/val loss (left) and validation F1/IoU (right). Best checkpoint = epoch 13.
+
+![Locked model precision recall](../results/report_figures/locked_precision_recall.png)
+
+**Figure 4.** Validation precision and recall over epochs for the locked model. Epoch 13 balances both (~0.75 precision, ~0.80 recall); later epochs trade one for the other.
+
+### 6.3 Principal comparison (GPU, BCE+Dice, augmentation on)
 
 | Model | Seed | Val F1 | IoU | Precision | Recall | Boundary F1 | Latency (s) |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
@@ -183,9 +195,15 @@ Held constant across the principal comparison: official splits, \(256\times256\)
 | FC-EF | **0.718** | 0.011 |
 | FC-Siam-diff | 0.543 | 0.045 |
 
-Under the matched BCE+Dice protocol, FC-EF clearly outperforms FC-Siam-diff. Single-seed FC-Siam-conc (0.773) is the strongest BCE+Dice triad run, but the overall best validation score is FC-EF trained with **BCE only** (§6.3).
+![Validation F1 trajectories](../results/report_figures/val_f1_trajectories_seed1511.png)
 
-### 6.3 Ablations
+**Figure 5.** Validation F1 trajectories at seed 1511. FC-EF+BCE rises fastest to the best peak; FC-Siam-diff stays lower; FC-Siam-conc is competitive under BCE+Dice.
+
+![Seed variability boxplot](../results/report_figures/seed_variability_boxplot.png)
+
+**Figure 6.** Seed variability for the principal BCE+Dice comparison. FC-EF is higher and tighter (std 0.011) than FC-Siam-diff (std 0.045).
+
+### 6.4 Ablations
 
 | Setting | Val F1 | IoU |
 | --- | ---: | ---: |
@@ -193,9 +211,11 @@ Under the matched BCE+Dice protocol, FC-EF clearly outperforms FC-Siam-diff. Sin
 | FC-EF, BCE only, aug on, seed 1511 | **0.778** | 0.636 |
 | FC-EF, BCE+Dice, aug off, seed 1511 | 0.745 | 0.594 |
 
-BCE alone outperforms BCE+Dice for this narrow U-Net on seed 1511. Removing paired geometric augmentation also improves over the matched BCE+Dice+aug run, so flips/rotations were not clearly helpful here.
+![Ablation F1 bar chart](../results/report_figures/ablation_f1_bar.png)
 
-### 6.4 Computational trade-off
+**Figure 7.** FC-EF ablations (seed 1511). BCE-only beats BCE+Dice; removing paired flips/rotations also helps relative to BCE+Dice+aug.
+
+### 6.5 Computational trade-off
 
 | Model | Params | Train time | Checkpoint | Batch-1 latency |
 | --- | ---: | ---: | ---: | ---: |
@@ -205,11 +225,11 @@ BCE alone outperforms BCE+Dice for this narrow U-Net on seed 1511. Removing pair
 
 FC-EF is both more accurate than FC-Siam-diff and faster at batch-1 inference. Conc has the highest latency and parameter count among the three.
 
-### 6.5 Qualitative results and failure modes
+### 6.6 Qualitative results and failure modes
 
 ![Locked-model validation gallery](../results/experiments/full_unet_bce_aug_seed1511_tile256/validation_gallery.png)
 
-**Figure 3.** Validation examples from the locked FC-EF + BCE checkpoint (best epoch 13). Columns: before, after, ground truth, prediction @ 0.5. Larger new buildings are often recovered; boundaries are softer than labels, and small structures can be weak or missed.
+**Figure 8.** Validation examples from the locked FC-EF + BCE checkpoint (best epoch 13). Columns: before, after, ground truth, prediction @ 0.5. Larger new buildings are often recovered; boundaries are softer than labels, and small structures can be weak or missed.
 
 Locked-test failure summary (tile change \(\le 256\) pixels = “small”):
 
@@ -222,7 +242,7 @@ Locked-test failure summary (tile change \(\le 256\) pixels = “small”):
 | Mean recall (large change) | 0.702 |
 | False alarms on empty tiles | 212 |
 
-### 6.6 Locked test evaluation
+### 6.7 Locked test evaluation
 
 | Item | Value |
 | --- | --- |
@@ -306,7 +326,7 @@ Configs and metrics live in `results/experiments/*/config.json` and `summary.jso
 
 ## 11. Assistance disclosure
 
-*(Team to fill before final submission. List any AI / writing tools used and how claims were checked, or state that no generative AI assistance was used.)*
+Claude was used as an assistance tool for writing organization, report formatting, and clarifying technical wording. All research design, experiments, metrics, figures from training runs, and final claims were produced and verified by the team against repository artifacts under `results/`. No generative scores were invented.
 
 ---
 
@@ -337,4 +357,5 @@ Configs and metrics live in `results/experiments/*/config.json` and `summary.jso
 | Feasibility curves | `results/unet_baseline/` |
 | GPU comparison table | `results/comparison_table.md` |
 | Locked-model gallery | `results/experiments/full_unet_bce_aug_seed1511_tile256/validation_gallery.png` |
+| Report figures (loss / P-R / bars) | `results/report_figures/` |
 | Locked test | `results/locked_test/full_unet_bce_aug_seed1511_tile256/` |
