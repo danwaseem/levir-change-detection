@@ -18,7 +18,8 @@ from docx.shared import Inches, Pt, Twips
 ROOT = Path(__file__).resolve().parent
 FIG = ROOT / "figures_compressed"
 OUT = ROOT / "DATA255_BuildSafeVision_IEEE.docx"
-COL_W = Inches(3.45)
+PDF_OUT = ROOT / "DATA255_BuildSafeVision_IEEE.pdf"
+FIG_W = Inches(3.45)
 
 
 def set_run_font(run, size=10, bold=False, italic=False):
@@ -87,8 +88,8 @@ def P(doc, text="", size=10, bold=False, italic=False, align="justify",
     pf = p.paragraph_format
     pf.space_before = Pt(before)
     pf.space_after = Pt(after)
-    pf.line_spacing = 1.0
-    pf.line_spacing_rule = WD_LINE_SPACING.SINGLE
+    pf.line_spacing = 1.2
+    pf.line_spacing_rule = WD_LINE_SPACING.MULTIPLE
     if first:
         pf.first_line_indent = Inches(first)
     if center or align == "center":
@@ -104,7 +105,7 @@ def P(doc, text="", size=10, bold=False, italic=False, align="justify",
 
 
 def heading(doc, text):
-    return P(doc, text, size=10, bold=True, align="center", before=11, after=3, center=True)
+    return P(doc, text, size=10, bold=True, align="center", before=12, after=4, center=True)
 
 
 def subhead(doc, text):
@@ -112,7 +113,7 @@ def subhead(doc, text):
 
 
 def body(doc, text, indent=True):
-    return P(doc, text, size=10, align="justify", before=0, after=2, first=0.15 if indent else 0)
+    return P(doc, text, size=10, align="justify", before=0, after=3, first=0.15 if indent else 0)
 
 
 def caption(doc, text):
@@ -122,10 +123,10 @@ def caption(doc, text):
 def figure(doc, path, cap, width=None):
     p = doc.add_paragraph()
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p.paragraph_format.space_before = Pt(6)
-    p.paragraph_format.space_after = Pt(1)
+    p.paragraph_format.space_before = Pt(4)
+    p.paragraph_format.space_after = Pt(0)
     run = p.add_run()
-    run.add_picture(str(path), width=width or COL_W)
+    run.add_picture(str(path), width=width or FIG_W)
     caption(doc, cap)
 
 
@@ -222,7 +223,7 @@ def add_table(doc, headers, rows, widths):
 
 
 def table_title(doc, text):
-    P(doc, text, size=8, bold=True, align="center", before=8, after=1, center=True)
+    P(doc, text, size=8, bold=True, align="center", before=7, after=1, center=True)
 
 
 def build():
@@ -257,16 +258,18 @@ def build():
     r1 = abs_p.add_run("Abstract—")
     set_run_font(r1, size=9, bold=True, italic=True)
     r2 = abs_p.add_run(
-        "We study building change detection on LEVIR-CD: mark construction or demolition "
-        "between two aligned satellite views. Simple RGB difference is weak under lighting "
-        "and vegetation shift. We implement the Daudt triad (FC-EF, FC-Siam-diff, "
-        "FC-Siam-conc) in one PyTorch pipeline, keep absolute difference as a reference, "
-        "and run loss and augmentation ablations. Change pixels are rare (~4–5%), so the "
-        "primary score is change-class F1 at threshold 0.5. Under matched BCE+Dice training, "
-        "FC-EF mean validation F1 is 0.718 (3 seeds) and FC-Siam-diff is 0.543; FC-Siam-conc "
-        "reaches 0.773 on one seed. BCE-only FC-EF hits the best validation F1 (0.778) and "
-        "a locked test F1 of 0.780. At width base=16, H1 (Siam-diff better) and H2 (BCE+Dice "
-        "better) are not supported. Absolute difference stays far lower (F1 0.129)."
+        "Team BuildSafe Vision studies building change detection on LEVIR-CD: given two "
+        "aligned satellite images of the same place, mark pixels where buildings were "
+        "constructed or demolished. Absolute RGB difference is a weak non-learned "
+        "reference under lighting and vegetation shift. We implement the Daudt triad "
+        "(FC-EF, FC-Siam-diff, FC-Siam-conc) in one shared PyTorch pipeline, run a "
+        "nine-run GPU matrix with loss and paired-augmentation ablations, and freeze "
+        "before one locked test. Change pixels are rare (~4–5%), so the primary score is "
+        "change-class F1 at threshold 0.5. Under matched BCE+Dice training, FC-EF mean "
+        "validation F1 is 0.718±0.011 (3 seeds) versus FC-Siam-diff 0.543±0.045; "
+        "FC-Siam-conc reaches 0.773 on one seed. BCE-only FC-EF is best on validation "
+        "(0.778) and reaches locked test F1 0.780. At width base=16, H1 (Siam-diff better) "
+        "and H2 (BCE+Dice better) are not supported. Absolute difference stays at F1 0.129."
     )
     set_run_font(r2, size=9, bold=True)
 
@@ -274,7 +277,8 @@ def build():
     a = idx.add_run("Index Terms—")
     set_run_font(a, size=9, bold=True, italic=True)
     b = idx.add_run(
-        "change detection, remote sensing, U-Net, Siamese networks, LEVIR-CD, semantic segmentation"
+        "change detection, remote sensing, U-Net, Siamese networks, LEVIR-CD, "
+        "semantic segmentation"
     )
     set_run_font(b, size=9, bold=True)
 
@@ -285,126 +289,191 @@ def build():
     heading(doc, "I.  INTRODUCTION")
     body(
         doc,
-        "Cities need maps of new or removed buildings, not every brightness change between "
-        "two satellite dates. Shadows, plants, and sensor conditions can look like change "
-        "even when the buildings did not move. We treat the problem as dense binary "
-        "segmentation on a before/after pair.",
+        "Urban mapping needs construction and demolition signals, not every brightness "
+        "shift between two satellite dates. Shadows, plants, seasonal color, and sensor "
+        "conditions can look like change even when buildings did not move. Our team "
+        "treats the task as dense binary segmentation on a registered before/after pair: "
+        "each pixel is change or no-change.",
         indent=False,
     )
     body(
         doc,
-        "Research question. Under the same splits, tiles, and metrics, does a shared-encoder "
-        "Siamese U-Net beat a six-channel early-fusion U-Net (FC-EF) on building-change F1, "
-        "and how do loss and paired augmentation change accuracy and compute?",
+        "Research question. Under the same official splits, 256×256 tiles, optimizer, and "
+        "metrics, does a shared-encoder Siamese U-Net beat a six-channel early-fusion "
+        "U-Net (FC-EF) on building-change F1, and how do loss choice and paired geometric "
+        "augmentation change accuracy and compute?",
     )
     body(
         doc,
         "Hypotheses. (H1) FC-Siam-diff improves change-class F1/IoU over FC-EF by comparing "
-        "dates in feature space, maybe with higher inference cost. (H2) BCE+Dice finds rare "
-        "change pixels better than BCE alone. Success means honest evidence for or against "
-        "these claims. This is a course prototype, not an operational system.",
+        "dates in feature space, possibly with higher inference cost. (H2) BCE+Dice finds "
+        "rare change pixels better than BCE alone. Success means honest evidence for or "
+        "against these claims on a controlled course budget—not an operational monitor.",
     )
     body(
         doc,
-        "What we deliver: a shared PyTorch pipeline for the Daudt triad on LEVIR-CD, a "
-        "nine-run GPU matrix with three seeds for the main comparison, and one locked test "
-        "after freeze with failure analysis.",
+        "Team contribution. We deliver one shared PyTorch codebase for the Daudt triad on "
+        "LEVIR-CD, a scored absolute-difference reference, a nine-run university-GPU "
+        "matrix (three seeds on the principal comparison), freeze-before-test discipline, "
+        "failure counts, and a signed artifact reproduction check in the public repo. "
+        "Equal ownership across data, models, configs/gallery, and metrics is recorded in "
+        "docs/TEAM_WORK_DIVISION.md and the acknowledgment below.",
+    )
+    body(
+        doc,
+        "Scope note. This report answers a controlled course question with mixed evidence. "
+        "We do not claim state-of-the-art LEVIR numbers, STANet reproduction, or readiness "
+        "for city-scale monitoring. Numbers below come only from executed runs under "
+        "results/.",
+    )
+    table_title(doc, "TABLE I.  PROJECT AT A GLANCE")
+    add_table(
+        doc,
+        ["Item", "Our choice"],
+        [
+            ["Task", "Binary building-change segmentation"],
+            ["Data", "LEVIR-CD (637 pairs; Texas VHR)"],
+            ["Reference", "Absolute RGB difference (val F1 0.129)"],
+            ["Strong baseline", "FC-EF 6-ch U-Net (base=16)"],
+            ["Investigation", "FC-Siam-diff / FC-Siam-conc"],
+            ["Primary metric", "Change-class F1 @ 0.5"],
+            ["Main result", "Locked test F1 0.780 (FC-EF+BCE)"],
+            ["H1 / H2", "Not supported at this width"],
+        ],
+        [1600, 3400],
     )
 
     heading(doc, "II.  RELATED WORK")
     body(
         doc,
         "Chen and Shi released LEVIR-CD and STANet and popularized change-class F1 for "
-        "building change detection [1], [4]. We use their dataset, official split spirit, "
-        "and F1-first metric style, but we deliberately do not rebuild STANet attention or "
-        "batch-balanced contrastive loss. U-Net is the encoder–decoder backbone for dense "
-        "labels [2]. Daudt et al. compared FC-EF, FC-Siam-diff, and FC-Siam-conc for change "
-        "detection [3]; we reimplemented that full triad under one dataloader, loss, and "
-        "metric API so architecture claims stay controlled. Public FC-style LEVIR scores "
-        "near 0.81–0.86 often use heavier schedules or ImageNet backbones [5], [6]. Those "
-        "numbers are context only. Our nets use width base=16 (~0.48–0.56M parameters) and "
-        "train from scratch on the course GPU budget.",
+        "building change detection [1], [4]. LEVIR-CD has 637 VHR Google Earth pairs "
+        "(1024×1024, 0.5 m/pixel, Texas) with over 31k labeled building-change instances. "
+        "We use their data, official split spirit, and F1-first metric style, but we do "
+        "not rebuild STANet attention or batch-balanced contrastive loss.",
         indent=False,
+    )
+    body(
+        doc,
+        "U-Net is the standard encoder–decoder for dense labels [2]. Daudt et al. compared "
+        "FC-EF, FC-Siam-diff, and FC-Siam-conc for change detection [3]. We reimplemented "
+        "that full triad under one dataloader, loss, and metric API so architecture claims "
+        "stay fair. Public FC-style LEVIR scores near 0.81–0.86 often use heavier schedules "
+        "or ImageNet backbones [5], [6]. Those numbers are context only. Our nets use width "
+        "base=16 (~0.48–0.56M parameters) and train from scratch on the course GPU budget.",
+    )
+    body(
+        doc,
+        "Relative to those papers, the student-owned contribution is not a new attention "
+        "module. It is a controlled implementation: one API for three fusion styles, a "
+        "non-learned reference, loss and paired-augmentation ablations, seed reporting, "
+        "latency measurement, and a freeze-before-test lock so claims stay matched to "
+        "evidence.",
     )
 
     heading(doc, "III.  DATASET AND EVALUATION PROTOCOL")
     subhead(doc, "A.  Dataset")
     body(
         doc,
-        "LEVIR-CD [1] has 637 RGB pairs (1024×1024, ~0.5 m/pixel, Texas Google Earth) with "
-        "binary building construction/demolition masks. Academic use only; Google Earth terms "
-        "apply. Official split: 445 train / 64 val / 128 test. We cut each pair into 16 "
-        "non-overlapping 256×256 tiles after the pair is assigned to a split (7,120 / 1,024 / "
-        "2,048 tiles). Masks are binarized at intensity ≥128. Changed pixels are only about "
-        "4–5%, so we do not use overall accuracy for selection.",
+        "LEVIR-CD [1] provides binary building construction/demolition masks for academic "
+        "use under Google Earth terms. Official pair split: 445 train / 64 val / 128 test. "
+        "We cut each pair into 16 non-overlapping 256×256 tiles after the pair is assigned "
+        "to a split (Table II). Masks are binarized at intensity ≥128. Changed pixels are "
+        "only about 4–5%, so overall accuracy is recorded but never used for selection.",
         indent=False,
+    )
+    table_title(doc, "TABLE II.  LEVIR-CD SPLITS USED IN THIS PROJECT")
+    add_table(
+        doc,
+        ["Split", "Image pairs", "256×256 tiles", "Role"],
+        [
+            ["Train", "445", "7,120", "Learn weights"],
+            ["Val", "64", "1,024", "Select model / ablations"],
+            ["Test", "128", "2,048", "One locked evaluation"],
+        ],
+        [900, 1100, 1400, 1600],
     )
     subhead(doc, "B.  Leakage audit")
     body(
         doc,
         "Filename-stem overlap across official splits is 0 "
         "(results/levir_audit/stem_overlap_report.json). That blocks trivial identity "
-        "leakage. It does not prove nearby scenes never correlate; a lat/long distance "
-        "check is future work.",
+        "leakage. It does not prove nearby scenes never correlate; a lat/long neighborhood "
+        "check remains future work.",
         indent=False,
     )
     subhead(doc, "C.  Metrics and test policy")
     body(
         doc,
-        "Primary metric for checkpointing is change-class F1 at threshold 0.5. Secondary "
-        "metrics are IoU, precision, recall, and boundary F1. Learned models keep threshold "
-        "0.5. Absolute difference uses a validation-chosen threshold (0.4). We select on "
-        "validation only. Freeze date 2026-11-08; test is touched once with no retuning.",
+        "Primary checkpoint metric is change-class F1 at threshold 0.5. Secondary metrics "
+        "are IoU, precision, recall, and boundary F1. Learned models keep threshold 0.5. "
+        "Absolute difference uses a validation-chosen threshold (0.4). We select on "
+        "validation only. Freeze date 2026-11-08; the test set is touched once with no "
+        "retuning after scores are seen.",
         indent=False,
     )
 
     heading(doc, "IV.  METHODS")
     body(
         doc,
-        "Fig. 1 shows the pipeline. Absolute RGB difference is the non-learned reference. "
-        "FC-EF stacks A and B as six channels into one U-Net (~483k params). FC-Siam-diff "
-        "and FC-Siam-conc share an encoder and fuse with |fA−fB| or concat (~483k / ~564k).",
+        "Fig. 1 shows the team pipeline. Absolute RGB difference is the non-learned "
+        "reference. FC-EF stacks dates A and B as six channels into one U-Net (~483k "
+        "params). FC-Siam-diff and FC-Siam-conc share an encoder and fuse with |fA−fB| or "
+        "concat (~483k / ~564k). All learned paths map logits → sigmoid → threshold 0.5.",
         indent=False,
     )
     figure(
         doc,
         FIG / "architecture.jpg",
-        "Fig. 1. Bi-temporal inputs are tiled to 256×256. Absolute difference is the reference. "
-        "Learned models are FC-EF, FC-Siam-diff, and FC-Siam-conc, scored at threshold 0.5.",
-        width=Inches(3.45),
+        "Fig. 1. BuildSafe Vision pipeline: tile bi-temporal LEVIR pairs, score an "
+        "absolute-difference reference, then train FC-EF / FC-Siam-diff / FC-Siam-conc.",
     )
     body(
         doc,
         "Training uses Adam (1e-3, weight decay 1e-4), batch 4, up to 30 epochs with early "
-        "stopping, and best validation F1. We compare BCE vs BCE+Dice. Augmentation is "
-        "synced flips and 90° rotations on A, B, and the mask. Principal seeds: 1511, 42, "
-        "123. Full matrix ran on the university CUDA GPU lab; Mac MPS was only for smoke "
-        "and early feasibility.",
+        "stopping, and best validation F1. We compare BCE versus BCE+Dice because change "
+        "pixels are rare and Dice can trade precision for recall. Augmentation is synced "
+        "flips and 90° rotations on A, B, and the mask so geometry stays aligned across "
+        "dates. Principal seeds: 1511, 42, 123. The full matrix ran on the university CUDA "
+        "GPU lab; Mac MPS was used only for smoke tests and early feasibility.",
+    )
+    body(
+        doc,
+        "Implementation notes. Models live in src/levir_cd/models.py; metrics in "
+        "metrics.py; training and latency timing in train.py. Absolute difference is "
+        "scored by scripts/run_baseline.py. Locked test requires an explicit "
+        "--i-confirm-choices-are-frozen flag so the protected split is not casually "
+        "reopened.",
     )
 
     heading(doc, "V.  EXPERIMENTAL SETUP")
     body(
         doc,
-        "Nine full runs (scripts/run_plan.py --mode full): three-seed FC-EF and FC-Siam-diff "
-        "with BCE+Dice+aug; one FC-Siam-conc; FC-EF BCE ablation; FC-EF no-aug ablation. "
-        "Configs are under configs/. Same splits, tile size, Adam settings, epoch budget, "
-        "eval code, and threshold 0.5 for the principal comparison.",
+        "Nine full runs (scripts/run_plan.py --mode full) make the controlled study: "
+        "three-seed FC-EF and FC-Siam-diff with BCE+Dice+aug; one FC-Siam-conc seed to "
+        "complete the Daudt triad; FC-EF BCE ablation; FC-EF no-aug ablation. Reported "
+        "configs live under configs/ with an index in configs/INDEX.md. The principal "
+        "comparison holds splits, tile size, Adam settings, epoch budget, eval code, and "
+        "threshold 0.5 fixed so only architecture (or the named ablation factor) changes.",
         indent=False,
     )
     body(
         doc,
         "Latency protocol: after training, batch-1 inference does 3 warm-up forwards, then "
         "10 timed forwards with device sync (src/levir_cd/train.py). Preprocessing time is "
-        "not inside that number.",
+        "outside that number. Cross-member artifact verification without retraining is "
+        "logged in docs/REPRODUCTION.md. Unit and smoke tests cover code paths without "
+        "requiring LEVIR on disk.",
     )
 
     heading(doc, "VI.  RESULTS")
     subhead(doc, "A.  Reference and overview")
     body(
         doc,
-        "Absolute RGB difference reaches validation F1 0.129 (IoU 0.069). An early Mac "
-        "feasibility FC-EF run reached 0.732 and is not part of the locked comparison. "
-        "Fig. 2 summarizes the main validation F1 numbers used in the rest of this section.",
+        "Absolute RGB difference reaches validation F1 0.129 (IoU 0.069). That weak floor "
+        "shows why a learned segmenter is needed. An early Mac feasibility FC-EF run "
+        "reached 0.732 and is not part of the locked comparison. Fig. 2 summarizes the "
+        "main validation F1 numbers discussed below.",
         indent=False,
     )
     figure(
@@ -417,13 +486,13 @@ def build():
     subhead(doc, "B.  Principal comparison")
     body(
         doc,
-        "Table I is the three-seed BCE+Dice comparison. FC-EF mean±std validation F1 is "
+        "Table III is the three-seed BCE+Dice comparison. FC-EF mean±std validation F1 is "
         "0.718±0.011. FC-Siam-diff is 0.543±0.045. FC-Siam-conc is 0.773 on seed 1511 only. "
-        "Fig. 3 shows seed spread is tighter for FC-EF. Fig. 4 shows validation F1 "
-        "trajectories at seed 1511: FC-EF+BCE climbs fastest among the matched runs.",
+        "Seed spread is tighter for FC-EF (Fig. 3). At this width, early fusion is more "
+        "stable than difference fusion.",
         indent=False,
     )
-    table_title(doc, "TABLE I.  PRINCIPAL COMPARISON (BCE+DICE, AUG ON)")
+    table_title(doc, "TABLE III.  PRINCIPAL COMPARISON (BCE+DICE, AUG ON)")
     add_table(
         doc,
         ["Model", "Seed", "Val F1", "IoU", "P", "R", "Lat. (s)"],
@@ -441,25 +510,20 @@ def build():
     figure(
         doc,
         FIG / "seed_variability_boxplot.jpg",
-        "Fig. 3. Seed variability for the principal BCE+Dice comparison (FC-EF vs "
-        "FC-Siam-diff).",
-    )
-    figure(
-        doc,
-        FIG / "val_f1_trajectories.jpg",
-        "Fig. 4. Validation F1 trajectories at seed 1511 for the principal and ablation "
-        "settings discussed below.",
+        "Fig. 3. Seed variability for the principal BCE+Dice comparison "
+        "(FC-EF vs FC-Siam-diff).",
     )
 
     subhead(doc, "C.  Ablations")
     body(
         doc,
-        "Table II and Fig. 5 hold architecture and seed fixed (FC-EF, 1511). BCE alone beats "
-        "BCE+Dice. Turning off geometric augmentation also helps versus BCE+Dice+aug under "
-        "this width and budget.",
+        "Table IV and Fig. 4 hold architecture and seed fixed (FC-EF, 1511). BCE alone "
+        "beats BCE+Dice. Turning off geometric augmentation also helps versus "
+        "BCE+Dice+aug under this width and budget. Fig. 5 shows validation F1 trajectories "
+        "at seed 1511: FC-EF+BCE climbs fastest among the matched runs.",
         indent=False,
     )
-    table_title(doc, "TABLE II.  FC-EF ABLATIONS (SEED 1511)")
+    table_title(doc, "TABLE IV.  FC-EF ABLATIONS (SEED 1511)")
     add_table(
         doc,
         ["Setting", "Val F1", "IoU"],
@@ -473,19 +537,89 @@ def build():
     figure(
         doc,
         FIG / "ablation_f1_bar.jpg",
-        "Fig. 5. FC-EF ablations at seed 1511. BCE-only is best.",
+        "Fig. 4. FC-EF ablations at seed 1511. BCE-only is best.",
+    )
+    figure(
+        doc,
+        FIG / "val_f1_trajectories.jpg",
+        "Fig. 5. Validation F1 trajectories at seed 1511 for principal and ablation runs.",
     )
 
-    subhead(doc, "D.  Compute and locked test")
+    subhead(doc, "D.  Locked test")
     body(
         doc,
-        "Table III is the cost view at seed 1511. FC-EF is strongest on F1 and lowest on "
-        "batch-1 latency. Full matrix: university CUDA lab (workdir /app/dl in configs), "
-        "batch 4, 256×256 tiles. Verification host (2026-11-18): Darwin arm64, Python 3.13.5, "
-        "PyTorch 2.10.0 (results/environment.json).",
+        "Locked setup: FC-EF + BCE + aug, seed 1511 (best val F1 0.778 at epoch 13). "
+        "Fig. 6 shows the locked learning curves; Fig. 7 shows validation precision/recall. "
+        "Table V reports the one-shot test scores. No retuning after test. Test tracks "
+        "validation closely, so the freeze looks stable.",
         indent=False,
     )
-    table_title(doc, "TABLE III.  COMPUTE TRADE-OFF (SEED 1511)")
+    figure(
+        doc,
+        FIG / "locked_learning_curves.jpg",
+        "Fig. 6. Locked FC-EF+BCE train/val loss and validation F1/IoU (best epoch 13).",
+    )
+    figure(
+        doc,
+        FIG / "locked_precision_recall.jpg",
+        "Fig. 7. Validation precision/recall for the locked FC-EF+BCE run.",
+    )
+    table_title(doc, "TABLE V.  LOCKED TEST (FC-EF + BCE + AUG, SEED 1511)")
+    add_table(
+        doc,
+        ["Split", "F1", "IoU", "Precision", "Recall", "Boundary F1"],
+        [
+            ["Val (best)", "0.778", "0.636", "0.751", "0.806", "0.338"],
+            ["Test (once)", "0.780", "0.639", "0.770", "0.790", "0.356"],
+        ],
+        [1100, 700, 700, 1000, 900, 1100],
+    )
+
+    heading(doc, "VII.  ERROR ANALYSIS AND LIMITATIONS")
+    body(
+        doc,
+        "Fig. 8 shows locked-model validation examples. Large new buildings often return. "
+        "Small structures and boundaries stay weak. On the locked test, empty tiles are "
+        "1,113/2,048. Small-change tiles (≤256 labeled pixels) miss often (56/61; mean "
+        "recall 0.083 vs 0.702 on large change). There are 212 false alarms on empty tiles. "
+        "Pooled test F1 is 0.780 while mean per-tile F1 is only 0.297—expected when many "
+        "tiles are empty or tiny.",
+        indent=False,
+    )
+    figure(
+        doc,
+        FIG / "validation_gallery.jpg",
+        "Fig. 8. Locked FC-EF+BCE validation examples (before, after, GT, prediction @ 0.5).",
+        width=Inches(3.25),
+    )
+    body(
+        doc,
+        "Hypothesis outcomes. H1 is not supported for FC-Siam-diff (0.543 vs 0.718). "
+        "FC-Siam-conc is competitive on one seed (0.773), so the negative result is about "
+        "difference fusion at this capacity, not every Siamese design. H2 is not supported: "
+        "BCE (0.778) beats BCE+Dice (0.702) on the ablation seed.",
+    )
+    body(
+        doc,
+        "Limits: base=16 caps peak F1 versus heavier public setups [5], [6]; stem overlap "
+        "is only a partial geo check; Siam-conc and ablations are single-seed; data is "
+        "Texas Google Earth only; small objects remain hard. These limits bound how far "
+        "the negative H1/H2 findings should be generalized: they hold for this capacity "
+        "and protocol, not for every possible Siamese or loss design.",
+    )
+
+    heading(doc, "VIII.  COMPUTATIONAL AND RESPONSIBLE-USE CONSIDERATIONS")
+    body(
+        doc,
+        "Table VI is the cost view at seed 1511. FC-EF is strongest on F1 and lowest on "
+        "batch-1 latency among competitive setups. Full matrix: university CUDA lab "
+        "(workdir /app/dl in configs), batch 4, 256×256 tiles. Verification host "
+        "(2026-11-18): Darwin arm64, Python 3.13.5, PyTorch 2.10.0 "
+        "(results/environment.json). Checkpoints are gitignored; metric summaries under "
+        "results/ are enough to verify reported numbers without retraining.",
+        indent=False,
+    )
+    table_title(doc, "TABLE VI.  COMPUTE TRADE-OFF (SEED 1511)")
     add_table(
         doc,
         ["Model", "Params", "Train", "Batch-1", "Val F1"],
@@ -498,117 +632,71 @@ def build():
     )
     body(
         doc,
-        "Locked setup: FC-EF + BCE + aug, seed 1511 (best val F1 0.778 at epoch 13). "
-        "Fig. 6 shows the locked learning curves; Fig. 7 shows validation precision/recall. "
-        "Test F1 / IoU / P / R = 0.780 / 0.639 / 0.770 / 0.790; boundary F1 0.356. No "
-        "retuning after test. Test tracks validation closely, so the freeze looks stable.",
-    )
-    figure(
-        doc,
-        FIG / "locked_learning_curves.jpg",
-        "Fig. 6. Locked FC-EF+BCE train/val loss and validation F1/IoU (best epoch 13).",
-    )
-    figure(
-        doc,
-        FIG / "locked_precision_recall.jpg",
-        "Fig. 7. Validation precision/recall for the locked FC-EF+BCE run.",
-    )
-
-    heading(doc, "VII.  ERROR ANALYSIS, LIMITATIONS, AND RESPONSIBLE USE")
-    body(
-        doc,
-        "Fig. 8 shows locked-model validation examples. Large new buildings often come back. "
-        "Small structures and boundaries stay weak.",
-        indent=False,
-    )
-    figure(
-        doc,
-        FIG / "validation_gallery.jpg",
-        "Fig. 8. Locked FC-EF+BCE validation examples (before, after, GT, prediction @ 0.5).",
-        width=COL_W,
-    )
-    body(
-        doc,
-        "On the locked test, empty tiles are 1,113/2,048. Small-change tiles (≤256 labeled "
-        "pixels) miss often (56/61; mean recall 0.083 vs 0.702 on large change). There are "
-        "212 false alarms on empty tiles. Pooled test F1 is 0.780 while mean per-tile F1 is "
-        "only 0.297—expected when many tiles are empty or tiny.",
-    )
-    body(
-        doc,
-        "Hypothesis outcomes. H1 is not supported for FC-Siam-diff (0.543 vs 0.718). "
-        "FC-Siam-conc is competitive on one seed (0.773), so the negative result is about "
-        "difference fusion at this capacity, not every Siamese design. H2 is not supported: "
-        "BCE (0.778) beats BCE+Dice (0.702) on the ablation seed.",
-    )
-    body(
-        doc,
-        "Limits: base=16 caps peak F1 versus heavier public setups [5], [6]; stem overlap is "
-        "only a partial geo check; Siam-conc and ablations are single-seed; data is Texas "
-        "Google Earth only; small objects remain hard.",
-    )
-    body(
-        doc,
         "Responsible use. LEVIR-CD is academic under Google Earth terms [1]. We make no "
-        "medical, safety-critical, surveillance, or deployment claims. Texas-only data may "
-        "not transfer. The model can miss small buildings and false-alarm on empty tiles, so "
-        "it needs human review if anyone reused it outside class.",
+        "medical, safety-critical, surveillance, or deployment claims. Texas-only imagery "
+        "may not transfer. The model can miss small buildings and false-alarm on empty "
+        "tiles, so any reuse outside class needs human review. What worked for the team: "
+        "one shared dataloader/metric code, freeze-before-test, and the abs-diff sanity "
+        "floor. What did not: difference fusion at this width, and BCE+Dice as a free "
+        "lunch for imbalance.",
     )
 
-    heading(doc, "VIII.  FUTURE WORK")
+    heading(doc, "IX.  FUTURE WORK")
     body(
         doc,
         "Keep the same official splits, tiles, and F1 protocol, then widen capacity beyond "
-        "base=16 so the Daudt comparison is not capacity-limited. Add multi-seed confirmation "
-        "for FC-Siam-conc and the loss/augmentation ablations. Replace the filename-stem "
-        "leakage check with a lat/long neighborhood audit. Study small-building recall with "
-        "boundary-aware losses or multi-scale heads without changing the evaluation code. "
-        "If compute allows, report quality-per-FLOP against heavier public LEVIR setups as "
-        "context only, still without claiming STANet reproduction [4]–[6].",
+        "base=16 so the Daudt comparison is not capacity-limited. Add multi-seed "
+        "confirmation for FC-Siam-conc and the loss/augmentation ablations. Replace the "
+        "filename-stem check with a lat/long neighborhood audit. Study small-building "
+        "recall with boundary-aware losses or multi-scale heads without changing the "
+        "evaluation code. If compute allows, report quality-per-FLOP against heavier public "
+        "LEVIR setups as context only, still without claiming STANet reproduction [4]–[6].",
         indent=False,
     )
 
-    heading(doc, "IX.  CONCLUSION")
+    heading(doc, "X.  CONCLUSION")
     body(
         doc,
         "Under a matched LEVIR-CD protocol, learned models beat absolute difference "
         "(0.129 vs ~0.70–0.78 F1). FC-EF beats FC-Siam-diff; BCE beats BCE+Dice in our "
         "ablation; the frozen FC-EF+BCE model reaches test F1 0.780. The research question "
-        "gets a clear, partly negative answer instead of a forced win. Shared dataloaders, "
-        "freeze-before-test, and the abs-diff sanity floor kept the comparison honest.",
+        "gets a clear, partly negative answer instead of a forced win. Shared code, "
+        "freeze-before-test, and equal team ownership kept the comparison honest.",
         indent=False,
     )
 
     heading(doc, "ACKNOWLEDGMENT")
     body(
         doc,
-        "Equal team split. Sneha Singh: data pipeline, leakage audit, abs-diff reference, "
-        "protocol, and Week 3 dataset card. Danish Waseem: FC-EF/Siamese models, GPU matrix, "
-        "locked test, and H1/H2 interpretation. Ritika Mukesh Neema: FC-EF/aug configs, "
-        "Week 4 progress report, qualitative gallery, and responsible-use drafting. "
-        "Rajesh Paruchuri: metrics and secondary scores, comparison table, latency/compute "
-        "rows, environment.json, report figures, failure-count tables, and the signed "
-        "reproduction check (docs/REPRODUCTION.md).",
+        "This is a four-person group project with equal technical ownership. Sneha Singh: "
+        "data pipeline, leakage audit, abs-diff reference, protocol, and Week 3 dataset "
+        "card. Danish Waseem: FC-EF/Siamese models, GPU matrix, locked test, and H1/H2 "
+        "interpretation. Ritika Mukesh Neema: FC-EF/aug configs, Week 4 progress report, "
+        "qualitative gallery, and responsible-use drafting. Rajesh Paruchuri: metrics and "
+        "secondary scores, comparison table, latency/compute rows, environment.json, "
+        "report figures, failure-count tables, and the signed reproduction check "
+        "(docs/REPRODUCTION.md).",
         indent=False,
     )
     body(
         doc,
-        "Assistance disclosure. Claude was used only to clarify hard wording around ablation "
-        "interpretation when seed and architecture results disagreed. Design, training, "
-        "metrics, figures, and claims were produced and checked by the team against results/.",
+        "Assistance disclosure. Claude was used only to clarify hard wording around "
+        "ablation interpretation when seed and architecture results disagreed. Design, "
+        "training, metrics, figures, and claims were produced and checked by the team "
+        "against results/.",
     )
 
     heading(doc, "REFERENCES")
     refs = [
-        "[1]  H. Chen and Z. Shi, “A spatial-temporal attention-based method and a new dataset "
-        "for remote sensing image change detection,” Remote Sensing, vol. 12, no. 10, "
-        "art. 1662, 2020, doi: 10.3390/rs12101662. Dataset: "
+        "[1]  H. Chen and Z. Shi, “A spatial-temporal attention-based method and a new "
+        "dataset for remote sensing image change detection,” Remote Sensing, vol. 12, "
+        "no. 10, art. 1662, 2020, doi: 10.3390/rs12101662. Dataset: "
         "https://justchenhao.github.io/LEVIR/.",
         "[2]  O. Ronneberger, P. Fischer, and T. Brox, “U-Net: Convolutional networks for "
         "biomedical image segmentation,” in Proc. MICCAI, 2015, pp. 234–241, "
         "doi: 10.1007/978-3-319-24574-4_28.",
-        "[3]  R. C. Daudt, B. Le Saux, and A. Boulch, “Fully convolutional Siamese networks "
-        "for change detection,” in Proc. IEEE ICIP, 2018, pp. 4063–4067, "
+        "[3]  R. C. Daudt, B. Le Saux, and A. Boulch, “Fully convolutional Siamese "
+        "networks for change detection,” in Proc. IEEE ICIP, 2018, pp. 4063–4067, "
         "doi: 10.1109/ICIP.2018.8451652.",
         "[4]  H. Chen and Z. Shi, STANet (public research implementation). "
         "https://github.com/justchenhao/STANet (accessed Nov. 2026).",
