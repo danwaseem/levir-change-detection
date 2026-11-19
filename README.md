@@ -36,6 +36,7 @@ Figures: [`results/report_figures/`](results/report_figures/) · Gallery: [`resu
 | Reproduction evidence | [`docs/REPRODUCTION.md`](docs/REPRODUCTION.md) |
 | Presentation (PDF / PPTX) | [`presentation/LEVIR_Change_Detection_DATA255.pdf`](presentation/LEVIR_Change_Detection_DATA255.pdf) · [`presentation/LEVIR_Change_Detection_DATA255.pptx`](presentation/LEVIR_Change_Detection_DATA255.pptx) |
 | Team work division | [`docs/TEAM_WORK_DIVISION.md`](docs/TEAM_WORK_DIVISION.md) |
+| Week 1–8 milestone map | [`docs/MILESTONE_EVIDENCE.md`](docs/MILESTONE_EVIDENCE.md) |
 | Individual statements | [`individual-contribution/`](individual-contribution/) |
 
 Individual statements: [Sneha](individual-contribution/sneha_singh.md) · [Ritika](individual-contribution/ritika_mukesh_neema.md) · [Danish](individual-contribution/danish_waseem.md) · [Rajesh](individual-contribution/rajesh_paruchuri.md)

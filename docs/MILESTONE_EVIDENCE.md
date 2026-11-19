@@ -1,0 +1,16 @@
+# Schedule milestones → evidence
+
+Index for the course Week 1–8 table. Artifacts stay in their normal folders; this file only maps them.
+
+| Timing | Milestone | Evidence in this repo |
+| --- | --- | --- |
+| Week 1 | Feasibility and team agreement | [`Data255_ProjectProposal.pdf`](Data255_ProjectProposal.pdf) (question, dataset, compute, roles, fallback); [`TEAM_WORK_DIVISION.md`](TEAM_WORK_DIVISION.md) |
+| Week 2 | Proposal | [`Data255_ProjectProposal.pdf`](Data255_ProjectProposal.pdf); related work notes in [`RELATED_WORK.md`](RELATED_WORK.md) |
+| Week 3 | Dataset and baseline checkpoint | [`progress-report-week-3-4/week3_dataset_card.pdf`](progress-report-week-3-4/week3_dataset_card.pdf); splits/baseline under `results/` (`absdiff_baseline`, `levir_audit`); runnable `scripts/run_baseline.py` |
+| Week 4 | Main model + progress report | [`progress-report-week-3-4/week4_progress_report.pdf`](progress-report-week-3-4/week4_progress_report.pdf); training/val via `scripts/run_plan.py` + `configs/` |
+| Week 5 | Controlled experiments | `configs/` (9-run matrix); `results/experiments/`; [`results/comparison_table.md`](../results/comparison_table.md) (main compare + ablation) |
+| Week 6 | Final evaluation and analysis | `results/locked_test/`; freeze → test in final report § results / error / compute / responsible use: [`../report/DATA255_BuildSafeVision_IEEE.pdf`](../report/DATA255_BuildSafeVision_IEEE.pdf) |
+| Week 7 | Reproducibility and communication | [`REPRODUCTION.md`](REPRODUCTION.md); final configs + `results/report_figures/`; report draft→final; [`../presentation/`](../presentation/); contrib in report Table VII + [`../individual-contribution/`](../individual-contribution/) |
+| Week 8 | Final submission and presentation | Final report + DOCX in `report/`; code package (`README`, `requirements.txt`, `configs/`, `src/`, `scripts/`, `results/`, `docs/`); slides; disclosures; presentation + peer assessment on Canvas |
+
+**Outside the zip / repo:** Canvas upload, live presentation, confidential peer assessments.
