@@ -316,8 +316,8 @@ def build():
         "LEVIR-CD, a scored absolute-difference reference, a nine-run university-GPU "
         "matrix (three seeds on the principal comparison), freeze-before-test discipline, "
         "failure counts, and a signed artifact reproduction check in the public repo. "
-        "Equal ownership across data, models, configs/gallery, and metrics is recorded in "
-        "docs/TEAM_WORK_DIVISION.md and the acknowledgment below.",
+        "Equal ownership across data, models, configs/gallery, and metrics is summarized "
+        "in the acknowledgment below.",
     )
     body(
         doc,
@@ -439,31 +439,31 @@ def build():
     )
     body(
         doc,
-        "Implementation notes. Models live in src/levir_cd/models.py; metrics in "
-        "metrics.py; training and latency timing in train.py. Absolute difference is "
-        "scored by scripts/run_baseline.py. Locked test requires an explicit "
-        "--i-confirm-choices-are-frozen flag so the protected split is not casually "
+        "Implementation notes. All three fusion models, metrics, and training/latency "
+        "code share one package so comparisons stay fair. Absolute difference is scored "
+        "with the same tiles and change-class metrics. The locked test entry point "
+        "requires an explicit freeze confirmation so the protected split is not casually "
         "reopened.",
     )
 
     heading(doc, "V.  EXPERIMENTAL SETUP")
     body(
         doc,
-        "Nine full runs (scripts/run_plan.py --mode full) make the controlled study: "
-        "three-seed FC-EF and FC-Siam-diff with BCE+Dice+aug; one FC-Siam-conc seed to "
-        "complete the Daudt triad; FC-EF BCE ablation; FC-EF no-aug ablation. Reported "
-        "configs live under configs/ with an index in configs/INDEX.md. The principal "
-        "comparison holds splits, tile size, Adam settings, epoch budget, eval code, and "
-        "threshold 0.5 fixed so only architecture (or the named ablation factor) changes.",
+        "Nine full GPU runs make the controlled study: three-seed FC-EF and FC-Siam-diff "
+        "with BCE+Dice+aug; one FC-Siam-conc seed to complete the Daudt triad; FC-EF BCE "
+        "ablation; FC-EF no-aug ablation. Reported configs are archived with the repo. The "
+        "principal comparison holds splits, tile size, Adam settings, epoch budget, eval "
+        "code, and threshold 0.5 fixed so only architecture (or the named ablation factor) "
+        "changes.",
         indent=False,
     )
     body(
         doc,
         "Latency protocol: after training, batch-1 inference does 3 warm-up forwards, then "
-        "10 timed forwards with device sync (src/levir_cd/train.py). Preprocessing time is "
-        "outside that number. Cross-member artifact verification without retraining is "
-        "logged in docs/REPRODUCTION.md. Unit and smoke tests cover code paths without "
-        "requiring LEVIR on disk.",
+        "10 timed forwards with device synchronization. Preprocessing time is outside that "
+        "number. A teammate re-checked locked-test and abs-diff numbers from on-disk "
+        "summaries without retraining. Unit and smoke tests cover code paths without "
+        "requiring LEVIR on the local machine.",
     )
 
     heading(doc, "VI.  RESULTS")
@@ -486,13 +486,14 @@ def build():
     subhead(doc, "B.  Principal comparison")
     body(
         doc,
-        "Table III is the three-seed BCE+Dice comparison. FC-EF mean±std validation F1 is "
-        "0.718±0.011. FC-Siam-diff is 0.543±0.045. FC-Siam-conc is 0.773 on seed 1511 only. "
-        "Seed spread is tighter for FC-EF (Fig. 3). At this width, early fusion is more "
-        "stable than difference fusion.",
+        "Table III is the matched BCE+Dice comparison. FC-EF mean±std validation F1 is "
+        "0.718±0.011 over three seeds. FC-Siam-diff is 0.543±0.045 over the same seeds. "
+        "FC-Siam-conc is a single-seed triad-completion run (0.773 at seed 1511), not part "
+        "of the three-seed mean. Seed spread is tighter for FC-EF (Fig. 3). At this width, "
+        "early fusion is more stable than difference fusion.",
         indent=False,
     )
-    table_title(doc, "TABLE III.  PRINCIPAL COMPARISON (BCE+DICE, AUG ON)")
+    table_title(doc, "TABLE III.  PRINCIPAL + TRIAD RUNS (BCE+DICE, AUG ON)")
     add_table(
         doc,
         ["Model", "Seed", "Val F1", "IoU", "P", "R", "Lat. (s)"],
@@ -500,12 +501,20 @@ def build():
             ["FC-EF", "1511", "0.702", "0.541", "0.734", "0.673", "0.0015"],
             ["FC-EF", "42", "0.727", "0.571", "0.707", "0.749", "0.0014"],
             ["FC-EF", "123", "0.726", "0.570", "0.753", "0.701", "0.0014"],
+            ["FC-EF mean", "3 seeds", "0.718±0.011", "—", "—", "—", "—"],
             ["FC-Siam-diff", "1511", "0.503", "0.336", "0.674", "0.402", "0.0021"],
             ["FC-Siam-diff", "42", "0.606", "0.435", "0.608", "0.604", "0.0021"],
             ["FC-Siam-diff", "123", "0.521", "0.352", "0.941", "0.360", "0.0021"],
-            ["FC-Siam-conc", "1511", "0.773", "0.630", "0.836", "0.719", "0.0028"],
+            ["Siam-diff mean", "3 seeds", "0.543±0.045", "—", "—", "—", "—"],
+            ["FC-Siam-conc*", "1511", "0.773", "0.630", "0.836", "0.719", "0.0028"],
         ],
-        [1100, 650, 700, 650, 650, 650, 750],
+        [1200, 700, 1100, 650, 650, 650, 750],
+    )
+    body(
+        doc,
+        "*FC-Siam-conc is single-seed triad completion under the same loss/aug settings; "
+        "it is not included in the FC-Siam-diff mean used for H1.",
+        indent=False,
     )
     figure(
         doc,
@@ -615,8 +624,8 @@ def build():
         "batch-1 latency among competitive setups. Full matrix: university CUDA lab "
         "(workdir /app/dl in configs), batch 4, 256×256 tiles. Verification host "
         "(2026-11-18): Darwin arm64, Python 3.13.5, PyTorch 2.10.0 "
-        "(results/environment.json). Checkpoints are gitignored; metric summaries under "
-        "results/ are enough to verify reported numbers without retraining.",
+        "(results/environment.json). Checkpoints are not committed; metric summaries in "
+        "the repo are enough to verify reported numbers without retraining.",
         indent=False,
     )
     table_title(doc, "TABLE VI.  COMPUTE TRADE-OFF (SEED 1511)")
@@ -673,17 +682,18 @@ def build():
         "card. Danish Waseem: FC-EF/Siamese models, GPU matrix, locked test, and H1/H2 "
         "interpretation. Ritika Mukesh Neema: FC-EF/aug configs, Week 4 progress report, "
         "qualitative gallery, and responsible-use drafting. Rajesh Paruchuri: metrics and "
-        "secondary scores, comparison table, latency/compute rows, environment.json, "
-        "report figures, failure-count tables, and the signed reproduction check "
-        "(docs/REPRODUCTION.md).",
+        "secondary scores, comparison/latency tables, environment record, report figures, "
+        "failure-count tables, and the signed reproduction check.",
         indent=False,
     )
+
+    heading(doc, "ASSISTANCE DISCLOSURE")
     body(
         doc,
-        "Assistance disclosure. Claude was used only to clarify hard wording around "
-        "ablation interpretation when seed and architecture results disagreed. Design, "
-        "training, metrics, figures, and claims were produced and checked by the team "
-        "against results/.",
+        "Claude was used only to clarify hard wording around ablation interpretation when "
+        "seed and architecture results disagreed. Design, training, metrics, figures, and "
+        "claims were produced and checked by the team against the executed result files.",
+        indent=False,
     )
 
     heading(doc, "REFERENCES")
