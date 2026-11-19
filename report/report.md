@@ -320,7 +320,7 @@ Configs and metrics live in `results/experiments/*/config.json` and `summary.jso
 2. Lat/long geographic distance audits between train and evaluation tiles.
 3. Repeat the protocol on WHU-CD or LEVIR-CD+.
 4. Targeted sampling or losses for small buildings.
-5. Optional transfer-learning encoders or STANet-style attention as a separate study (out of scope here).
+5. STANet-style attention as a separate study (out of scope here).
 
 ---
 
