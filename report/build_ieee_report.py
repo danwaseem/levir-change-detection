@@ -693,18 +693,37 @@ def build():
     heading(doc, "CONTRIBUTIONS")
     body(
         doc,
-        "Team contributions follow an even lead-and-support split (details also in "
-        "individual-contribution/ and docs/TEAM_WORK_DIVISION.md). Sneha Singh leads "
-        "data pipeline, leakage audit, abs-diff reference, protocol, and Week 3 dataset "
-        "card, and supports freeze checks before locked test. Danish Waseem leads "
-        "FC-EF/Siamese models, GPU matrix, locked test, and H1/H2 interpretation, and "
-        "supports dataloader integration and summary QA. Ritika Mukesh Neema leads "
-        "configs, BCE/BCE+Dice losses, feasibility packaging, Week 4 progress, gallery, "
-        "and responsible-use drafting, and supports the GPU config matrix. Rajesh "
-        "Paruchuri leads metrics, comparison/latency tables, environment.json, report "
-        "figures, failure-count tables, and the signed reproduction check, and supports "
-        "locked-test verification.",
+        "Team contributions use an even lead-and-support split. Full artifact lists are "
+        "in individual-contribution/ and docs/TEAM_WORK_DIVISION.md.",
         indent=False,
+    )
+    table_title(doc, "TABLE VII.  TEAM CONTRIBUTIONS (LEAD + SUPPORT)")
+    add_table(
+        doc,
+        ["Member", "Technical lead", "Also supports"],
+        [
+            [
+                "Sneha Singh",
+                "Data pipeline, leakage audit, abs-diff, protocol, Week 3 card",
+                "Danish: freeze checklist before locked test",
+            ],
+            [
+                "Danish Waseem",
+                "FC-EF/Siamese models, GPU matrix, locked test, H1/H2",
+                "Sneha: dataloader integration; Rajesh: summary QA",
+            ],
+            [
+                "Ritika Mukesh Neema",
+                "Configs, losses (BCE/BCE+Dice), feasibility, Week 4, gallery, responsible-use",
+                "Sneha: dataset-card review; Danish: GPU config matrix",
+            ],
+            [
+                "Rajesh Paruchuri",
+                "Metrics, comparison/latency, figures, environment, reproduction",
+                "Danish: locked-test verify; Ritika: compute rows",
+            ],
+        ],
+        [1400, 2200, 1900],
     )
 
     heading(doc, "ASSISTANCE DISCLOSURE")
