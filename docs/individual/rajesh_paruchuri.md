@@ -1,15 +1,16 @@
 # Individual contribution statement — Rajesh Paruchuri
 
-**Team:** BuildSafe Vision · DATA 255 Fall 2026
+**Team:** BuildSafe Vision · DATA 255 Fall 2026  
+**Load:** Supporting (metrics tables, timing packaging, reproduction sign-off)
 
 ## Concrete artifacts
-- Metrics / timing surfaces (`src/levir_cd/metrics.py`, batch-1 latency warm-up+sync in `train.py`)
-- Aggregate comparison table: `results/comparison_table.md`
-- Cross-member reproduction log: `docs/REPRODUCTION.md` (re-verified 2026-11-18)
-- Compute / latency narration in the IEEE report
+- Aggregate comparison table regeneration: `results/comparison_table.md`
+- Signed cross-member reproduction log: `docs/REPRODUCTION.md`
+- Packaging of compute / batch-1 latency rows for the report (from existing `summary.json` fields)
+- Supporting check that reported F1/IoU match on-disk artifacts
 
 ## Cross-review activity
-Reviewed Sneha’s leakage audit (`stem_overlap_report.json`): all pairwise stem overlaps **0**; counts 445/64/128.
+Reviewed Danish’s locked-test summary (`test_f1` **0.780**, `test_iou` **0.639**, no post-test retune) against the IEEE report tables.
 
 ## Experiment I can explain in depth
-Computational trade-off at seed 1511: FC-EF (~483k params, ~0.0014 s batch-1) vs Siam-diff/conc higher latency; FC-EF Pareto-strong on F1 and speed under this budget.
+Artifact reproduction workflow: `run_plan.py --aggregate-only` + reading locked-test/abs-diff JSON to confirm report numbers without retraining.

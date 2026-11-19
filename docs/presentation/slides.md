@@ -50,8 +50,8 @@ Suggested timing. All four students must speak.
 - Early fusion wins under this capacity/budget
 - Repo + `docs/REPRODUCTION.md` for checks
 
-## Q&A prep (each member owns one)
-- Sneha: splits / leakage / abs-diff threshold
-- Ritika: U-Net training / aug / checkpointing
-- Danish: Siamese fusion / why H1 failed / gallery
-- Rajesh: metrics / latency protocol / reproduction
+## Q&A prep (hard leads take depth questions)
+- Sneha (**hard**): splits / leakage / abs-diff threshold / freeze protocol
+- Danish (**hard**): Siamese fusion / H1–H2 / locked test / failure gallery
+- Ritika (supporting): FC-EF config / aug flags / progress packaging
+- Rajesh (supporting): comparison table / reproduction commands / latency numbers

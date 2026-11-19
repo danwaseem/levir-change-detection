@@ -170,10 +170,10 @@ Under a matched LEVIR-CD protocol, learned models dominate absolute difference (
 
 | Member | Responsibility |
 | --- | --- |
-| Sneha Singh | Dataset integrity, stem-overlap audit, abs-diff baseline |
-| Ritika Mukesh Neema | FC-EF path, paired augmentation, seed runs |
-| Danish Waseem | Siamese models, loss comparison, GPU matrix, error analysis |
-| Rajesh Paruchuri | Metrics, timing, summaries, reproduction checks |
+| Sneha Singh (**hard**) | Data pipeline, leakage audit, abs-diff reference science, eval protocol, dataset card, responsible-use drafting |
+| Danish Waseem (**hard**) | Triad models on GPU, 9-run matrix, locked test, failure/gallery analysis, H1/H2 interpretation |
+| Ritika Mukesh Neema (supporting) | FC-EF/aug config packaging, local feasibility artifacts, progress-report write-up |
+| Rajesh Paruchuri (supporting) | Comparison-table aggregation, latency/compute packaging, signed reproduction check |
 
 Reproduction evidence: `docs/REPRODUCTION.md`. Configs: `configs/`.
 

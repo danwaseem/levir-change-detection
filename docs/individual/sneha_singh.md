@@ -1,16 +1,18 @@
 # Individual contribution statement — Sneha Singh
 
-**Team:** BuildSafe Vision · DATA 255 Fall 2026
+**Team:** BuildSafe Vision · DATA 255 Fall 2026  
+**Load:** Hard technical lead (data, protocol, reference baseline)
 
 ## Concrete artifacts
-- Dataset integrity / audit: `notebooks/01_dataset_audit.ipynb`
-- Stem-overlap leakage check: `results/levir_audit/stem_overlap_report.json`, `split_manifest.csv`
-- Reference baseline: abs-diff pipeline and `results/absdiff_baseline/summary.json` (val F1 0.129)
-- Dataset card for Week 3: `docs/DATASET_CARD.md`
-- Report sections on dataset / protocol / responsible-use wording review
+- End-to-end dataset audit and integrity pipeline: `notebooks/01_dataset_audit.ipynb`
+- Leakage / stem-overlap science: `results/levir_audit/stem_overlap_report.json`, `split_manifest.csv`
+- Non-learned reference baseline design and scoring: `results/absdiff_baseline/` (val F1 **0.129** @ threshold 0.4)
+- Evaluation protocol: official splits, tile-after-split rule, primary change-class F1, freeze-before-test policy
+- Week 3 dataset card: `docs/DATASET_CARD.md`
+- Report §§III & VII: dataset/protocol, limitations, responsible-use drafting
 
 ## Cross-review activity
-Reviewed Ritika’s FC-EF configs under `configs/full_unet_*` against `results/experiments/*/summary.json` for seed/loss/aug consistency.
+Reviewed Ritika’s progress report and `configs/full_unet_*` for consistency with the frozen protocol (seeds, aug flags, loss keys).
 
 ## Experiment I can explain in depth
-Absolute RGB difference baseline: validation threshold sweep → selected threshold **0.4** → change-class F1 **0.129**, showing non-learned differencing is far below learned models.
+Abs-diff reference vs learned models under the same val tiles: threshold sweep → **0.4** → F1 **0.129**, establishing that the task requires learning beyond pixel subtraction and anchoring all later claims.

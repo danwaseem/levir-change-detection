@@ -1,6 +1,7 @@
 # Dataset card — LEVIR-CD (Week 3 checkpoint)
 
 **Team:** BuildSafe Vision (DATA 255, Fall 2026)  
+**Primary owner (hard):** Sneha Singh (dataset audit, splits/leakage, abs-diff reference)  
 **Dataset:** LEVIR-CD (Chen & Shi, 2020)  
 **Source:** https://justchenhao.github.io/LEVIR/  
 **Use:** Academic research only; Google Earth terms apply. Not for operational deployment.

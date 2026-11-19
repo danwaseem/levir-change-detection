@@ -45,11 +45,11 @@ Human audit of train pairs in notebook 01 confirmed masks align with building ap
 
 ## Responsibilities (revised)
 
-| Member | Focus |
-| --- | --- |
-| Sneha | Data audit, leakage, abs-diff |
-| Ritika | FC-EF path, aug, seeds |
-| Danish | Siamese, GPU matrix, failures |
-| Rajesh | Metrics, timing, reproduction |
+| Member | Load | Focus |
+| --- | --- | --- |
+| Sneha | **Hard** | Data pipeline, leakage, abs-diff science, eval protocol |
+| Danish | **Hard** | Siamese/GPU matrix, locked test, failure analysis |
+| Ritika | Supporting | FC-EF/aug configs, progress packaging |
+| Rajesh | Supporting | Metrics tables, timing packaging, reproduction check |
 
 Each member contributes code, writing, and one cross-review (see `docs/TEAM_WORK_DIVISION.md`).
