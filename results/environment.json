@@ -1,0 +1,20 @@
+{
+  "recorded_date": "2026-11-18",
+  "training_runs": {
+    "site": "University CUDA GPU lab (containerized)",
+    "workdir_in_configs": "/app/dl",
+    "accelerator": "CUDA",
+    "evidence": "results/experiments/full_*/config.json PROJECT_ROOT=/app/dl; batch-1 latency and ~50 min/run timings in summary.json",
+    "gpu_sku": "Not retained in committed summary.json files (checkpoints gitignored). Fill if recovered from lab logs.",
+    "cuda_version": "Not retained in committed artifacts.",
+    "torch_version_training": "Not retained in committed summary.json (stored inside best_model.pt only)."
+  },
+  "artifact_verification_host": {
+    "hostname_os": "Darwin 25.2.0 (arm64)",
+    "python": "3.13.5",
+    "torch": "2.10.0",
+    "cuda_available": false,
+    "mps_available": false,
+    "role": "Cross-member reproduction / smoke only \u2014 not the training host"
+  }
+}

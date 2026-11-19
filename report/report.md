@@ -134,7 +134,7 @@ Mean±std val F1: FC-EF **0.718±0.011**; FC-Siam-diff **0.543±0.045**.
 | FC-Siam-diff (1511) | 483k | ~47 min | 5.6 MB | 0.0021 s | 0.503 |
 | FC-Siam-conc (1511) | 564k | ~48 min | 6.5 MB | 0.0028 s | 0.773 |
 
-**Hardware/software.** Full matrix: university CUDA GPU lab, PyTorch 2.x, batch 4, \(256\times256\) tiles. Smoke/feasibility: Apple Silicon MPS. Exact lab GPU inventory varies by node; timings above are from the recorded run summaries under `results/experiments/`.
+**Hardware/software.** Full matrix: university **CUDA** GPU lab (container workdir `/app/dl` in saved configs), batch 4, \(256\times256\) tiles; per-run wall times ~47–51 min in `summary.json`. Smoke/feasibility: Apple Silicon. Artifact verification host (2026-11-18): Darwin arm64, Python 3.13.5, **PyTorch 2.10.0**, CUDA unavailable locally (`results/environment.json`). Lab GPU SKU / CUDA toolkit build were not retained in committed summaries (checkpoints gitignored); timings and F1 scores remain those recorded on the lab runs.
 
 FC-EF is Pareto-strong here: highest F1 among seed-1511 rows above and lowest latency.
 

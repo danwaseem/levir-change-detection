@@ -318,6 +318,12 @@ def run_experiment(cfg: ExperimentConfig, device: torch.device | None = None) ->
         "threshold_sweep": sweep,
         "official_threshold": cfg.THRESHOLD,
         "run_dir": str(run_dir),
+        "torch_version": str(torch.__version__),
+        "device": str(device),
+        "cuda_available": bool(torch.cuda.is_available()),
+        "cuda_device_name": (
+            torch.cuda.get_device_name(0) if torch.cuda.is_available() else None
+        ),
     }
     (run_dir / "summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
     print(json.dumps(summary, indent=2))
