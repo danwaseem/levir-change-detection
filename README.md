@@ -12,11 +12,11 @@ Compares a six-channel U-Net (FC-EF) with shared-encoder Siamese U-Nets on [LEVI
 | Done | Still needed |
 | --- | --- |
 | Full training + eval code (Daudt triad, losses, metrics, ablations) | Presentation slides |
-| Dataset audit + stem-overlap check | Team assistance disclosure in report |
-| Abs-diff baseline on **val** (F1 **0.129**) | Contribution wording polish if needed |
+| Dataset audit + stem-overlap check | Team assistance disclosure (§11 in report) |
+| Abs-diff baseline on **val** (F1 **0.129**) | Export final PDF for submission |
 | GPU 9-run matrix + comparison table | — |
 | Locked test: FC-EF BCE seed 1511 → test F1 **0.780** | — |
-| Report tables filled from GPU + locked test | — |
+| Full write-up in `report/report.md` (results, H1/H2, failures, locked gallery) | — |
 | Architecture figure + validation gallery / curves | — |
 | Smoke + unit tests (14) | — |
 
