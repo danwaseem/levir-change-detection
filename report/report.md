@@ -151,6 +151,18 @@ Nine full runs (`scripts/run_plan.py --mode full`):
 
 Held constant across the principal comparison: official splits, \(256\times256\) tiles, Adam settings, epoch budget, evaluation code, and threshold 0.5. Mac MPS was used for smoke tests and early feasibility only; one epoch already took ~16 minutes locally, so the matrix was completed on GPU.
 
+### 5.1 Methodology loop (lecture alignment)
+
+We follow the course loop **Train → Validate → Diagnose → Improve → Freeze**:
+
+| Stage | What we did |
+| --- | --- |
+| Train | Nine GPU runs under a shared dataloader / optimizer / epoch budget |
+| Validate | Checkpoint by **validation change-class F1** only (not overall accuracy) |
+| Diagnose | Learning curves, precision/recall trajectories, seed spread, failure summaries |
+| Improve | Controlled ablations (loss, augmentation); keep other factors fixed |
+| Freeze | 2026-11-08: lock FC-EF+BCE seed 1511; **one** test evaluation; no retuning |
+
 ---
 
 ## 6. Results
@@ -177,6 +189,8 @@ The selected model is FC-EF + BCE (seed 1511). Training curves show clear learni
 ![Locked model precision recall](../results/report_figures/locked_precision_recall.png)
 
 **Figure 4.** Validation precision and recall over epochs for the locked model. Epoch 13 balances both (~0.75 precision, ~0.80 recall); later epochs trade one for the other.
+
+**Bias / variance diagnosis (from these curves).** At the best epoch, train and validation losses are close (≈0.058 vs 0.053), so the run is **not underfitting**: the model fits the training signal and generalizes on validation. After epoch 13, validation F1 falls sharply (e.g. ≈0.55 by epoch 15) while train loss keeps decreasing to ≈0.051 by epoch 21—an **overfitting / instability** pattern. This is exactly why we keep the **best validation-F1 checkpoint**, not the last epoch.
 
 ### 6.3 Principal comparison (GPU, BCE+Dice, augmentation on)
 
@@ -217,13 +231,13 @@ The selected model is FC-EF + BCE (seed 1511). Training curves show clear learni
 
 ### 6.5 Computational trade-off
 
-| Model | Params | Train time | Checkpoint | Batch-1 latency |
-| --- | ---: | ---: | ---: | ---: |
-| FC-EF (BCE, seed 1511) | 483,169 | ~51 min | ~5.6 MB | 0.0014 s |
-| FC-Siam-diff (seed 1511) | 482,737 | ~47 min | ~5.6 MB | 0.0021 s |
-| FC-Siam-conc (seed 1511) | 563,889 | ~48 min | ~6.5 MB | 0.0028 s |
+| Model | Params | Train time | Checkpoint | Batch-1 latency | Val F1 |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| FC-EF (BCE, seed 1511) | 483,169 | ~51 min | ~5.6 MB | 0.0014 s | **0.778** |
+| FC-Siam-diff (seed 1511) | 482,737 | ~47 min | ~5.6 MB | 0.0021 s | 0.503 |
+| FC-Siam-conc (seed 1511) | 563,889 | ~48 min | ~6.5 MB | 0.0028 s | 0.773 |
 
-FC-EF is both more accurate than FC-Siam-diff and faster at batch-1 inference. Conc has the highest latency and parameter count among the three.
+**Quality–cost reading.** FC-EF is Pareto-strong here: highest F1 among the seed-1511 runs above and the **lowest** batch-1 latency. FC-Siam-diff uses similar parameter count but worse F1 and slower inference. FC-Siam-conc is competitive on F1 but costs ~2× the latency and more parameters. For this budget, early fusion wins on both accuracy and efficiency.
 
 ### 6.6 Qualitative results and failure modes
 
@@ -235,12 +249,15 @@ Locked-test failure summary (tile change \(\le 256\) pixels = “small”):
 
 | Pattern | Value |
 | --- | ---: |
-| Empty tiles (no labeled change) | 1,113 / 2,048 |
+| Empty tiles (no labeled change) | 1,113 / 2,048 (54.3%) |
 | Small-change tiles | 61 |
-| Missed small-change tiles | 56 |
+| Missed small-change tiles | 56 / 61 |
 | Mean recall (small change) | 0.083 |
 | Mean recall (large change) | 0.702 |
 | False alarms on empty tiles | 212 |
+| Low-precision change tiles | 167 |
+
+**Tile-level vs pooled metrics.** Pooled test F1 is **0.780**, but the mean of per-tile F1 is only **0.297** (std 0.379), and **59.1%** of tiles have F1 = 0. That gap is expected: most tiles are empty or tiny-change cases where a single FP/FN collapses tile F1, while pooled F1 aggregates pixels globally. Diagnosis: the model is stronger on **large** building changes (recall 0.70) and weak on **small** ones (recall 0.08)—matching the gallery.
 
 ### 6.7 Locked test evaluation
 
@@ -250,9 +267,10 @@ Locked-test failure summary (tile change \(\le 256\) pixels = “small”):
 | Selected setup | FC-EF, BCE, augmentation on, seed 1511 |
 | Selection criterion | Highest validation F1 among finished runs (0.778) |
 | Test F1 / IoU / Precision / Recall | **0.780** / 0.639 / 0.770 / 0.790 |
+| Test boundary F1 | 0.356 |
 | Retuned after seeing test? | No |
 
-Test F1 closely matches validation F1, which supports that the freeze did not overfit a brittle validation quirk.
+Test F1 (0.780) closely matches validation F1 (0.778), which supports that the freeze did not overfit a brittle validation quirk.
 
 ---
 
@@ -265,11 +283,15 @@ Test F1 closely matches validation F1, which supports that the freeze did not ov
 
 Absolute difference (F1 0.129) remains far below every learned model, confirming that the task needs more than pixel subtraction even when architecture hypotheses are mixed.
 
-### 7.2 Relation to prior literature
+### 7.2 What the diagnostics imply
+
+Putting curves and failures together: the locked model **learned** (large gap over abs-diff; train/val losses aligned at the best epoch), but **capacity and class imbalance** still show up as (i) late-epoch validation collapse if we kept training, (ii) near-misses on small buildings, and (iii) empty-tile false alarms. Improving those would need targeted sampling, wider encoders, or harder augmentations—not another uncontrolled hyperparameter sweep.
+
+### 7.3 Relation to prior literature
 
 Daudt et al. often found Siamese variants competitive or preferred under their settings [2]. Our narrower from-scratch U-Nets and shorter budget reverse that ranking for FC-Siam-diff. The gap to published LEVIR tables (~0.81–0.86) is expected given capacity and schedule differences [4,5].
 
-### 7.3 Limitations
+### 7.4 Limitations
 
 1. Model width `base=16` limits peak F1 relative to heavier public setups.
 2. Stem overlap is only a partial geographic-leakage check.
@@ -311,6 +333,17 @@ PYTHONPATH=src python scripts/run_plan.py --aggregate-only
 ```
 
 Configs and metrics live in `results/experiments/*/config.json` and `summary.json`. Aggregate table: `results/comparison_table.md`. Locked test: `results/locked_test/full_unet_bce_aug_seed1511_tile256/`.
+
+**Protocol / software box (locked run).**
+
+| Item | Value |
+| --- | --- |
+| Framework | PyTorch (CUDA GPU lab for full matrix; Mac for smoke) |
+| Model | FC-EF U-Net, `base=16`, ~483k parameters |
+| Loss / aug / seed | BCE / paired flip+rot90 / 1511 |
+| Optimizer | Adam, lr \(1\times10^{-3}\), weight decay \(1\times10^{-4}\), batch 4 |
+| Selection | Best validation F1 @ threshold **0.5** (epoch 13) |
+| Test policy | Touched once after freeze; no threshold retune |
 
 ---
 
