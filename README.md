@@ -35,7 +35,6 @@ Figures: [`results/report_figures/`](results/report_figures/) · Gallery: [`resu
 | Week 4 progress report | [`docs/progress-report-week-3-4/week4_progress_report.pdf`](docs/progress-report-week-3-4/week4_progress_report.pdf) |
 | Reproduction evidence | [`docs/REPRODUCTION.md`](docs/REPRODUCTION.md) |
 | Presentation (PDF / PPTX) | [`presentation/LEVIR_Change_Detection_DATA255.pdf`](presentation/LEVIR_Change_Detection_DATA255.pdf) · [`presentation/LEVIR_Change_Detection_DATA255.pptx`](presentation/LEVIR_Change_Detection_DATA255.pptx) |
-| Presentation outline | [`docs/presentation/slides.md`](docs/presentation/slides.md) |
 | Team work division | [`docs/TEAM_WORK_DIVISION.md`](docs/TEAM_WORK_DIVISION.md) |
 | Individual statements | [`individual-contribution/`](individual-contribution/) |
 
