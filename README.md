@@ -10,7 +10,7 @@ Compares a six-channel U-Net (FC-EF) with shared-encoder Siamese U-Nets on [LEVI
 - Reproduction evidence: [`docs/REPRODUCTION.md`](docs/REPRODUCTION.md)  
 - Presentation outline: [`docs/presentation/slides.md`](docs/presentation/slides.md)  
 - Team work division: [`docs/TEAM_WORK_DIVISION.md`](docs/TEAM_WORK_DIVISION.md)  
-- Dataset card / progress report: [`docs/DATASET_CARD.md`](docs/DATASET_CARD.md) · [`docs/PROGRESS_REPORT.md`](docs/PROGRESS_REPORT.md)  
+- Week 3/4 Canvas uploads: [`docs/progress-report-week-3-4/`](docs/progress-report-week-3-4/) (dataset card + progress report PDFs)  
 - Individual contribution statements: [`docs/individual-contribution/`](docs/individual-contribution/) ([Sneha](docs/individual-contribution/sneha_singh.md) · [Ritika](docs/individual-contribution/ritika_mukesh_neema.md) · [Danish](docs/individual-contribution/danish_waseem.md) · [Rajesh](docs/individual-contribution/rajesh_paruchuri.md))  
 - Repo: https://github.com/danwaseem/levir-change-detection
 
