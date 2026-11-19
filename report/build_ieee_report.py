@@ -10,7 +10,7 @@ from pathlib import Path
 from docx import Document
 from docx.enum.section import WD_SECTION
 from docx.enum.table import WD_TABLE_ALIGNMENT
-from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_BREAK, WD_LINE_SPACING
+from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_LINE_SPACING
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from docx.shared import Inches, Pt, Twips
@@ -19,7 +19,7 @@ ROOT = Path(__file__).resolve().parent
 FIG = ROOT / "figures_compressed"
 OUT = ROOT / "DATA255_BuildSafeVision_IEEE.docx"
 PDF_OUT = ROOT / "DATA255_BuildSafeVision_IEEE.pdf"
-FIG_W = Inches(3.35)
+FIG_W = Inches(3.45)
 
 
 def set_run_font(run, size=10, bold=False, italic=False):
@@ -88,7 +88,7 @@ def P(doc, text="", size=10, bold=False, italic=False, align="justify",
     pf = p.paragraph_format
     pf.space_before = Pt(before)
     pf.space_after = Pt(after)
-    pf.line_spacing = 1.15
+    pf.line_spacing = 1.2
     pf.line_spacing_rule = WD_LINE_SPACING.MULTIPLE
     if first:
         pf.first_line_indent = Inches(first)
@@ -105,15 +105,15 @@ def P(doc, text="", size=10, bold=False, italic=False, align="justify",
 
 
 def heading(doc, text):
-    return P(doc, text, size=10, bold=True, align="center", before=10, after=3, center=True)
+    return P(doc, text, size=10, bold=True, align="center", before=12, after=4, center=True)
 
 
 def subhead(doc, text):
-    return P(doc, text, size=10, italic=True, align="left", before=7, after=2)
+    return P(doc, text, size=10, italic=True, align="left", before=8, after=2)
 
 
 def body(doc, text, indent=True):
-    return P(doc, text, size=10, align="justify", before=0, after=2, first=0.15 if indent else 0)
+    return P(doc, text, size=10, align="justify", before=0, after=3, first=0.15 if indent else 0)
 
 
 def caption(doc, text):
@@ -191,24 +191,18 @@ def set_table_fixed(table, widths):
             tcW.set(qn("w:type"), "dxa")
 
 
-def add_table(doc, headers, rows, widths, font_size=8, compact=False, cell_pad_pt=None):
+def add_table(doc, headers, rows, widths):
     table = doc.add_table(rows=1 + len(rows), cols=len(headers))
     set_table_fixed(table, widths)
-    if cell_pad_pt is not None:
-        pad = Pt(cell_pad_pt)
-    else:
-        pad = Pt(0) if compact else Pt(1)
     for j, h in enumerate(headers):
         cell = table.rows[0].cells[j]
         cell.text = ""
         p = cell.paragraphs[0]
         p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        p.paragraph_format.space_before = pad
-        p.paragraph_format.space_after = pad
-        if compact:
-            p.paragraph_format.line_spacing = 1.0
+        p.paragraph_format.space_before = Pt(1)
+        p.paragraph_format.space_after = Pt(1)
         run = p.add_run(h)
-        set_run_font(run, size=font_size, bold=True)
+        set_run_font(run, size=8, bold=True)
         shade_header(cell)
         set_cell_border(cell)
     for i, row in enumerate(rows):
@@ -216,22 +210,20 @@ def add_table(doc, headers, rows, widths, font_size=8, compact=False, cell_pad_p
             cell = table.rows[i + 1].cells[j]
             cell.text = ""
             p = cell.paragraphs[0]
-            p.alignment = WD_ALIGN_PARAGRAPH.LEFT if (j == 0 or compact) else WD_ALIGN_PARAGRAPH.CENTER
-            p.paragraph_format.space_before = pad
-            p.paragraph_format.space_after = pad
-            if compact:
-                p.paragraph_format.line_spacing = 1.0
+            p.alignment = WD_ALIGN_PARAGRAPH.LEFT if j == 0 else WD_ALIGN_PARAGRAPH.CENTER
+            p.paragraph_format.space_before = Pt(1)
+            p.paragraph_format.space_after = Pt(1)
             run = p.add_run(val)
-            set_run_font(run, size=font_size)
+            set_run_font(run, size=8)
             set_cell_border(cell)
     spacer = doc.add_paragraph()
     spacer.paragraph_format.space_before = Pt(0)
-    spacer.paragraph_format.space_after = Pt(2 if compact else 4)
+    spacer.paragraph_format.space_after = Pt(4)
     return table
 
 
-def table_title(doc, text, before=7, after=1):
-    P(doc, text, size=8, bold=True, align="center", before=before, after=after, center=True)
+def table_title(doc, text):
+    P(doc, text, size=8, bold=True, align="center", before=7, after=1, center=True)
 
 
 def build():
@@ -621,6 +613,7 @@ def build():
         doc,
         FIG / "validation_gallery.jpg",
         "Fig. 8. Locked FC-EF+BCE validation examples (before, after, GT, prediction @ 0.5).",
+        width=Inches(3.25),
     )
     body(
         doc,
@@ -697,27 +690,40 @@ def build():
         indent=False,
     )
 
-    # IEEE two-column end matter (no separate page / single-column break).
     heading(doc, "CONTRIBUTIONS")
     body(
         doc,
-        "Even lead-and-support split. Details: individual-contribution/ and "
-        "docs/TEAM_WORK_DIVISION.md.",
+        "Team contributions use an even lead-and-support split. Full artifact lists are "
+        "in individual-contribution/ and docs/TEAM_WORK_DIVISION.md.",
         indent=False,
     )
-    table_title(doc, "TABLE VII.  TEAM CONTRIBUTIONS (LEAD + SUPPORT)", before=4, after=1)
+    table_title(doc, "TABLE VII.  TEAM CONTRIBUTIONS (LEAD + SUPPORT)")
     add_table(
         doc,
-        ["Member", "Lead", "Supports"],
+        ["Member", "Technical lead", "Also supports"],
         [
-            ["Sneha", "Data, audit, abs-diff, protocol, Week 3", "Freeze checklist (Danish)"],
-            ["Danish", "Models, GPU matrix, locked test, H1/H2", "Dataloader + summary QA"],
-            ["Ritika", "Configs, losses, Week 4, gallery, responsible-use", "Dataset-card + GPU configs"],
-            ["Rajesh", "Metrics, latency, figures, env, reproduction", "Locked-test verify + compute"],
+            [
+                "Sneha Singh",
+                "Data pipeline, leakage audit, abs-diff, protocol, Week 3 card",
+                "Danish: freeze checklist before locked test",
+            ],
+            [
+                "Danish Waseem",
+                "FC-EF/Siamese models, GPU matrix, locked test, H1/H2",
+                "Sneha: dataloader integration; Rajesh: summary QA",
+            ],
+            [
+                "Ritika Mukesh Neema",
+                "Configs, losses (BCE/BCE+Dice), feasibility, Week 4, gallery, responsible-use",
+                "Sneha: dataset-card review; Danish: GPU config matrix",
+            ],
+            [
+                "Rajesh Paruchuri",
+                "Metrics, comparison/latency, figures, environment, reproduction",
+                "Danish: locked-test verify; Ritika: compute rows",
+            ],
         ],
-        [900, 2300, 1800],
-        font_size=7,
-        compact=True,
+        [1400, 2200, 1900],
     )
 
     heading(doc, "ASSISTANCE DISCLOSURE")
