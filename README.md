@@ -6,7 +6,7 @@ Team **BuildSafe Vision**: Sneha Singh, Ritika Mukesh Neema, Danish Waseem, Raje
 Compares a six-channel U-Net (FC-EF) with shared-encoder Siamese U-Nets on [LEVIR-CD](https://justchenhao.github.io/LEVIR/) for building construction/demolition.
 
 - Proposal: [`docs/Data255_ProjectProposal.pdf`](docs/Data255_ProjectProposal.pdf)  
-- Final report (IEEE-style PDF): [`report/report.pdf`](report/report.pdf) · source [`report/report.md`](report/report.md)  
+- Final report (IEEE DOCX→PDF): [`report/report.pdf`](report/report.pdf) · [`report/DATA255_BuildSafeVision_IEEE.docx`](report/DATA255_BuildSafeVision_IEEE.docx) · builder [`report/build_ieee_report.py`](report/build_ieee_report.py)  
 - Reproduction evidence: [`docs/REPRODUCTION.md`](docs/REPRODUCTION.md)  
 - Presentation outline: [`docs/presentation/slides.md`](docs/presentation/slides.md)  
 - Team work division: [`docs/TEAM_WORK_DIVISION.md`](docs/TEAM_WORK_DIVISION.md)  
