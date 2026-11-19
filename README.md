@@ -6,8 +6,9 @@ Team **BuildSafe Vision**: Sneha Singh, Ritika Mukesh Neema, Danish Waseem, Raje
 Compares a six-channel U-Net (FC-EF) with shared-encoder Siamese U-Nets on [LEVIR-CD](https://justchenhao.github.io/LEVIR/) for building construction/demolition.
 
 - Proposal: [`docs/Data255_ProjectProposal.pdf`](docs/Data255_ProjectProposal.pdf)  
-- Final report (Markdown): [`report/report.md`](report/report.md)  
-- Final report (PDF): [`report/report.pdf`](report/report.pdf)  
+- Final report (IEEE-style PDF): [`report/report.pdf`](report/report.pdf) · source [`report/report.md`](report/report.md)  
+- Reproduction evidence: [`docs/REPRODUCTION.md`](docs/REPRODUCTION.md)  
+- Presentation outline: [`docs/presentation/slides.md`](docs/presentation/slides.md)  
 - Repo: https://github.com/danwaseem/levir-change-detection
 
 ---
@@ -138,8 +139,9 @@ Stem overlap across splits: **0** ([`results/levir_audit/stem_overlap_report.jso
 ```text
 .
 ├── README.md
-├── docs/                 # proposal, related work, architecture.jpg
-├── report/               # report.md + report.pdf
+├── configs/              # JSON configs for the nine reported GPU runs
+├── docs/                 # proposal, related work, reproduction, slides, architecture
+├── report/               # IEEE-style report.md + report.pdf
 ├── results/
 │   ├── absdiff_baseline/
 │   ├── levir_audit/      # stem overlap + manifest
@@ -153,8 +155,10 @@ Stem overlap across splits: **0** ([`results/levir_audit/stem_overlap_report.jso
 └── tests/
 ```
 
+Cross-member artifact check: [`docs/REPRODUCTION.md`](docs/REPRODUCTION.md). Reported configs: [`configs/INDEX.md`](configs/INDEX.md).
+
 ---
 
 ## Credits
 
-LEVIR-CD: Chen & Shi (2020). Academic use only. Team roles follow the proposal and report §9.
+LEVIR-CD: Chen & Shi (2020). Academic use only. Team roles follow the proposal and report acknowledgment table.
