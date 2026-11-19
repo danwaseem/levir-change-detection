@@ -19,7 +19,7 @@ ROOT = Path(__file__).resolve().parent
 FIG = ROOT / "figures_compressed"
 OUT = ROOT / "DATA255_BuildSafeVision_IEEE.docx"
 PDF_OUT = ROOT / "DATA255_BuildSafeVision_IEEE.pdf"
-FIG_W = Inches(3.05)
+FIG_W = Inches(3.35)
 
 
 def set_run_font(run, size=10, bold=False, italic=False):
@@ -88,7 +88,7 @@ def P(doc, text="", size=10, bold=False, italic=False, align="justify",
     pf = p.paragraph_format
     pf.space_before = Pt(before)
     pf.space_after = Pt(after)
-    pf.line_spacing = 1.08
+    pf.line_spacing = 1.15
     pf.line_spacing_rule = WD_LINE_SPACING.MULTIPLE
     if first:
         pf.first_line_indent = Inches(first)
@@ -105,11 +105,11 @@ def P(doc, text="", size=10, bold=False, italic=False, align="justify",
 
 
 def heading(doc, text):
-    return P(doc, text, size=10, bold=True, align="center", before=8, after=2, center=True)
+    return P(doc, text, size=10, bold=True, align="center", before=10, after=3, center=True)
 
 
 def subhead(doc, text):
-    return P(doc, text, size=10, italic=True, align="left", before=5, after=1)
+    return P(doc, text, size=10, italic=True, align="left", before=7, after=2)
 
 
 def body(doc, text, indent=True):
@@ -550,7 +550,8 @@ def build():
         doc,
         "Table IV and Fig. 4 hold architecture and seed fixed (FC-EF, 1511) so only one "
         "factor changes. BCE alone beats BCE+Dice. Turning off geometric augmentation also "
-        "helps versus BCE+Dice+aug under this width and budget.",
+        "helps versus BCE+Dice+aug under this width and budget. Fig. 5 shows validation F1 "
+        "trajectories at seed 1511: FC-EF+BCE climbs fastest among the matched runs.",
         indent=False,
     )
     table_title(doc, "TABLE IV.  FC-EF ABLATIONS (SEED 1511)")
@@ -569,20 +570,30 @@ def build():
         FIG / "ablation_f1_bar.jpg",
         "Fig. 4. FC-EF ablations at seed 1511. BCE-only is best.",
     )
+    figure(
+        doc,
+        FIG / "val_f1_trajectories.jpg",
+        "Fig. 5. Validation F1 trajectories at seed 1511 for principal and ablation runs.",
+    )
 
     subhead(doc, "E.  Locked test")
     body(
         doc,
         "Locked setup: FC-EF + BCE + aug, seed 1511 (best val F1 0.778 at epoch 13). "
-        "Fig. 5 shows the locked learning curves. Table V reports the one-shot test "
-        "scores. No retuning after test. Test tracks validation closely, so the freeze "
-        "looks stable.",
+        "Fig. 6 shows the locked learning curves; Fig. 7 shows validation precision/recall. "
+        "Table V reports the one-shot test scores. No retuning after test. Test tracks "
+        "validation closely, so the freeze looks stable.",
         indent=False,
     )
     figure(
         doc,
         FIG / "locked_learning_curves.jpg",
-        "Fig. 5. Locked FC-EF+BCE train/val loss and validation F1/IoU (best epoch 13).",
+        "Fig. 6. Locked FC-EF+BCE train/val loss and validation F1/IoU (best epoch 13).",
+    )
+    figure(
+        doc,
+        FIG / "locked_precision_recall.jpg",
+        "Fig. 7. Validation precision/recall for the locked FC-EF+BCE run.",
     )
     table_title(doc, "TABLE V.  LOCKED TEST (FC-EF + BCE + AUG, SEED 1511)")
     add_table(
@@ -598,7 +609,7 @@ def build():
     heading(doc, "VII.  ERROR ANALYSIS AND LIMITATIONS")
     body(
         doc,
-        "Fig. 6 shows locked-model validation examples. Large new buildings often return. "
+        "Fig. 8 shows locked-model validation examples. Large new buildings often return. "
         "Small structures and boundaries stay weak. On the locked test, empty tiles are "
         "1,113/2,048. Small-change tiles (≤256 labeled pixels) miss often (56/61; mean "
         "recall 0.083 vs 0.702 on large change). There are 212 false alarms on empty tiles. "
@@ -609,8 +620,7 @@ def build():
     figure(
         doc,
         FIG / "validation_gallery.jpg",
-        "Fig. 6. Locked FC-EF+BCE validation examples (before, after, GT, prediction @ 0.5).",
-        width=Inches(3.05),
+        "Fig. 8. Locked FC-EF+BCE validation examples (before, after, GT, prediction @ 0.5).",
     )
     body(
         doc,
@@ -687,83 +697,29 @@ def build():
         indent=False,
     )
 
-    # Start contributions on its own full-width page (page 5).
-    p_break = doc.add_paragraph()
-    p_break.paragraph_format.space_before = Pt(0)
-    p_break.paragraph_format.space_after = Pt(0)
-    p_break.add_run().add_break(WD_BREAK.PAGE)
-
-    sec_end = doc.add_section(WD_SECTION.CONTINUOUS)
-    configure_page(sec_end)
-    set_columns(sec_end, 1)
-
+    # IEEE two-column end matter (no separate page / single-column break).
     heading(doc, "CONTRIBUTIONS")
     body(
         doc,
-        "Even lead-and-support split across all four members. Full artifact lists: "
-        "individual-contribution/ and docs/TEAM_WORK_DIVISION.md.",
+        "Even lead-and-support split. Details: individual-contribution/ and "
+        "docs/TEAM_WORK_DIVISION.md.",
         indent=False,
     )
-    table_title(doc, "TABLE VII.  TEAM CONTRIBUTIONS (LEAD + SUPPORT)", before=6, after=3)
+    table_title(doc, "TABLE VII.  TEAM CONTRIBUTIONS (LEAD + SUPPORT)", before=4, after=1)
     add_table(
         doc,
-        ["Member", "Technical lead", "Also supports", "Key artifacts"],
+        ["Member", "Lead", "Supports"],
         [
-            [
-                "Sneha Singh",
-                "Data pipeline; leakage/geo audit; abs-diff reference baseline; "
-                "split/tile + freeze-before-test protocol; Week 3 dataset card",
-                "Danish — freeze checklist before locked test; "
-                "Ritika — protocol fields in configs",
-                "notebooks/01_dataset_audit.ipynb; results/levir_audit/; "
-                "results/absdiff_baseline/ (val F1 0.129); "
-                "docs/.../week3_dataset_card.pdf",
-            ],
-            [
-                "Danish Waseem",
-                "FC-EF / Siamese model code (models.py); 9-run GPU matrix; "
-                "locked test execution (test F1 0.780); H1/H2 interpretation",
-                "Sneha — Siamese/dataloader integration for bi-temporal tiles; "
-                "Rajesh — per-run summary.json QA against report tables",
-                "src/levir_cd/models.py; results/experiments/full_*; "
-                "results/locked_test/",
-            ],
-            [
-                "Ritika Mukesh Neema",
-                "Config/seed/aug wiring; BCE / BCE+Dice losses (losses.py); "
-                "feasibility + smoke packaging; Week 4 progress; validation "
-                "gallery; responsible-use drafting",
-                "Sneha — dataset-card / stem-overlap review; "
-                "Danish — full seed/loss/aug config matrix for GPU runs",
-                "configs/ + INDEX.md; src/levir_cd/losses.py; "
-                "results/unet_baseline/; week4_progress_report.pdf; gallery",
-            ],
-            [
-                "Rajesh Paruchuri",
-                "Metrics + secondary scores (metrics.py); comparison table; "
-                "latency/compute; environment.json; report figures; "
-                "failure-count tables; signed reproduction; aggregate outputs",
-                "Danish — locked-test F1/IoU verification; "
-                "Ritika — compute/latency rows for progress packaging",
-                "src/levir_cd/metrics.py; results/comparison_table.md; "
-                "results/report_figures/; results/environment.json; "
-                "docs/REPRODUCTION.md",
-            ],
+            ["Sneha", "Data, audit, abs-diff, protocol, Week 3", "Freeze checklist (Danish)"],
+            ["Danish", "Models, GPU matrix, locked test, H1/H2", "Dataloader + summary QA"],
+            ["Ritika", "Configs, losses, Week 4, gallery, responsible-use", "Dataset-card + GPU configs"],
+            ["Rajesh", "Metrics, latency, figures, env, reproduction", "Locked-test verify + compute"],
         ],
-        [1400, 3100, 2800, 3100],
-        font_size=9,
-        compact=False,
-        cell_pad_pt=5,
-    )
-    body(
-        doc,
-        "Cross-review pairs: Ritika → Sneha (dataset card + abs-diff); Rajesh → Danish "
-        "(locked test + experiment summaries); Sneha → Ritika (progress report + configs + "
-        "gallery); Danish → Rajesh (reproduction + comparison table + figures).",
+        [900, 2300, 1800],
+        font_size=7,
+        compact=True,
     )
 
-    # End matter continues after the big contributions table (same last page if space;
-    # otherwise naturally flows to the next page without leaving a blank middle gap).
     heading(doc, "ASSISTANCE DISCLOSURE")
     body(
         doc,
@@ -793,7 +749,7 @@ def build():
         "arXiv:2402.06994, 2024 (context only).",
     ]
     for ref in refs:
-        p = P(doc, ref, size=8, align="justify", before=0, after=1)
+        p = P(doc, ref, size=8, align="justify", before=0, after=2)
         p.paragraph_format.left_indent = Inches(0.2)
         p.paragraph_format.first_line_indent = Inches(-0.2)
 
