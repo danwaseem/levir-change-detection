@@ -1,6 +1,8 @@
 # Cross-member reproduction evidence
 
-**Experiment authors:** Danish Waseem (GPU matrix, locked test); Sneha Singh (abs-diff reference + split/audit artifacts)  
+**Data / abs-diff / audit:** Sneha Singh  
+**Models / GPU matrix / locked test:** Danish Waseem  
+**Configs / gallery packaging:** Ritika Mukesh Neema  
 **Metrics / tables / reproduction:** Rajesh Paruchuri  
 **Initial record:** 2026-11-18  
 **Re-verified:** 2026-11-18 (Rajesh on clean `main`)
@@ -55,6 +57,7 @@ See `results/environment.json`. Training: university CUDA lab (`PROJECT_ROOT=/ap
 
 | Role | Name | Date | Result |
 | --- | --- | --- | --- |
-| GPU / locked test | Danish Waseem | 2026-11-18 | Runs + locked test on disk |
 | Abs-diff / audit | Sneha Singh | 2026-11-18 | Reference + leakage artifacts |
+| GPU / locked test | Danish Waseem | 2026-11-18 | Runs + locked test on disk |
+| Configs / gallery | Ritika Mukesh Neema | 2026-11-18 | Config index + gallery packaging |
 | Metrics / reproduction | Rajesh Paruchuri | 2026-11-18 | Artifact numbers match report |

@@ -40,18 +40,18 @@ Suggested timing. All four students must speak.
 - FC-EF lowest latency among competitive setups
 - Params ~483k; ~50 min/run on CUDA lab
 
-## Slide 7 — Failures & limits (Rajesh, ~60s)
+## Slide 7 — Failures & limits (Ritika, ~60s)
 - Gallery: large buildings OK; small buildings missed (recall ~0.08)
 - Empty-tile false alarms; Texas-only data
-- No deployment / safety claims
+- Responsible-use: no deployment / safety claims
 
-## Slide 8 — Conclusion (all, ~45s)
+## Slide 8 — Conclusion (Rajesh, ~45s)
 - Controlled answer to RQ with mixed evidence
 - Early fusion wins under this capacity/budget
 - Repo + `docs/REPRODUCTION.md` for checks
 
 ## Q&A prep
-- Sneha: splits / leakage / abs-diff threshold / freeze protocol
-- Danish: Siamese fusion / H1–H2 / locked test / gallery
-- Ritika: FC-EF config / aug flags / progress packaging
+- Sneha: splits / leakage / abs-diff threshold / freeze protocol / Week 3 card
+- Danish: Siamese fusion / H1–H2 / locked test / GPU matrix
+- Ritika: FC-EF config / aug flags / gallery / responsible-use / Week 4
 - Rajesh: metrics / report figures / environment / reproduction / latency

@@ -8,7 +8,7 @@
 - Compute / batch-1 latency packaging and trade-off rows in the final report
 - Environment record for verification host + lab notes: `results/environment.json`
 - Report figure packaging under `results/report_figures/` (bars, curves used in the IEEE report)
-- Quantitative failure-count tables for locked-test analysis (empty-tile / small-change stats) pulled into the report
+- Quantitative failure-count tables for locked-test analysis pulled into the report
 - Signed cross-member reproduction log: `docs/REPRODUCTION.md`
 
 ## Cross-review activity

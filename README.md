@@ -166,5 +166,5 @@ Cross-member artifact check: [`docs/REPRODUCTION.md`](docs/REPRODUCTION.md). Rep
 ## Credits
 
 LEVIR-CD: Chen & Shi (2020). Academic use only.  
-Team roles: Sneha (data/protocol/abs-diff), Danish (GPU matrix/locked test/gallery), Ritika (configs/progress report), Rajesh (metrics/figures/environment/reproduction).  
+Team roles (equal split): Sneha (data/protocol/abs-diff/Week 3), Danish (models/GPU matrix/locked test/H1–H2), Ritika (configs/Week 4/gallery/responsible-use), Rajesh (metrics/figures/environment/reproduction).  
 Details: [`docs/TEAM_WORK_DIVISION.md`](docs/TEAM_WORK_DIVISION.md).
