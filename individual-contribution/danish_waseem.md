@@ -8,6 +8,7 @@
 - Principal 3-seed comparison and loss/architecture investigation (H1/H2)
 - Freeze + locked test: test F1 **0.780** (`results/locked_test/...`)
 - Report methods/results narrative for model comparison and hypothesis outcomes
+- Support: Siamese/dataloader integration with Sneha’s tile protocol; per-run `summary.json` QA with Rajesh before report freeze
 
 ## Cross-review activity
 Reviewed Rajesh’s `docs/REPRODUCTION.md`, comparison table, and `results/report_figures/` against locked-test and per-run `summary.json` values.

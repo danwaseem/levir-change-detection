@@ -4,12 +4,13 @@
 
 ## Concrete artifacts
 - Metrics implementation and secondary scores (IoU, precision, recall, boundary F1): `src/levir_cd/metrics.py`
-- Aggregate comparison table: `results/comparison_table.md`
+- Aggregate comparison table and plan-aggregation outputs: `results/comparison_table.md`
 - Compute / batch-1 latency packaging and trade-off rows in the final report
 - Environment record for verification host + lab notes: `results/environment.json`
 - Report figure packaging under `results/report_figures/` (bars, curves used in the IEEE report)
 - Quantitative failure-count tables for locked-test analysis pulled into the report
 - Signed cross-member reproduction log: `docs/REPRODUCTION.md`
+- Support: locked-test F1/IoU verification with Danish; compute/latency rows for Ritika’s progress packaging
 
 ## Cross-review activity
 Reviewed Danish’s locked-test summary (`test_f1` **0.780**, `test_iou` **0.639**, no post-test retune) against the IEEE report tables and figure set.

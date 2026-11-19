@@ -51,7 +51,7 @@ Suggested timing. All four students must speak.
 - Repo + `docs/REPRODUCTION.md` for checks
 
 ## Q&A prep
-- Sneha: splits / leakage / abs-diff threshold / freeze protocol / Week 3 card
-- Danish: Siamese fusion / H1–H2 / locked test / GPU matrix
-- Ritika: FC-EF config / aug flags / gallery / responsible-use / Week 4
-- Rajesh: metrics / report figures / environment / reproduction / latency
+- Sneha: splits / leakage / abs-diff threshold / freeze protocol / Week 3 card (+ freeze support)
+- Danish: Siamese fusion / H1–H2 / locked test / GPU matrix (+ summary QA support)
+- Ritika: configs / `losses.py` / aug flags / gallery / Week 4 / responsible-use
+- Rajesh: metrics / figures / environment / reproduction / latency (+ locked-test verify)

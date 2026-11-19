@@ -693,13 +693,16 @@ def build():
     heading(doc, "ACKNOWLEDGMENT")
     body(
         doc,
-        "This is a four-person group project with equal technical ownership. Sneha Singh: "
-        "data pipeline, leakage audit, abs-diff reference, protocol, and Week 3 dataset "
-        "card. Danish Waseem: FC-EF/Siamese models, GPU matrix, locked test, and H1/H2 "
-        "interpretation. Ritika Mukesh Neema: FC-EF/aug configs, Week 4 progress report, "
-        "qualitative gallery, and responsible-use drafting. Rajesh Paruchuri: metrics and "
-        "secondary scores, comparison/latency tables, environment record, report figures, "
-        "failure-count tables, and the signed reproduction check.",
+        "This is a four-person group project with an even lead-and-support split. "
+        "Sneha Singh leads data pipeline, leakage audit, abs-diff reference, protocol, "
+        "and Week 3 dataset card, and supports freeze checks before locked test. "
+        "Danish Waseem leads FC-EF/Siamese models, GPU matrix, locked test, and H1/H2 "
+        "interpretation, and supports dataloader integration and summary QA. "
+        "Ritika Mukesh Neema leads configs, BCE/BCE+Dice losses, feasibility packaging, "
+        "Week 4 progress, gallery, and responsible-use drafting, and supports the GPU "
+        "config matrix. Rajesh Paruchuri leads metrics, comparison/latency tables, "
+        "environment.json, report figures, failure-count tables, and the signed "
+        "reproduction check, and supports locked-test verification.",
         indent=False,
     )
 

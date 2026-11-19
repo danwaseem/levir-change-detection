@@ -8,9 +8,10 @@
 - Non-learned reference baseline design and scoring: `results/absdiff_baseline/` (val F1 **0.129** @ threshold 0.4)
 - Evaluation protocol: official splits, tile-after-split rule, freeze-before-test policy
 - Week 3 dataset card: `docs/progress-report-week-3-4/week3_dataset_card.pdf`
+- Support: freeze checklist with Danish before the locked test; protocol field checks with Ritika’s configs
 
 ## Cross-review activity
-Reviewed Ritika’s progress report, `configs/full_unet_*`, and gallery packaging for consistency with the frozen protocol (seeds, aug flags, loss keys).
+Reviewed Ritika’s progress report, `configs/`, `losses.py` flags, and gallery packaging for consistency with the frozen protocol (seeds, aug flags, loss keys).
 
 ## Experiment I can explain in depth
 Abs-diff reference vs learned models under the same val tiles: threshold sweep → **0.4** → F1 **0.129**, establishing that the task needs learning beyond pixel subtraction.

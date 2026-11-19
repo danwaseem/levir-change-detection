@@ -1,9 +1,9 @@
 # Cross-member reproduction evidence
 
-**Data / abs-diff / audit:** Sneha Singh  
-**Models / GPU matrix / locked test:** Danish Waseem  
-**Configs / gallery packaging:** Ritika Mukesh Neema  
-**Metrics / tables / reproduction:** Rajesh Paruchuri  
+**Data / abs-diff / audit (+ freeze support):** Sneha Singh  
+**Models / GPU matrix / locked test (+ summary QA support):** Danish Waseem  
+**Configs / losses / gallery (+ GPU matrix configs):** Ritika Mukesh Neema  
+**Metrics / tables / reproduction (+ locked-test verify):** Rajesh Paruchuri  
 **Initial record:** 2026-11-18  
 **Re-verified:** 2026-11-18 (Rajesh on clean `main`)
 
@@ -61,7 +61,7 @@ See `results/environment.json`. Training: university CUDA lab (`PROJECT_ROOT=/ap
 
 | Role | Name | Date | Result |
 | --- | --- | --- | --- |
-| Abs-diff / audit | Sneha Singh | 2026-11-18 | Reference + leakage artifacts |
-| GPU / locked test | Danish Waseem | 2026-11-18 | Runs + locked test on disk |
-| Configs / gallery | Ritika Mukesh Neema | 2026-11-18 | Config index + gallery packaging |
-| Metrics / reproduction | Rajesh Paruchuri | 2026-11-18 | Artifact numbers match report |
+| Abs-diff / audit (+ freeze support) | Sneha Singh | 2026-11-18 | Reference + leakage artifacts |
+| GPU / locked test (+ summary QA) | Danish Waseem | 2026-11-18 | Runs + locked test on disk |
+| Configs / losses / gallery | Ritika Mukesh Neema | 2026-11-18 | Config index + loss/aug wiring + gallery |
+| Metrics / reproduction (+ verify) | Rajesh Paruchuri | 2026-11-18 | Artifact numbers match report |

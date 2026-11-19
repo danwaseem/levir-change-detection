@@ -43,14 +43,14 @@ Individual statements: [Sneha](individual-contribution/sneha_singh.md) · [Ritik
 
 ---
 
-## Team roles (equal split)
+## Team roles (even split — lead + support)
 
-| Member | Owns |
-| --- | --- |
-| **Sneha Singh** | Data pipeline, leakage audit, abs-diff baseline, protocol, Week 3 dataset card |
-| **Danish Waseem** | FC-EF / Siamese models, GPU 9-run matrix, locked test, H1/H2 |
-| **Ritika Mukesh Neema** | Configs, Week 4 progress report, validation gallery, responsible-use |
-| **Rajesh Paruchuri** | Metrics, comparison/latency tables, figures, environment, reproduction |
+| Member | Technical lead | Also supports |
+| --- | --- | --- |
+| **Sneha Singh** | Data, leakage audit, abs-diff, protocol, Week 3 card | Danish (freeze checklist); Ritika (config protocol fields) |
+| **Danish Waseem** | Models, GPU 9-run matrix, locked test, H1/H2 | Sneha (Siamese/dataloader); Rajesh (summary.json QA) |
+| **Ritika Mukesh Neema** | Configs, `losses.py`, feasibility/smoke, Week 4, gallery, responsible-use | Sneha (dataset-card review); Danish (GPU config matrix) |
+| **Rajesh Paruchuri** | Metrics, comparison/latency, figures, environment, reproduction | Danish (locked-test verify); Ritika (compute rows) |
 
 Full checklist and cross-review pairs: [`docs/TEAM_WORK_DIVISION.md`](docs/TEAM_WORK_DIVISION.md).
 
