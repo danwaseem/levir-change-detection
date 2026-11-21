@@ -20,6 +20,8 @@ Compares a six-channel U-Net (**FC-EF**) with shared-encoder Siamese U-Nets on [
 
 **H1** (Siam-diff > FC-EF) and **H2** (BCE+Dice > BCE) were **not supported** under this `base=16` protocol. Absolute difference is weaker than every learned model.
 
+Locked-test reliability (no retrain): tile-bootstrap 95% CI on pooled F1 **[0.770, 0.790]**; error strata (empty / small / large) in [`results/locked_test/full_unet_bce_aug_seed1511_tile256/error_strata.json`](results/locked_test/full_unet_bce_aug_seed1511_tile256/error_strata.json) (report Table VIII).
+
 Figures: [`results/report_figures/`](results/report_figures/) · Gallery: [`results/experiments/full_unet_bce_aug_seed1511_tile256/validation_gallery.png`](results/experiments/full_unet_bce_aug_seed1511_tile256/validation_gallery.png)
 
 ---
@@ -63,6 +65,8 @@ Full checklist and cross-review pairs: [`docs/TEAM_WORK_DIVISION.md`](docs/TEAM_
 | Code (Daudt triad, losses, metrics, abs-diff, audits, tests) | Done |
 | GPU 9-run matrix + comparison table | Done |
 | Locked test (FC-EF BCE, seed 1511) | Done — test F1 **0.780** |
+| Locked-test error strata + bootstrap CI | Done — `error_strata.json` / report Table VIII |
+| Artifact metric verifier (no GPU) | Done — `scripts/verify_reported_metrics.py` |
 | Leakage audit (stem overlap = 0) | Done |
 | Report write-up + figures | Done |
 | Assistance disclosure | Done (Claude noted in report) |
@@ -155,6 +159,7 @@ Do **not** commit smoke folders or `.pt` checkpoints.
 | Abs-diff baseline (val) | `PYTHONPATH=src python scripts/run_baseline.py` | Yes |
 | Full 9-run matrix | `PYTHONPATH=src python scripts/run_plan.py --mode full` | Yes (GPU) |
 | Build comparison table | `PYTHONPATH=src python scripts/run_plan.py --aggregate-only` | Summaries on disk |
+| Verify report numbers (no GPU) | `python scripts/verify_reported_metrics.py` | Summaries on disk |
 | Locked test (once) | `PYTHONPATH=src python scripts/run_locked_test.py --checkpoint …/best_model.pt --i-confirm-choices-are-frozen` | Yes |
 
 The full matrix already ran on the university GPU lab. Re-running is optional. Artifact check: [`docs/REPRODUCTION.md`](docs/REPRODUCTION.md). Reported configs: [`configs/INDEX.md`](configs/INDEX.md).
@@ -176,10 +181,11 @@ The full matrix already ran on the university GPU lab. Re-running is optional. A
 │   ├── levir_audit/           # stem overlap + manifest
 │   ├── report_figures/        # loss / P-R / bar charts
 │   ├── experiments/           # per-run summaries (+ locked gallery)
-│   ├── locked_test/
+│   ├── locked_test/           # locked summary + error_strata.json
 │   └── comparison_table.md
 ├── src/levir_cd/
-├── scripts/                   # run_smoke, run_plan, run_baseline, run_locked_test
+├── scripts/                   # run_smoke, run_plan, run_baseline, run_locked_test,
+│                              # verify_reported_metrics
 ├── notebooks/
 └── tests/
 ```

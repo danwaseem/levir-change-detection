@@ -87,4 +87,32 @@ Published LEVIR **test** F1 numbers other groups report for the Daudt models are
   year={2020},
   doi={10.3390/rs12101662}
 }
+
+@article{chen2022bit,
+  title={Remote Sensing Image Change Detection with Transformers},
+  author={Chen, Hao and Qi, Zipeng and Shi, Zhenwei},
+  journal={IEEE Transactions on Geoscience and Remote Sensing},
+  volume={60},
+  year={2022},
+  doi={10.1109/TGRS.2021.3095166},
+  note={Context only; not reproduced}
+}
+
+@inproceedings{bandara2022changeformer,
+  title={A Transformer-Based Siamese Network for Change Detection},
+  author={Bandara, Wele Gedara Chaminda and Patel, Vishal M.},
+  booktitle={IEEE IGARSS},
+  year={2022},
+  doi={10.1109/IGARSS46834.2022.9883686},
+  note={Context only; not reproduced}
+}
+
+@inproceedings{milletari2016vnet,
+  title={V-Net: Fully Convolutional Neural Networks for Volumetric Medical Image Segmentation},
+  author={Milletari, Fausto and Navab, Nassir and Ahmadi, Seyed-Ahmad},
+  booktitle={3DV},
+  year={2016},
+  doi={10.1109/3DV.2016.79},
+  note={Dice-overlap motivation for BCE+Dice ablation}
+}
 ```
