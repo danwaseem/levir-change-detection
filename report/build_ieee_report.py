@@ -123,7 +123,7 @@ def caption(doc, text):
 def figure(doc, path, cap, width=None):
     p = doc.add_paragraph()
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p.paragraph_format.space_before = Pt(4)
+    p.paragraph_format.space_before = Pt(8)
     p.paragraph_format.space_after = Pt(0)
     run = p.add_run()
     run.add_picture(str(path), width=width or FIG_W)
@@ -223,11 +223,11 @@ def add_table(doc, headers, rows, widths, font_size=8, compact=False):
             set_cell_border(cell)
     spacer = doc.add_paragraph()
     spacer.paragraph_format.space_before = Pt(0)
-    spacer.paragraph_format.space_after = Pt(6 if compact else 4)
+    spacer.paragraph_format.space_after = Pt(8 if compact else 6)
     return table
 
 
-def table_title(doc, text, before=7, after=1):
+def table_title(doc, text, before=8, after=2):
     P(doc, text, size=8, bold=True, align="center", before=before, after=after, center=True)
 
 
@@ -578,6 +578,8 @@ def build():
             ["BCE+Dice, aug off", "0.745", "0.594"],
         ],
         [2800, 900, 900],
+        font_size=7,
+        compact=True,
     )
     figure(
         doc,
