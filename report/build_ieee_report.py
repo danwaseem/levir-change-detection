@@ -223,7 +223,7 @@ def add_table(doc, headers, rows, widths, font_size=8, compact=False):
             set_cell_border(cell)
     spacer = doc.add_paragraph()
     spacer.paragraph_format.space_before = Pt(0)
-    spacer.paragraph_format.space_after = Pt(2 if compact else 4)
+    spacer.paragraph_format.space_after = Pt(6 if compact else 4)
     return table
 
 
@@ -536,8 +536,8 @@ def build():
     )
     body(
         doc,
-        "*FC-Siam-conc is single-seed triad completion under the same loss/aug settings; "
-        "it is not included in the FC-Siam-diff mean used for H1.",
+        "*Siam-conc is single-seed triad completion under the same loss/aug settings; "
+        "it is not included in the Siam-diff mean used for H1. Latency is batch-1 seconds.",
         indent=False,
     )
     figure(
