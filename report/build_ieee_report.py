@@ -221,6 +221,12 @@ def add_table(doc, headers, rows, widths, font_size=8, compact=False):
             run = p.add_run(val)
             set_run_font(run, size=font_size)
             set_cell_border(cell)
+            if compact:
+                # Avoid mid-number wraps that look like overlaps in narrow IEEE columns.
+                tcPr = cell._tc.get_or_add_tcPr()
+                no_wrap = tcPr.find(qn("w:noWrap"))
+                if no_wrap is None:
+                    tcPr.append(OxmlElement("w:noWrap"))
     spacer = doc.add_paragraph()
     spacer.paragraph_format.space_before = Pt(0)
     spacer.paragraph_format.space_after = Pt(8 if compact else 6)
@@ -515,29 +521,29 @@ def build():
         indent=False,
     )
     table_title(doc, "TABLE III.  PRINCIPAL + TRIAD RUNS (BCE+DICE, AUG ON)")
-    # Keep ≤ one IEEE column (~4750 twips) so the table cannot overlap the next column.
+    # Keep ≤ one IEEE column (~4750 twips). Latency lives in Table VI to avoid wrap/overlap.
     add_table(
         doc,
-        ["Model", "Seed", "Val F1", "IoU", "P", "R", "Lat"],
+        ["Model", "Seed", "Val F1", "IoU", "P", "R"],
         [
-            ["FC-EF", "1511", "0.702", "0.541", "0.734", "0.673", "0.0015"],
-            ["FC-EF", "42", "0.727", "0.571", "0.707", "0.749", "0.0014"],
-            ["FC-EF", "123", "0.726", "0.570", "0.753", "0.701", "0.0014"],
-            ["FC-EF mean", "3 seeds", "0.718±0.011", "—", "—", "—", "—"],
-            ["Siam-diff", "1511", "0.503", "0.336", "0.674", "0.402", "0.0021"],
-            ["Siam-diff", "42", "0.606", "0.435", "0.608", "0.604", "0.0021"],
-            ["Siam-diff", "123", "0.521", "0.352", "0.941", "0.360", "0.0021"],
-            ["Siam-diff mean", "3 seeds", "0.543±0.045", "—", "—", "—", "—"],
-            ["Siam-conc*", "1511", "0.773", "0.630", "0.836", "0.719", "0.0028"],
+            ["FC-EF", "1511", "0.702", "0.541", "0.734", "0.673"],
+            ["FC-EF", "42", "0.727", "0.571", "0.707", "0.749"],
+            ["FC-EF", "123", "0.726", "0.570", "0.753", "0.701"],
+            ["FC-EF mean", "3 seeds", "0.718±0.011", "—", "—", "—"],
+            ["Siam-diff", "1511", "0.503", "0.336", "0.674", "0.402"],
+            ["Siam-diff", "42", "0.606", "0.435", "0.608", "0.604"],
+            ["Siam-diff", "123", "0.521", "0.352", "0.941", "0.360"],
+            ["Siam-diff mean", "3 seeds", "0.543±0.045", "—", "—", "—"],
+            ["Siam-conc*", "1511", "0.773", "0.630", "0.836", "0.719"],
         ],
-        [950, 600, 950, 550, 500, 500, 600],
+        [1100, 700, 1050, 650, 650, 650],
         font_size=7,
         compact=True,
     )
     body(
         doc,
         "*Siam-conc is single-seed triad completion under the same loss/aug settings; "
-        "it is not included in the Siam-diff mean used for H1. Latency is batch-1 seconds.",
+        "it is not included in the Siam-diff mean used for H1. Batch-1 latency is in Table VI.",
         indent=False,
     )
     figure(
