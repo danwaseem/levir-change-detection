@@ -266,18 +266,23 @@ def build():
     r1 = abs_p.add_run("Abstract—")
     set_run_font(r1, size=9, bold=True, italic=True)
     r2 = abs_p.add_run(
-        "Team BuildSafe Vision studies building change detection on LEVIR-CD: given two "
-        "aligned satellite images of the same place, mark pixels where buildings were "
-        "constructed or demolished. Absolute RGB difference is a weak non-learned "
-        "reference under lighting and vegetation shift. We implement the Daudt triad "
-        "(FC-EF, FC-Siam-diff, FC-Siam-conc) in one shared PyTorch pipeline, run a "
-        "nine-run GPU matrix with loss and paired-augmentation ablations, and freeze "
-        "before one locked test. Change pixels are rare (~4–5%), so the primary score is "
-        "change-class F1 at threshold 0.5. Under matched BCE+Dice training, FC-EF mean "
-        "validation F1 is 0.718±0.011 (3 seeds) versus FC-Siam-diff 0.543±0.045; "
-        "FC-Siam-conc reaches 0.773 on one seed. BCE-only FC-EF is best on validation "
-        "(0.778) and reaches locked test F1 0.780. At width base=16, H1 (Siam-diff better) "
-        "and H2 (BCE+Dice better) are not supported. Absolute difference stays at F1 0.129."
+        "Building change detection from bi-temporal satellite imagery is challenging "
+        "because illumination, vegetation, and sensor variation can mimic structural "
+        "change while true building construction or demolition occupies only a small "
+        "fraction of pixels. This paper evaluates early-fusion and Siamese U-Net "
+        "architectures for binary building-change segmentation on LEVIR-CD under a "
+        "matched training and evaluation protocol. We implement the Daudt triad "
+        "(FC-EF, FC-Siam-diff, and FC-Siam-conc) in a shared PyTorch pipeline, compare "
+        "them against a non-learned absolute RGB-difference baseline, and study loss "
+        "(BCE vs. BCE+Dice) and paired-augmentation ablations in a nine-run GPU matrix. "
+        "Model selection and thresholds are frozen on validation before a single locked "
+        "test evaluation. With change-class F1 at threshold 0.5 as the primary metric, "
+        "FC-EF achieves mean validation F1 0.718±0.011 under BCE+Dice (3 seeds), "
+        "FC-Siam-diff 0.543±0.045, and FC-Siam-conc 0.773 on one seed; absolute "
+        "difference remains at 0.129. BCE-only FC-EF is strongest on validation (0.778) "
+        "and obtains locked test F1 0.780. At width base=16, neither Siamese late fusion "
+        "nor BCE+Dice consistently outperforms early fusion, so both stated hypotheses "
+        "are not supported under this protocol."
     )
     set_run_font(r2, size=9, bold=True)
 
