@@ -620,13 +620,30 @@ def build():
     heading(doc, "VII.  ERROR ANALYSIS AND LIMITATIONS")
     body(
         doc,
-        "Fig. 8 shows locked-model validation examples. Large new buildings often return. "
-        "Small structures and boundaries stay weak. On the locked test, empty tiles are "
-        "1,113/2,048. Small-change tiles (≤256 labeled pixels) miss often (56/61; mean "
-        "recall 0.083 vs 0.702 on large change). There are 212 false alarms on empty tiles. "
-        "Pooled test F1 is 0.780 while mean per-tile F1 is only 0.297—expected when many "
-        "tiles are empty or tiny.",
+        "Fig. 8 shows locked-model validation examples. Large new buildings often return; "
+        "small structures and boundaries stay weak. Table VIII stratifies the locked test "
+        "tiles by ground-truth change size (from per-tile metrics, no retrain). Empty tiles "
+        "are 1,113/2,048 with a 19.0% false-alarm rate (212/1,113). Small-change tiles "
+        "(≤256 labeled pixels) stay hard (pooled F1 0.088; 56/61 missed). Large-change "
+        "tiles reach pooled F1 0.790. Pooled test F1 is 0.780 while mean per-tile F1 is "
+        "only 0.297—expected when many tiles are empty or tiny. A 2,000-draw tile "
+        "bootstrap of micro-averaged test F1 gives a 95% interval [0.770, 0.790] "
+        "(sampling uncertainty only; not a model retrain).",
         indent=False,
+    )
+    table_title(doc, "TABLE VIII.  LOCKED-TEST ERROR STRATA (NO RETRAIN)", before=4, after=1)
+    add_table(
+        doc,
+        ["Stratum", "N", "Pooled F1", "Mean tile F1", "Key failure signal"],
+        [
+            ["Empty (0 px)", "1113", "—", "—", "FA rate 19.0% (212 tiles)"],
+            ["Small (1–256)", "61", "0.088", "0.078", "Mean recall 0.083"],
+            ["Large (>256)", "874", "0.790", "0.691", "Mean recall 0.702"],
+            ["All tiles", "2048", "0.780", "0.297", "Bootstrap 95% CI 0.770–0.790"],
+        ],
+        [1200, 600, 900, 1100, 1600],
+        font_size=7,
+        compact=True,
     )
     figure(
         doc,

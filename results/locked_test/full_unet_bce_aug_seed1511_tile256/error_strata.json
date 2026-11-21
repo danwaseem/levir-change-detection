@@ -1,0 +1,50 @@
+{
+  "n_tiles": 2048,
+  "small_change_max_pixels": 256,
+  "strata": {
+    "empty": {
+      "n": 1113,
+      "pooled_precision": 0.0,
+      "pooled_recall": 0.0,
+      "pooled_f1": 0.0,
+      "mean_tile_f1": 0.0,
+      "mean_tile_recall": 0.0,
+      "false_alarm_tile_rate": 0.1905,
+      "n_false_alarm_tiles": 212
+    },
+    "small_1_to_256": {
+      "n": 61,
+      "pooled_precision": 0.067,
+      "pooled_recall": 0.1292,
+      "pooled_f1": 0.0883,
+      "mean_tile_f1": 0.0779,
+      "mean_tile_recall": 0.0828
+    },
+    "large_gt_256": {
+      "n": 874,
+      "pooled_precision": 0.7897,
+      "pooled_recall": 0.7911,
+      "pooled_f1": 0.7904,
+      "mean_tile_f1": 0.6907,
+      "mean_tile_recall": 0.702
+    },
+    "all": {
+      "n": 2048,
+      "pooled_precision": 0.7696,
+      "pooled_recall": 0.7903,
+      "pooled_f1": 0.7798,
+      "mean_tile_f1": 0.2971,
+      "mean_tile_recall": 0.3021
+    }
+  },
+  "bootstrap_pooled_f1": {
+    "n_resamples": 2000,
+    "seed": 0,
+    "mean": 0.7797,
+    "ci95": [
+      0.7699,
+      0.7895
+    ],
+    "note": "Tile-level nonparametric bootstrap of micro-averaged change-class F1; not a model retrain."
+  }
+}

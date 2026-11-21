@@ -13,9 +13,12 @@ This check does **not** require full retraining. It verifies that reported numbe
 
 ```bash
 PYTHONPATH=src python scripts/run_plan.py --aggregate-only
+python scripts/verify_reported_metrics.py
 PYTHONPATH=src python -c "import json; from pathlib import Path; s=json.loads(Path('results/locked_test/full_unet_bce_aug_seed1511_tile256/summary.json').read_text()); print(round(s['test_f1'],3), round(s['test_iou'],3))"
 PYTHONPATH=src python -c "import json; from pathlib import Path; s=json.loads(Path('results/absdiff_baseline/summary.json').read_text()); print(round(s['f1'],3))"
 ```
+
+Locked-test strata / bootstrap CI (no GPU): `results/locked_test/full_unet_bce_aug_seed1511_tile256/error_strata.json`.
 
 Optional smoke (`scripts/run_smoke.py`) exercises code paths without LEVIR; it is **not** used as a LEVIR score.
 
