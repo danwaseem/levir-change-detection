@@ -20,7 +20,7 @@ Compares a six-channel U-Net (**FC-EF**) with shared-encoder Siamese U-Nets on [
 
 **H1** (Siam-diff > FC-EF) and **H2** (BCE+Dice > BCE) were **not supported** under this `base=16` protocol. Absolute difference is weaker than every learned model.
 
-Locked-test reliability (no retrain): tile-bootstrap 95% CI on pooled F1 **[0.770, 0.790]**; error strata (empty / small / large) in [`results/locked_test/full_unet_bce_aug_seed1511_tile256/error_strata.json`](results/locked_test/full_unet_bce_aug_seed1511_tile256/error_strata.json) (report Table VIII).
+Locked-test reliability (no retrain): tile-bootstrap 95% CI on pooled F1 **[0.770, 0.790]**; error strata (empty / small / large) in [`results/locked_test/full_unet_bce_aug_seed1511_tile256/error_strata.json`](results/locked_test/full_unet_bce_aug_seed1511_tile256/error_strata.json) (report Table VI).
 
 Figures: [`results/report_figures/`](results/report_figures/) · Gallery: [`results/experiments/full_unet_bce_aug_seed1511_tile256/validation_gallery.png`](results/experiments/full_unet_bce_aug_seed1511_tile256/validation_gallery.png)
 
@@ -65,7 +65,7 @@ Full checklist and cross-review pairs: [`docs/TEAM_WORK_DIVISION.md`](docs/TEAM_
 | Code (Daudt triad, losses, metrics, abs-diff, audits, tests) | Done |
 | GPU 9-run matrix + comparison table | Done |
 | Locked test (FC-EF BCE, seed 1511) | Done — test F1 **0.780** |
-| Locked-test error strata + bootstrap CI | Done — `error_strata.json` / report Table VIII |
+| Locked-test error strata + bootstrap CI | Done — `error_strata.json` / report Table VI |
 | Artifact metric verifier (no GPU) | Done — `scripts/verify_reported_metrics.py` |
 | Leakage audit (stem overlap = 0) | Done |
 | Report write-up + figures | Done |

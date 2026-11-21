@@ -521,7 +521,7 @@ def build():
         indent=False,
     )
     table_title(doc, "TABLE III.  PRINCIPAL + TRIAD RUNS (BCE+DICE, AUG ON)")
-    # Keep ≤ one IEEE column (~4750 twips). Latency lives in Table VI to avoid wrap/overlap.
+    # Keep ≤ one IEEE column (~4750 twips). Latency lives in Table VII to avoid wrap/overlap.
     add_table(
         doc,
         ["Model", "Seed", "Val F1", "IoU", "P", "R"],
@@ -543,7 +543,7 @@ def build():
     body(
         doc,
         "*Siam-conc is single-seed triad completion under the same loss/aug settings; "
-        "it is not included in the Siam-diff mean used for H1. Batch-1 latency is in Table VI.",
+        "it is not included in the Siam-diff mean used for H1. Batch-1 latency is in Table VII.",
         indent=False,
     )
     figure(
@@ -634,7 +634,7 @@ def build():
     body(
         doc,
         "Fig. 8 shows locked-model validation examples. Large new buildings often return; "
-        "small structures and boundaries stay weak. Table VIII stratifies the locked test "
+        "small structures and boundaries stay weak. Table VI stratifies the locked test "
         "tiles by ground-truth change size (from per-tile metrics, no retrain). Empty tiles "
         "are 1,113/2,048 with a 19.0% false-alarm rate (212/1,113). Small-change tiles "
         "(≤256 labeled pixels) stay hard (pooled F1 0.088; 56/61 missed). Large-change "
@@ -644,7 +644,7 @@ def build():
         "(sampling uncertainty only; not a model retrain).",
         indent=False,
     )
-    table_title(doc, "TABLE VIII.  LOCKED-TEST ERROR STRATA (NO RETRAIN)", before=4, after=1)
+    table_title(doc, "TABLE VI.  LOCKED-TEST ERROR STRATA (NO RETRAIN)", before=4, after=1)
     add_table(
         doc,
         ["Stratum", "N", "Pooled F1", "Mean tile F1", "Key failure signal"],
@@ -683,7 +683,7 @@ def build():
     heading(doc, "VIII.  COMPUTATIONAL AND RESPONSIBLE-USE CONSIDERATIONS")
     body(
         doc,
-        "Table VI is the cost view at seed 1511. FC-EF is strongest on F1 and lowest on "
+        "Table VII is the cost view at seed 1511. FC-EF is strongest on F1 and lowest on "
         "batch-1 latency among competitive setups. Full matrix: university CUDA lab "
         "(workdir /app/dl in configs), batch 4, 256×256 tiles. Verification host "
         "(2026-11-18): Darwin arm64, Python 3.13.5, PyTorch 2.10.0 "
@@ -691,7 +691,7 @@ def build():
         "the repo are enough to verify reported numbers without retraining.",
         indent=False,
     )
-    table_title(doc, "TABLE VI.  COMPUTE TRADE-OFF (SEED 1511)")
+    table_title(doc, "TABLE VII.  COMPUTE TRADE-OFF (SEED 1511)")
     add_table(
         doc,
         ["Model", "Params", "Train", "Batch-1", "Val F1"],
@@ -740,7 +740,7 @@ def build():
         indent=False,
     )
 
-    # Keep Table VII in one column (avoid cut-off at the bottom of the left column).
+    # Keep Table VIII in one column (avoid cut-off at the bottom of the left column).
     col_break = doc.add_paragraph()
     col_break.paragraph_format.space_before = Pt(0)
     col_break.paragraph_format.space_after = Pt(0)
@@ -753,7 +753,7 @@ def build():
         "in individual-contribution/ and docs/TEAM_WORK_DIVISION.md.",
         indent=False,
     )
-    table_title(doc, "TABLE VII.  TEAM CONTRIBUTIONS (LEAD + SUPPORT)", before=4, after=1)
+    table_title(doc, "TABLE VIII.  TEAM CONTRIBUTIONS (LEAD + SUPPORT)", before=4, after=1)
     # Keep total width ≤ one IEEE column (~3.3 in / 4750 twips) so the table is not clipped.
     add_table(
         doc,

@@ -8,7 +8,7 @@
 - Compute / batch-1 latency packaging and trade-off rows in the final report
 - Environment record for verification host + lab notes: `results/environment.json`
 - Report figure packaging under `results/report_figures/` (bars, curves used in the IEEE report)
-- Quantitative failure-count / error-strata tables for locked-test analysis (report Table VIII)
+- Quantitative failure-count / error-strata tables for locked-test analysis (report Table VI)
 - Locked-test strata + tile-bootstrap CI artifact: `results/locked_test/full_unet_bce_aug_seed1511_tile256/error_strata.json`
 - No-GPU metric verifier: `scripts/verify_reported_metrics.py`
 - Signed cross-member reproduction log: `docs/REPRODUCTION.md`
