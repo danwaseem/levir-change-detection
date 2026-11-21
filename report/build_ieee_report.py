@@ -371,17 +371,22 @@ def build():
         "U-Net is the standard encoder–decoder for dense labels [2]. Daudt et al. compared "
         "FC-EF, FC-Siam-diff, and FC-Siam-conc for change detection [3]. We reimplemented "
         "that full triad under one dataloader, loss, and metric API so architecture claims "
-        "stay fair. Public FC-style LEVIR scores near 0.81–0.86 often use heavier schedules "
-        "or ImageNet backbones [5], [6]. Those numbers are context only. Our nets use width "
-        "base=16 (~0.48–0.56M parameters) and train from scratch on the course GPU budget.",
+        "stay fair. Later transformer CD models such as BIT and ChangeFormer raise the "
+        "public LEVIR ceiling with heavier backbones [7], [8]; Open-CD tables and the "
+        "change-detection reality-check discussion place typical FC-style scores near "
+        "0.81–0.86 under richer schedules [5], [6]. Those numbers are context only. Our "
+        "nets use width base=16 (~0.48–0.56M parameters) and train from scratch on the "
+        "course GPU budget.",
     )
     body(
         doc,
-        "Relative to those papers, the student-owned contribution is not a new attention "
-        "module. It is a controlled implementation: one API for three fusion styles, a "
-        "non-learned reference, loss and paired-augmentation ablations, seed reporting, "
-        "latency measurement, and a freeze-before-test lock so claims stay matched to "
-        "evidence.",
+        "Because changed pixels are rare (~4–5%), we also study BCE versus BCE+Dice, "
+        "following the Dice-overlap objective popularized for highly imbalanced "
+        "segmentation [9]. Relative to prior work, the student-owned contribution is not "
+        "a new attention module. It is a controlled implementation: one API for three "
+        "fusion styles, a non-learned reference, loss and paired-augmentation ablations, "
+        "seed reporting, latency measurement, and a freeze-before-test lock so claims "
+        "stay matched to evidence.",
     )
 
     heading(doc, "III.  DATASET AND EVALUATION PROTOCOL")
@@ -447,7 +452,8 @@ def build():
         doc,
         "Training uses Adam (1e-3, weight decay 1e-4), batch 4, up to 30 epochs with early "
         "stopping, and best validation F1. We compare BCE versus BCE+Dice because change "
-        "pixels are rare and Dice can trade precision for recall. Augmentation is synced "
+        "pixels are rare and Dice can emphasize overlap on the minority class [9]. "
+        "Augmentation is synced "
         "flips and 90° rotations on A, B, and the mask so geometry stays aligned across "
         "dates. Principal seeds: 1511, 42, 123. The full matrix ran on the university CUDA "
         "GPU lab; Mac MPS was used only for smoke tests and early feasibility.",
@@ -637,7 +643,7 @@ def build():
     )
     body(
         doc,
-        "Limits: base=16 caps peak F1 versus heavier public setups [5], [6]; stem overlap "
+        "Limits: base=16 caps peak F1 versus heavier public setups [5]–[8]; stem overlap "
         "is only a partial geo check; Siam-conc and ablations are single-seed; data is "
         "Texas Google Earth only; small objects remain hard. These limits bound how far "
         "the negative H1/H2 findings should be generalized: they hold for this capacity "
@@ -686,7 +692,8 @@ def build():
         "filename-stem check with a lat/long neighborhood audit. Study small-building "
         "recall with boundary-aware losses or multi-scale heads without changing the "
         "evaluation code. If compute allows, report quality-per-FLOP against heavier public "
-        "LEVIR setups as context only, still without claiming STANet reproduction [4]–[6].",
+        "LEVIR setups as context only, still without claiming STANet/BIT/ChangeFormer "
+        "reproduction [4], [7], [8].",
         indent=False,
     )
 
@@ -775,6 +782,15 @@ def build():
         "https://github.com/likyoo/open-cd (accessed Nov. 2026).",
         "[6]  I. Corley, C. Robinson, and A. Ortiz, “A change detection reality check,” "
         "arXiv:2402.06994, 2024 (context only).",
+        "[7]  H. Chen, Z. Qi, and Z. Shi, “Remote sensing image change detection with "
+        "transformers,” IEEE Trans. Geosci. Remote Sens., vol. 60, 2022, art. 5607514, "
+        "doi: 10.1109/TGRS.2021.3095166 (context only).",
+        "[8]  W. G. C. Bandara and V. M. Patel, “A transformer-based Siamese network for "
+        "change detection,” in Proc. IEEE IGARSS, 2022, pp. 207–210, "
+        "doi: 10.1109/IGARSS46834.2022.9883686 (context only).",
+        "[9]  F. Milletari, N. Navab, and S.-A. Ahmadi, “V-Net: Fully convolutional neural "
+        "networks for volumetric medical image segmentation,” in Proc. 3DV, 2016, "
+        "pp. 565–571, doi: 10.1109/3DV.2016.79.",
     ]
     for ref in refs:
         p = P(doc, ref, size=8, align="justify", before=0, after=2)
