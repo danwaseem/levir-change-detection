@@ -1,4 +1,4 @@
-# Building Change Detection in Multi-Temporal Satellite Images
+# Deep Learning for Building Change Detection in Multi-Temporal Satellite Imagery
 
 **Course:** DATA 255 Deep Learning Vision · Fall 2026  
 **Team:** BuildSafe Vision — Sneha Singh · Ritika Mukesh Neema · Danish Waseem · Rajesh Paruchuri  

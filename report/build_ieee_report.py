@@ -248,16 +248,23 @@ def build():
     configure_page(sec0)
     set_columns(sec0, 1)
 
-    P(doc, "Deep Learning for Building Change Detection in Multi-Temporal Satellite Imagery",
-      size=16, bold=True, align="center", before=0, after=6, center=True)
-    P(doc, "Sneha Singh, Ritika Mukesh Neema, Danish Waseem, and Rajesh Paruchuri",
-      size=11, align="center", before=2, after=0, center=True)
-    P(doc, "Department of Applied Data Science, San Jose State University, San Jose, CA, USA",
-      size=10, italic=True, align="center", before=0, after=0, center=True)
-    P(doc, "DATA 255 Deep Learning Vision, Fall 2026  ·  Team BuildSafe Vision",
-      size=10, align="center", before=0, after=2, center=True)
+    # Match proposal.pdf project header (title + course line + team block).
+    P(doc, "Deep Learning for Building Change Detection",
+      size=16, bold=True, align="center", before=0, after=0, center=True)
+    P(doc, "in Multi-Temporal Satellite Imagery",
+      size=16, bold=True, align="center", before=0, after=4, center=True)
+    P(doc, "Final report | DATA 255 Deep Learning Vision | Fall 2026",
+      size=10, align="center", before=0, after=8, center=True)
+    P(doc, "Team: BuildSafe Vision.",
+      size=10, before=0, after=0)
+    P(doc, "Members: Sneha Singh, Ritika Mukesh Neema, Danish Waseem, Rajesh Paruchuri.",
+      size=10, before=0, after=0)
+    P(doc,
+      "Project area: Binary semantic segmentation, multi-temporal remote sensing, "
+      "and efficient computer vision.",
+      size=10, before=0, after=2)
     P(doc, "GitHub: https://github.com/danwaseem/levir-change-detection",
-      size=9, align="center", before=0, after=8, center=True)
+      size=9, before=0, after=8)
 
     abs_p = P(doc, "", size=9, align="justify", before=2, after=2)
     r1 = abs_p.add_run("Abstract—")
