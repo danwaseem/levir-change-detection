@@ -515,21 +515,24 @@ def build():
         indent=False,
     )
     table_title(doc, "TABLE III.  PRINCIPAL + TRIAD RUNS (BCE+DICE, AUG ON)")
+    # Keep ≤ one IEEE column (~4750 twips) so the table cannot overlap the next column.
     add_table(
         doc,
-        ["Model", "Seed", "Val F1", "IoU", "P", "R", "Lat. (s)"],
+        ["Model", "Seed", "Val F1", "IoU", "P", "R", "Lat"],
         [
             ["FC-EF", "1511", "0.702", "0.541", "0.734", "0.673", "0.0015"],
             ["FC-EF", "42", "0.727", "0.571", "0.707", "0.749", "0.0014"],
             ["FC-EF", "123", "0.726", "0.570", "0.753", "0.701", "0.0014"],
             ["FC-EF mean", "3 seeds", "0.718±0.011", "—", "—", "—", "—"],
-            ["FC-Siam-diff", "1511", "0.503", "0.336", "0.674", "0.402", "0.0021"],
-            ["FC-Siam-diff", "42", "0.606", "0.435", "0.608", "0.604", "0.0021"],
-            ["FC-Siam-diff", "123", "0.521", "0.352", "0.941", "0.360", "0.0021"],
+            ["Siam-diff", "1511", "0.503", "0.336", "0.674", "0.402", "0.0021"],
+            ["Siam-diff", "42", "0.606", "0.435", "0.608", "0.604", "0.0021"],
+            ["Siam-diff", "123", "0.521", "0.352", "0.941", "0.360", "0.0021"],
             ["Siam-diff mean", "3 seeds", "0.543±0.045", "—", "—", "—", "—"],
-            ["FC-Siam-conc*", "1511", "0.773", "0.630", "0.836", "0.719", "0.0028"],
+            ["Siam-conc*", "1511", "0.773", "0.630", "0.836", "0.719", "0.0028"],
         ],
-        [1200, 700, 1100, 650, 650, 650, 750],
+        [950, 600, 950, 550, 500, 500, 600],
+        font_size=7,
+        compact=True,
     )
     body(
         doc,
@@ -609,12 +612,14 @@ def build():
     table_title(doc, "TABLE V.  LOCKED TEST (FC-EF + BCE + AUG, SEED 1511)")
     add_table(
         doc,
-        ["Split", "F1", "IoU", "Precision", "Recall", "Boundary F1"],
+        ["Split", "F1", "IoU", "P", "R", "Bnd F1"],
         [
             ["Val (best)", "0.778", "0.636", "0.751", "0.806", "0.338"],
             ["Test (once)", "0.780", "0.639", "0.770", "0.790", "0.356"],
         ],
-        [1100, 700, 700, 1000, 900, 1100],
+        [1000, 650, 650, 650, 650, 900],
+        font_size=7,
+        compact=True,
     )
 
     heading(doc, "VII.  ERROR ANALYSIS AND LIMITATIONS")
@@ -636,12 +641,12 @@ def build():
         doc,
         ["Stratum", "N", "Pooled F1", "Mean tile F1", "Key failure signal"],
         [
-            ["Empty (0 px)", "1113", "—", "—", "FA rate 19.0% (212 tiles)"],
-            ["Small (1–256)", "61", "0.088", "0.078", "Mean recall 0.083"],
-            ["Large (>256)", "874", "0.790", "0.691", "Mean recall 0.702"],
-            ["All tiles", "2048", "0.780", "0.297", "Bootstrap 95% CI 0.770–0.790"],
+            ["Empty (0 px)", "1113", "—", "—", "FA 19.0% (212)"],
+            ["Small (1–256)", "61", "0.088", "0.078", "Recall 0.083"],
+            ["Large (>256)", "874", "0.790", "0.691", "Recall 0.702"],
+            ["All tiles", "2048", "0.780", "0.297", "CI 0.770–0.790"],
         ],
-        [1200, 600, 900, 1100, 1600],
+        [1000, 500, 750, 850, 1500],
         font_size=7,
         compact=True,
     )
