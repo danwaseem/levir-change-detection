@@ -39,5 +39,8 @@
   },
   "test_set_touched": true,
   "retuned_after_test": false,
-  "note": "One-shot locked evaluation. Do not change models after this."
+  "note": "One-shot locked evaluation. Do not change models after this.",
+  "analysis_checkpoint": "results/experiments/full_unet_bce_aug_seed1511_tile256/best_model.pt",
+  "secondary_artifacts_source": "checkpoint_listed_above",
+  "secondary_artifacts_note": "Locked test loaded the listed best_model.pt; failure_summary and per-image test metrics match that checkpoint."
 }

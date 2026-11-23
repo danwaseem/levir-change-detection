@@ -91,5 +91,10 @@
     }
   ],
   "official_threshold": 0.5,
-  "run_dir": "/app/dl/results/experiments/full_unet_bce_dice_noaug_seed1511_tile256"
+  "run_dir": "/app/dl/results/experiments/full_unet_bce_dice_noaug_seed1511_tile256",
+  "headline_metrics_source": "best_validation_epoch_in_metrics_csv",
+  "secondary_artifacts_source": "last_epoch_weights",
+  "secondary_artifacts_note": "Pre best-checkpoint reload fix: threshold_sweep, per_image_val_summary, and failure_summary in this file were computed from last-epoch weights after early stopping. Headline best_val_f1 / val_precision / val_recall / val_iou / val_boundary_f1 / val_accuracy match the best validation epoch in metrics.csv (best_model.pt). Do not cite threshold_sweep or embedded failure/per-image summaries as best-checkpoint scores. Code now reloads best_model.pt before those passes on new runs.",
+  "analysis_checkpoint": null,
+  "analysis_checkpoint_note": "Null because this summary was written before the best-checkpoint reload fix; headline metrics still come from the best epoch."
 }

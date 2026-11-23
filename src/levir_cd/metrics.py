@@ -83,7 +83,8 @@ def evaluate_loader(
         b_fp += bf
         b_fn += bn
     metrics = scores_from_counts(tp, fp, fn, tn)
-    boundary = scores_from_counts(b_tp, b_fp, b_fn)
+    # Boundary F1 only uses tp/fp/fn; tn is unused for the reported boundary score.
+    boundary = scores_from_counts(b_tp, b_fp, b_fn, tn=0)
     return {
         "val_loss": total_loss / max(total_samples, 1),
         "val_precision": metrics["precision"],
