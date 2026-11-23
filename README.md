@@ -111,16 +111,16 @@ All learned paths: logits → sigmoid → threshold **0.5** → change-class F1 
 ![LEVIR-CD Building Change Detection Architecture — Daudt triad](docs/architecture.jpg)
 
 ```text
-LEVIR pair (A, B, mask)
+Official LEVIR split (445 / 64 / 128)
         │
         ▼
- 256×256 tiles (+ optional synced flip/rot90)
+Non-overlapping 256×256 tiles (after split)
         │
         ├── Absolute RGB difference (reference)
         └── FC-EF | FC-Siam-diff | FC-Siam-conc
                  │
                  ▼
-        sigmoid → threshold 0.5 → change-class F1 / IoU / P / R
+sigmoid → threshold 0.5 → change-class F1 / IoU / P / R
 ```
 
 ---

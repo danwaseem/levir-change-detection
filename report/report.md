@@ -73,7 +73,7 @@ Primary checkpoint metric is change-class F1 at threshold 0.5. Secondary metrics
 
 We organize methods into the three course roles. Reference baseline: absolute RGB difference with a validation-chosen threshold (0.4). Strong baseline: FC-EF, a six-channel early-fusion U-Net (~483k params). Team investigation: shared-encoder FC-Siam-diff and FC-Siam-conc (~483k / ~564k), which fuse with |fA−fB| or feature concatenation. Fig. 1 shows the shared pipeline. All learned paths map logits → sigmoid → threshold 0.5.
 
-![Fig. 1. BuildSafe Vision pipeline: tile bi-temporal LEVIR pairs, score an absolute-difference reference, then train FC-EF / FC-Siam-diff / FC-Siam-conc.](figures_compressed/architecture.jpg)
+![Fig. 1. BuildSafe Vision pipeline: official LEVIR split, then non-overlapping 256×256 tiles; absolute-difference reference plus FC-EF / FC-Siam-diff / FC-Siam-conc under one protocol.](figures_compressed/architecture.jpg)
 
 Training uses Adam (1e-3, weight decay 1e-4), batch 4, up to 30 epochs with early stopping, and best validation F1. We compare BCE versus BCE+Dice because change pixels are rare and Dice can emphasize overlap on the minority class [9]. Augmentation is synced flips and 90° rotations on A, B, and the mask so geometry stays aligned across dates. Principal seeds: 1511, 42, 123. The full matrix ran on the university CUDA GPU lab; Mac MPS was used only for smoke tests and early feasibility.
 

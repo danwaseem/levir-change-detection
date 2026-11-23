@@ -451,8 +451,9 @@ def build():
     figure(
         doc,
         FIG / "architecture.jpg",
-        "Fig. 1. BuildSafe Vision pipeline: tile bi-temporal LEVIR pairs, score an "
-        "absolute-difference reference, then train FC-EF / FC-Siam-diff / FC-Siam-conc.",
+        "Fig. 1. BuildSafe Vision pipeline: official LEVIR split, then non-overlapping "
+        "256×256 tiles; absolute-difference reference plus FC-EF / FC-Siam-diff / "
+        "FC-Siam-conc under one protocol.",
     )
     body(
         doc,
