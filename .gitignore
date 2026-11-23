@@ -47,3 +47,6 @@ __pycache__/
 /report/DATA255_BuildSafeVision_IEEE.pdf
 /report/DATA255_BuildSafeVision_IEEE.docx
 /docs/progress-report-week-3-4/*.pdf
+
+# Internal team checklist image (not for the public repo)
+/docs/report_gaps_table.png
