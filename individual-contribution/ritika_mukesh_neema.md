@@ -6,7 +6,7 @@
 - FC-EF / paired-augmentation config wiring and seed matrix: `configs/*.json`, `configs/INDEX.md`
 - Loss implementations used in the matrix (BCE / BCE+Dice): `src/levir_cd/losses.py`
 - Local feasibility + smoke packaging under `results/unet_baseline/`
-- Week 4 progress-report packaging: `docs/progress-report-week-3-4/week4_progress_report.pdf`
+- Week 4 progress-report packaging (PDF removed from git)
 - Qualitative validation gallery and failure-mode image selection for the report
 - Responsible-use / limitation drafting for the final report
 - Support: dataset-card / stem-overlap review with Sneha; full seed/loss/aug config matrix for Danish’s GPU runs

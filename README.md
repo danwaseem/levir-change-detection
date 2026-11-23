@@ -31,10 +31,7 @@ Figures: [`results/report_figures/`](results/report_figures/) · Gallery: [`resu
 | Document | Path |
 | --- | --- |
 | Proposal | [`docs/Data255_ProjectProposal.pdf`](docs/Data255_ProjectProposal.pdf) |
-| Final report (PDF) | [`report/DATA255_BuildSafeVision_IEEE.pdf`](report/DATA255_BuildSafeVision_IEEE.pdf) |
-| Final report (DOCX) | [`report/DATA255_BuildSafeVision_IEEE.docx`](report/DATA255_BuildSafeVision_IEEE.docx) |
-| Week 3 dataset card | [`docs/progress-report-week-3-4/week3_dataset_card.pdf`](docs/progress-report-week-3-4/week3_dataset_card.pdf) |
-| Week 4 progress report | [`docs/progress-report-week-3-4/week4_progress_report.pdf`](docs/progress-report-week-3-4/week4_progress_report.pdf) |
+| Final report (PDF / DOCX) | Local only, not in git: `report/DATA255_BuildSafeVision_IEEE.pdf` and `.docx` |
 | Reproduction evidence | [`docs/REPRODUCTION.md`](docs/REPRODUCTION.md) |
 | Presentation (PDF / PPTX) | [`presentation/LEVIR_Change_Detection_DATA255.pdf`](presentation/LEVIR_Change_Detection_DATA255.pdf) · [`presentation/LEVIR_Change_Detection_DATA255.pptx`](presentation/LEVIR_Change_Detection_DATA255.pptx) |
 | Team work division | [`docs/TEAM_WORK_DIVISION.md`](docs/TEAM_WORK_DIVISION.md) |
@@ -175,7 +172,7 @@ The full matrix already ran on the university GPU lab. Re-running is optional. A
 ├── configs/                   # JSON configs for the nine reported GPU runs
 ├── docs/                      # proposal, related work, week3/4 Canvas, slide outline
 ├── presentation/              # final PPTX + PDF decks
-├── report/                    # IEEE DOCX + PDF (+ build_ieee_report.py)
+├── report/                    # IEEE builder; generated PDF/DOCX stay local
 ├── results/
 │   ├── absdiff_baseline/
 │   ├── levir_audit/           # stem overlap + manifest

@@ -42,3 +42,8 @@ __pycache__/
 
 # Local tool caches
 .deepeval/
+
+# Course writeups kept on disk only
+/report/DATA255_BuildSafeVision_IEEE.pdf
+/report/DATA255_BuildSafeVision_IEEE.docx
+/docs/progress-report-week-3-4/*.pdf
