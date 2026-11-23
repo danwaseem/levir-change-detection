@@ -251,6 +251,18 @@ def run_experiment(cfg: ExperimentConfig, device: torch.device | None = None) ->
             print(f"Early stopping at epoch {epoch}; best epoch {best_epoch}")
             break
 
+    # Post-training analysis must describe the checkpoint we report. Early
+    # stopping can leave `model` several epochs past the best validation F1,
+    # so reload the best weights before the latency, per-image and threshold
+    # passes below.
+    best_ckpt_path = run_dir / "best_model.pt"
+    analysis_checkpoint = None
+    if best_ckpt_path.exists():
+        best_state = torch.load(best_ckpt_path, map_location=device, weights_only=False)
+        model.load_state_dict(best_state["model_state"])
+        analysis_checkpoint = f"best_model.pt@epoch{int(best_state['epoch'])}"
+        print(f"Loaded {analysis_checkpoint} for post-training analysis", flush=True)
+
     # Batch-one inference latency after a short warm-up.
     model.eval()
     sample_x, _ = next(iter(val_loader))
@@ -310,6 +322,7 @@ def run_experiment(cfg: ExperimentConfig, device: torch.device | None = None) ->
         "parameters": n_params,
         "threshold": cfg.THRESHOLD,
         "selected_using": "validation F1 only",
+        "analysis_checkpoint": analysis_checkpoint,
         "test_set_touched": False,
         "synthetic": meta["synthetic"],
         "checkpoint_bytes": (run_dir / "best_model.pt").stat().st_size if (run_dir / "best_model.pt").exists() else None,

@@ -44,6 +44,17 @@ def test_absdiff_baseline():
     assert "threshold" in result
 
 
+def test_absdiff_baseline_counts_true_negatives():
+    """Accuracy needs tn; without it accuracy silently collapses onto IoU."""
+    ds = SyntheticChangeTiles(n_tiles=4, size=32, seed=0)
+    loader, _ = make_loaders(ds, ds, batch_size=2)
+    result = absolute_difference_baseline(loader, threshold=0.5)
+    total = 4 * 32 * 32
+    assert result["tp"] + result["fp"] + result["fn"] + result["tn"] == total
+    assert result["tn"] > 0
+    assert result["accuracy"] != result["iou"]
+
+
 def test_manifest_builder_pairs_a_b_label(tmp_path):
     from PIL import Image
 

@@ -39,7 +39,8 @@ def absolute_difference_baseline(
         tp = int(np.logical_and(pred, truth_all).sum())
         fp = int(np.logical_and(pred, ~truth_all).sum())
         fn = int(np.logical_and(~pred, truth_all).sum())
-        return scores_from_counts(tp, fp, fn)
+        tn = int(diff_all.size - tp - fp - fn)
+        return scores_from_counts(tp, fp, fn, tn)
 
     if threshold is None:
         scored = [(th, eval_at(th)) for th in grid]
