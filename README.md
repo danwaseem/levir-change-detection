@@ -108,7 +108,7 @@ We follow the Daudt et al. (2018) change-detection triad and score with change-c
 
 All learned paths: logits → sigmoid → threshold **0.5** → change-class F1 / IoU / P / R. Width `base=16`. Checkpoint by validation F1.
 
-![LEVIR-CD Building Change Detection Architecture — Daudt triad](docs/architecture.jpg)
+![LEVIR-CD Building Change Detection Architecture](docs/architecture_diagram.jpg)
 
 ```text
 Official LEVIR split (445 / 64 / 128)
