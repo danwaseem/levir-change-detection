@@ -643,8 +643,8 @@ def build():
         "are 1,113/2,048 with a 19.0% false-alarm rate (212/1,113). Small-change tiles "
         "(≤256 labeled pixels) stay hard (pooled F1 0.088; 56/61 missed). Large-change "
         "tiles reach pooled F1 0.790. Pooled test F1 is 0.780 while mean per-tile F1 is "
-        "only 0.297—expected when many tiles are empty or tiny. A 2,000-draw tile "
-        "bootstrap of micro-averaged test F1 gives a 95% interval [0.770, 0.790] "
+        "only 0.297—expected when many tiles are empty or tiny. A 10,000-draw tile "
+        "bootstrap of micro-averaged test F1 gives a 95% interval [0.770, 0.789] "
         "(sampling uncertainty only; not a model retrain).",
         indent=False,
     )
@@ -656,7 +656,7 @@ def build():
             ["Empty (0 px)", "1113", "—", "—", "FA 19.0% (212)"],
             ["Small (1–256)", "61", "0.088", "0.078", "Recall 0.083"],
             ["Large (>256)", "874", "0.790", "0.691", "Recall 0.702"],
-            ["All tiles", "2048", "0.780", "0.297", "CI 0.770–0.790"],
+            ["All tiles", "2048", "0.780", "0.297", "CI 0.770–0.789"],
         ],
         [1000, 500, 750, 850, 1500],
         font_size=7,

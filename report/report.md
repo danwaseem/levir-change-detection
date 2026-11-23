@@ -154,7 +154,7 @@ Locked setup: FC-EF + BCE + aug, seed 1511 (best val F1 0.778 at epoch 13). Fig.
 
 ## VII. Error Analysis and Limitations
 
-Fig. 8 shows locked-model validation examples. Large new buildings often return; small structures and boundaries stay weak. Table VI stratifies the locked test tiles by ground-truth change size (from per-tile metrics, no retrain). Empty tiles are 1,113/2,048 with a 19.0% false-alarm rate (212/1,113). Small-change tiles (≤256 labeled pixels) stay hard (pooled F1 0.088; 56/61 missed). Large-change tiles reach pooled F1 0.790. Pooled test F1 is 0.780 while mean per-tile F1 is only 0.297—expected when many tiles are empty or tiny. A 2,000-draw tile bootstrap of micro-averaged test F1 gives a 95% interval [0.770, 0.790] (sampling uncertainty only; not a model retrain).
+Fig. 8 shows locked-model validation examples. Large new buildings often return; small structures and boundaries stay weak. Table VI stratifies the locked test tiles by ground-truth change size (from per-tile metrics, no retrain). Empty tiles are 1,113/2,048 with a 19.0% false-alarm rate (212/1,113). Small-change tiles (≤256 labeled pixels) stay hard (pooled F1 0.088; 56/61 missed). Large-change tiles reach pooled F1 0.790. Pooled test F1 is 0.780 while mean per-tile F1 is only 0.297—expected when many tiles are empty or tiny. A 10,000-draw tile bootstrap of micro-averaged test F1 gives a 95% interval [0.770, 0.789] (sampling uncertainty only; not a model retrain).
 
 **Table VI. Locked-test error strata (no retrain)**
 
@@ -163,7 +163,7 @@ Fig. 8 shows locked-model validation examples. Large new buildings often return;
 | Empty (0 px) | 1113 | — | — | FA 19.0% (212) |
 | Small (1–256) | 61 | 0.088 | 0.078 | Recall 0.083 |
 | Large (>256) | 874 | 0.790 | 0.691 | Recall 0.702 |
-| All tiles | 2048 | 0.780 | 0.297 | CI 0.770–0.790 |
+| All tiles | 2048 | 0.780 | 0.297 | CI 0.770–0.789 |
 
 ![Fig. 8. Locked FC-EF+BCE validation examples (before, after, GT, prediction @ 0.5).](figures_compressed/validation_gallery.jpg)
 

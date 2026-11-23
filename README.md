@@ -20,7 +20,7 @@ Compares a six-channel U-Net (**FC-EF**) with shared-encoder Siamese U-Nets on [
 
 **H1** (Siam-diff > FC-EF) and **H2** (BCE+Dice > BCE) were **not supported** under this `base=16` protocol. Absolute difference is weaker than every learned model.
 
-Locked-test reliability (no retrain): tile-bootstrap 95% CI on pooled F1 **[0.770, 0.790]**; error strata (empty / small / large) in [`results/locked_test/full_unet_bce_aug_seed1511_tile256/error_strata.json`](results/locked_test/full_unet_bce_aug_seed1511_tile256/error_strata.json) (report Table VI).
+Locked-test reliability (no retrain): tile-bootstrap 95% CI on pooled F1 **[0.770, 0.789]**; error strata (empty / small / large) in [`results/locked_test/full_unet_bce_aug_seed1511_tile256/error_strata.json`](results/locked_test/full_unet_bce_aug_seed1511_tile256/error_strata.json) (report Table VI).
 
 IEEE-style writeup: [`report/report.md`](report/report.md). Figures: [`results/report_figures/`](results/report_figures/) · Gallery: [`results/experiments/full_unet_bce_aug_seed1511_tile256/validation_gallery.png`](results/experiments/full_unet_bce_aug_seed1511_tile256/validation_gallery.png)
 
