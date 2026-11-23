@@ -108,19 +108,24 @@ We follow the Daudt et al. (2018) change-detection triad and score with change-c
 
 All learned paths: logits → sigmoid → threshold **0.5** → change-class F1 / IoU / P / R. Width `base=16`. Checkpoint by validation F1.
 
-![LEVIR-CD Building Change Detection Architecture](docs/architecture_diagram.jpg)
+![LEVIR-CD Building Change Detection Architecture](docs/architecture.jpg)
+
+The diagram above shows all three architectures side by side: FC-EF (early fusion, teal), FC-Siam-diff (difference fusion, amber), and FC-Siam-conc (concatenation fusion, blue). Both input tiles feed into each architecture. The metrics strip shows locked-test results for the best model (FC-EF BCE): **F1 0.780 · IoU 0.639 · Precision 0.770 · Recall 0.790**. The bottom panel summarises the four-step evaluation protocol: official split → tile after split → train/val → locked test.
 
 ```text
-Official LEVIR split (445 / 64 / 128)
+Official LEVIR split (445 / 64 / 128 pairs)
         │
         ▼
-Non-overlapping 256×256 tiles (after split)
+16 non-overlapping 256×256 tiles per pair (after split)
         │
-        ├── Absolute RGB difference (reference)
+        ├── Absolute RGB difference (reference baseline)
         └── FC-EF | FC-Siam-diff | FC-Siam-conc
                  │
                  ▼
-sigmoid → threshold 0.5 → change-class F1 / IoU / P / R
+        sigmoid → threshold 0.5
+                 │
+                 ▼
+        change-class F1 / IoU / Precision / Recall
 ```
 
 ---
