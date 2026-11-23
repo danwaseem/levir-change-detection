@@ -22,7 +22,7 @@ Compares a six-channel U-Net (**FC-EF**) with shared-encoder Siamese U-Nets on [
 
 Locked-test reliability (no retrain): tile-bootstrap 95% CI on pooled F1 **[0.770, 0.790]**; error strata (empty / small / large) in [`results/locked_test/full_unet_bce_aug_seed1511_tile256/error_strata.json`](results/locked_test/full_unet_bce_aug_seed1511_tile256/error_strata.json) (report Table VI).
 
-Full tables: [`report.md`](report.md). Figures: [`results/report_figures/`](results/report_figures/) · Gallery: [`results/experiments/full_unet_bce_aug_seed1511_tile256/validation_gallery.png`](results/experiments/full_unet_bce_aug_seed1511_tile256/validation_gallery.png)
+Full tables: [`report/report.md`](report/report.md). Figures: [`results/report_figures/`](results/report_figures/) · Gallery: [`results/experiments/full_unet_bce_aug_seed1511_tile256/validation_gallery.png`](results/experiments/full_unet_bce_aug_seed1511_tile256/validation_gallery.png)
 
 ---
 
@@ -168,12 +168,13 @@ The full matrix already ran on the university GPU lab. Re-running is optional. A
 ```text
 .
 ├── README.md
-├── report.md                  # tracked results tables
 ├── individual-contribution/   # per-member contribution statements
 ├── configs/                   # JSON configs for the nine reported GPU runs
 ├── docs/                      # proposal, related work, week3/4 Canvas, slide outline
 ├── presentation/              # final PPTX + PDF decks
-├── report/                    # IEEE builder; generated PDF/DOCX stay local
+├── report/                    # report.md tracked; generated PDF/DOCX stay local
+│   ├── build_ieee_report.py
+│   └── report.md
 ├── results/
 │   ├── absdiff_baseline/
 │   ├── levir_audit/           # stem overlap + manifest
