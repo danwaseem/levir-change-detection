@@ -10,6 +10,7 @@
 - Qualitative validation gallery and failure-mode image selection for the report
 - Responsible-use / limitation drafting for the final report
 - Support: dataset-card / stem-overlap review with Sneha; full seed/loss/aug config matrix for Danish’s GPU runs
+- Scoring-integrity PR: reload `best_model.pt` before post-training analysis; pass true negatives into abs-diff accuracy (`31d5403`, merged on `main`)
 
 ## Cross-review activity
 Reviewed Sneha’s dataset card and stem-overlap report (counts 445/64/128; overlap **0**) for upload readiness.

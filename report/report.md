@@ -119,6 +119,8 @@ Table III is the matched BCE+Dice comparison. FC-EF mean±std validation F1 is 0
 
 The principal trained-method comparison uses three seeds (1511, 42, 123). We report every seed in Table III plus mean±std, and show spread in Fig. 3. FC-EF is both higher and more stable (std 0.011) than FC-Siam-diff (std 0.045). We do not claim statistical significance; the seed study is a reliability check under matched training budgets. Ablations and FC-Siam-conc remain single-seed and are labeled as such. Training variability is separate from finite test-set uncertainty; the locked test is one frozen evaluation, not a retuned search.
 
+**Artifact note.** All table metrics above are `best_val_f1` (and matching headline `val_*` fields) from each run’s `summary.json` / `metrics.csv`. We do not cite validation `threshold_sweep` rows stored in the legacy GPU summaries: those secondary blocks were produced from last-epoch weights after early stopping and are labeled as such in the artifacts. Final error strata use the locked-test evaluation on `best_model.pt`.
+
 ### D. Ablations
 
 Table IV and Fig. 4 hold architecture and seed fixed (FC-EF, 1511) so only one factor changes. BCE alone beats BCE+Dice. Turning off geometric augmentation also helps versus BCE+Dice+aug under this width and budget. Fig. 5 shows validation F1 trajectories at seed 1511: FC-EF+BCE climbs fastest among the matched runs.

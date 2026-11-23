@@ -50,7 +50,7 @@ Sources: Daudt et al. 2018, Chen & Shi 2020, and later public LEVIR tables (Open
 | Change-class precision, recall, F1, IoU | Implemented; F1 selects the checkpoint |
 | Overall accuracy | Recorded as `val_accuracy` and **not** used for selection (Chen & Shi and the proposal warn it is misleading) |
 | Boundary errors | `val_boundary_f1` on a 3×3 boundary band |
-| Missed small buildings / empty-tile false alarms | `failure_summary.json` (small = ≤256 changed pixels on a tile) |
+| Missed small buildings / empty-tile false alarms | Prefer locked-test `failure_summary` / `error_strata.json` (best checkpoint). Embedded val `failure_summary` inside legacy `full_*/summary.json` files is labeled last-epoch and must not be cited as best-ckpt scores. |
 | BCE vs BCE+Dice and paired flip/rot90 ablations | Coded. `scripts/run_plan.py --mode full` runs them with the main comparison. |
 | STANet attention, BCL loss, ImageNet/ResNet encoders | Left out on purpose. Adding them would change the controlled comparison. |
 

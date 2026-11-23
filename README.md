@@ -72,6 +72,8 @@ Full checklist and cross-review pairs: [`docs/TEAM_WORK_DIVISION.md`](docs/TEAM_
 
 No further training is required for submission. Numbers come only from `results/`.
 
+**Cite from summaries:** `best_val_f1` (and matching `val_*` headline fields) and locked-test metrics. Do **not** cite `threshold_sweep` or embedded val `failure_summary` / `per_image_val_summary` inside the nine legacy `full_*/summary.json` files — those secondary blocks are labeled `last_epoch_weights` (see `docs/REPRODUCTION.md`). Error analysis in the report uses locked-test strata.
+
 ---
 
 ## Dataset

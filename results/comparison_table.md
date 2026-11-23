@@ -3,6 +3,10 @@
 Built from `summary.json` files. Validation F1 selects each checkpoint.
 Overall accuracy is not the selection metric. Synthetic smoke runs are not LEVIR scores.
 
+This table uses `best_val_f1` and related headline fields only. Do not copy
+`threshold_sweep` from the same summaries into the report (legacy last-epoch
+secondary blocks; see `docs/REPRODUCTION.md`).
+
 | Run | Paper name | Loss | Aug | Seed | Val F1 | IoU | P | R | Boundary F1 | Params | Infer (s) | Synthetic |
 | --- | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
 | full | FC-Siam-conc | bce_dice | True | 1511 | 0.7730 | 0.6300 | 0.8357 | 0.7191 | 0.3518 | 563889 | 0.0028 | False |

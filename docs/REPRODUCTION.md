@@ -5,7 +5,8 @@
 **Configs / losses / gallery (+ GPU matrix configs):** Ritika Mukesh Neema  
 **Metrics / tables / reproduction (+ locked-test verify):** Rajesh Paruchuri  
 **Initial record:** 2026-11-18  
-**Re-verified:** 2026-11-18 (Rajesh on clean `main`)
+**Re-verified:** 2026-11-18 (Rajesh on clean `main`)  
+**Scoring-integrity follow-up:** 2026-11-23 (secondary-field labels + stronger verifier on `main`)
 
 This check does **not** require full retraining. It verifies that reported numbers match on-disk artifacts.
 
@@ -46,7 +47,19 @@ Optional smoke (`scripts/run_smoke.py`) exercises code paths without LEVIR; it i
 
 ## Discrepancies / fixes
 
-None for locked test, abs-diff, or the nine `full_*` summaries on re-verification.
+None for locked test F1/IoU, abs-diff **F1**, or the nine `full_*` **best_val_f1** values on re-verification.
+
+### Secondary-field reading rules (do not invent numbers)
+
+| Field in `results/experiments/full_*/summary.json` | Trust for report claims? | Note |
+| --- | --- | --- |
+| `best_val_f1`, `val_precision`, `val_recall`, `val_iou`, `val_boundary_f1` | Yes | Match best epoch in that run’s `metrics.csv` |
+| `threshold_sweep`, embedded `per_image_val_summary`, embedded `failure_summary` | No (legacy runs) | Labeled `secondary_artifacts_source: last_epoch_weights` — computed after early stop, before the best-checkpoint reload fix |
+| Locked-test `failure_summary` / `error_strata.json` | Yes | Scored from listed `best_model.pt` |
+| Abs-diff `f1` / `iou` / `precision` / `recall` | Yes | Unchanged by the tn fix |
+| Abs-diff `accuracy` / `tn` | Yes (after fix) | Older copies had `tn=0` so accuracy wrongly equaled IoU; current file has real `tn` |
+
+`scripts/verify_reported_metrics.py` now checks headline locked/abs-diff numbers, abs-diff `tn`, and that each `full_*` `best_val_f1` matches `metrics.csv`, and that last-epoch sweeps are labeled.
 
 ## Environment note
 

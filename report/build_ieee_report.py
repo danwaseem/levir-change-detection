@@ -561,7 +561,10 @@ def build():
         "not claim statistical significance; the seed study is a reliability check under "
         "matched training budgets. Ablations and FC-Siam-conc remain single-seed and are "
         "labeled as such. Training variability is separate from finite test-set "
-        "uncertainty; the locked test is one frozen evaluation, not a retuned search.",
+        "uncertainty; the locked test is one frozen evaluation, not a retuned search. "
+        "Table metrics use best_val_f1 from each run. We do not cite legacy validation "
+        "threshold_sweep rows stored in the GPU summaries (last-epoch secondary blocks). "
+        "Error strata use the locked test on best_model.pt.",
         indent=False,
     )
 
