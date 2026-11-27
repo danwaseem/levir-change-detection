@@ -50,3 +50,7 @@ __pycache__/
 
 # Internal team checklist image (not for the public repo)
 /docs/report_gaps_table.png
+
+# Course writeups kept on disk only (see e3a55c8)
+/docs/progress_report.pdf
+/docs/progress_report.docx
